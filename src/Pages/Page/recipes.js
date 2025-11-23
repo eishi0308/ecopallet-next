@@ -129,7 +129,7 @@ const fetchRecipes = async (ingredientsString = '') => {
   }
 
   const baseUrl = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients";
-  const apiKey = "7e5c79a960msh553841ae25171a7p1a4b75jsn19d44f51b44e";
+  const apiKey = "c28caa21ebmshad90569c94c63b6p1bed38jsn8049f9342f0f";
   const number = 15;
   const ranking = 1;
   const ignorePantry = true;
@@ -177,7 +177,8 @@ const fetchRecipes = async (ingredientsString = '') => {
     if (!pyodideLoaded) return; // Exit if pyodide is not loaded
 
     const baseUrl = `https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/${recipeId}/information`;
-    const apiKey = "7e5c79a960msh553841ae25171a7p1a4b75jsn19d44f51b44e";
+    const apiKey = "c28caa21ebmshad90569c94c63b6p1bed38jsn8049f9342f0f"; 
+    
 
     const headers = {
       "X-RapidAPI-Key": apiKey,
