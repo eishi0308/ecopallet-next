@@ -1,177 +1,46 @@
-/* .app {
+.app {
+  margin-top: 60px;
   text-align: center;
   color: white;
-} */
+}
 
-/* .full-width-card {
-  height: 600px;
+.full-width-card {
+  width: 100vw;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background-size: cover;
   background-position: center;
-  margin-bottom: 20px;
-  /* background-size: 90%;  */
-  /*margin-top: 90px; /* Add some top margin to push it down */
-/*} */
-
-/* .full-width-card h1 {
-  font-size: 100px;
-} */
-
-
-.app {
-  margin: 0; /* Remove default margins */
-  padding: 0; /* Remove default padding */
-}
-
-/* .full-width-card {
-  height: 100vh; /* Set the height to cover the entire viewport */
-  /*display: flex;
-  align-items: center;
-  justify-content: center;
-  background-size: cover; /* Ensure the background image covers the entire container */
-  /*background-position: center; /* Center the background image */
-  /*margin: 0; /* Remove margins */
-  /*padding: 0; /* Remove padding */
-  /*position: relative;
-/*} */
-
-.app {
-  margin: 0; /* Remove default margins */
-  padding: 0; /* Remove default padding */
-}
-
-.full-width-card {
-  width: 100vw; /* Set the width to cover the entire viewport */
-  height: 100vh; /* Set the height to cover the entire viewport */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-size: cover; /* Ensure the background image covers the entire container */
-  background-position: center; /* Center the background image */
-  margin: 0; /* Remove margins */
-  padding: 0; /* Remove padding */
-  position: fixed; /* Set the position to fixed */
-  top: 0; /* Position from the top */
-  left: 0; /* Position from the left */
-  z-index: 999; /* Set a high z-index to ensure it's on top of other content */
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
   margin-top: 50px;
 }
 
-/* 
-.full-width-card {
-  width: 100vw; /* Set the width to cover the entire viewport */
-  /* height: 100vh; /* Set the height to cover the entire viewport */
-  /* display: flex;
-  align-items: center;
-  justify-content: center;
-  background-size: cover; /* Ensure the background image covers the entire container */
-  /* background-position: center; /* Center the background image */
-  /* margin: 0; /* Remove margins */
-  /* padding: 0; /* Remove padding */
-  /* position: relative;
-}
- */
-
-/***************************chatgpt*****************************************************/
-/* .full-width-card {
-  height: 600px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-size: cover;
-  background-position: center;
-  margin-bottom: 20px;
-  margin-top: 10px;
-  position: relative; /* Establish relative positioning for absolute child elements */
-/*} */
-
 .full-width-card:before {
-  content: ""; /* Necessary for generating the pseudo-element */
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  /* background: linear-gradient(to bottom, rgba(128,128,128,0.2) 0%, rgba(128,128,128,0.7) 100%); */
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%);
-  z-index: 1; /* Ensures the overlay is above the background image but below any content */
+  z-index: 1;
 }
-
-/* .full-width-card h1 {
-  position: relative; /* Ensure the text appears above the overlay */
-  /*z-index: 2; /* Higher z-index than the overlay */
-  /*font-size: 100px;
-  color: white; /* Ensure text color is visible on darker backgrounds */
-/*} */
-
-/* .full-width-card h1{ */
-  /* position: relative; /* Ensure the text appears above the overlay */
-  /* z-index: 2; Higher z-index than the overlay */
-  /* font-size: 100px; */
-  /* color: white; Ensure text color is visible on darker backgrounds */
-  /* font-weight: bold; Make the font bold */
-  /* font-family: Arial, sans-serif; Change font type */ 
-/*} 
-
-/* .full-width-card h2 { */
-  /* position: relative; Ensures it's correctly positioned within the parent */
-  /* z-index: 2; Keeps it above the overlay */
-  /* color: white; Ensures text color is visible against a darker background */
-  /* font-size: 30px; Adjust the size as needed */
-  /* font-weight: normal; Adjust the weight as desired */
-  /* font-family: Arial, sans-serif; Ensures consistent font usage */
-  /* text-align: center; Centers the text within the element */
-  /* text-transform: capitalize; */
-  /* padding-top: 20px; Adds spacing between the headlines */
-  /* cursor: pointer; Makes it selectable (clickable) */
-/*}
-*/
 
 .full-width-card h1 {
-  position: relative; /* Ensure the text appears above the overlay */
-  z-index: 2; /* Higher z-index than the overlay */
+  position: relative;
+  z-index: 2;
   font-size: 100px;
-  color: white; /* Ensure text color is visible on darker backgrounds */
-  font-weight: bold; /* Make the font bold */
-  font-family: Arial, sans-serif; /* Change font type */
+  color: white;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
 }
 
-.full-width-card h2 {
-  position: relative; /* Ensures it's correctly positioned within the parent */
-  z-index: 2; /* Keeps it above the overlay */
-  color: white; /* Ensures text color is visible against a darker background */
-  font-size: 30px; /* Adjust the size as needed */
-  font-weight: normal; /* Adjust the weight as desired */
-  font-family: Arial, sans-serif; /* Ensures consistent font usage */
-  text-align: center; /* Centers the text within the element */
-  text-transform: capitalize;
-  padding-top: 60px; /* Increased padding-top to push it down more */
-}
-
-
-
-/********************************************************************************/
-/* .grid-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Updated to 4 columns */
-  /*grid-gap: 20px; /* Increased gap */
-/*} */
-
-/* .quarter {
-  height: 400px; /* Decreased height */
-  /*background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px; /* Adjusted font size */
-  /*border-radius: 20px; /* Rounded corners */
-  /*margin: 10px; /* Added margin */
-/*} */
-/********************************************************************************/
-/* 
 .headline-container {
   text-align: center;
   padding: 40px;
@@ -179,126 +48,15 @@
   font-size: 20px;
 }
 
-/*.subheadline {
-  color: white;
-  font-size: 24px; /* Adjust font size if needed */
-  /*ext-align: center; /* Center the text */
-  /*margin-top: 10px; /* Adjust the margin-top value to push it down further */
-/*} */
-
-
-/* Fixes the navigation bar at the top */
-/* .nav-bar {
-  position: fixed;
-  width: 100%;
-  top: 0;
-  z-index: 1000; /* Ensures it stays on top of other content */
-/*} */
-
-/* Adds top margin to the main app container */
-.app {
-  margin-top: 60px; /* Adjust this value based on the actual height of your navigation bar */
-  text-align: center;
-  color: white;
-}
-
-.quarter h2 {
-  color: white;
-  font-family: Arial, sans-serif;
-}
-
-
-
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Change to 2 columns */
-  grid-gap: 20px;
-}
-
-.quarter {
-  height: 400px; /* Keep as per your previous setting */
-  background-size: cover; /* Ensures the background image covers the entire div */
-  background-position: center; /* Centers the background image */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  border-radius: 20px;
-  margin: 10px;
-}
-
-
 .button-container {
-  z-index: 2; /* Ensures it is above the overlay */
-  margin-top: 20px; /* Adjust as needed */
+  z-index: 2;
+  margin-top: 20px;
 }
-
-/*1*/
-
-/* .get-started-button {
-  background-color: #0a9f39;
-  color: white; /* Set text color to white */
-  /*border: none;
-  padding: 20px 30px;
-  border-radius: 50px;
-  cursor: pointer;
-  font-size: 20px;
-  font-weight: bold;
-  text-transform: uppercase;
-  box-shadow: 0px 4px 6px rgba(198, 12, 12, 0.1);
-/*} */
-
-
-/*1*/
-/* .get-started-button:hover {
-  background-color: #096f1f;
-} */
-
 
 .get-started-button {
-  /* background-color: transparent; */
-  background-color: #035828; 
-  color: white; /* Make text color white */
-  border: 2px solid #035828; /* Optional: add white border for visibility */
-  padding: 15px 30px;
-  border-radius: 50px;
-  cursor: pointer;
-  font-size: 24px;
-  font-weight: bold;
-  text-transform: uppercase;
-  box-shadow: none; /* Remove any shadow for a cleaner look */
-  z-index: 3; /* Ensure it's above the overlay */
-}
-
-.get-started-button:hover {
-  background-color: #25f76b; /* Slight shade darker than the button's background color, within the blue spectrum */
-}
-
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 2; /* This should be below the button's z-index */
-}
-
-/* 
-
-give me other better idea of color of this:
-.get-started-button:hover {
-  background-color: #25f76b; /* Slight shade darker than the button's background color, within the blue spectrum */
-/*} */
-
-.get-started-button {
-  background-color: #035828; /* Base color */
+  background-color: #035828;
   color: white;
-  border: 2px solid #035828; /* Match the base color */
+  border: 2px solid #035828;
   padding: 15px 30px;
   border-radius: 50px;
   cursor: pointer;
@@ -310,5 +68,18 @@ give me other better idea of color of this:
 }
 
 .get-started-button:hover {
-  background: linear-gradient(90deg, #8BC34A 0%, #4CAF50 50%, #8BC34A 100%); /* Gradient from lighter to base color */
+  background: linear-gradient(90deg, #8BC34A 0%, #4CAF50 50%, #8BC34A 100%);
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
 }

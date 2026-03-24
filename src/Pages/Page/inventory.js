@@ -4,11 +4,9 @@ import Webcam from "react-webcam";
 import './inventory.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Link } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import samimg1 from "./1.jpeg"; // Import the image
 import samimg2 from "./2.jpeg"; // Import the image
-import samimg3 from "./3.jpeg"; // Import the image
 
 
 // Function to calculate the status based on the expiry date
@@ -55,7 +53,6 @@ export function Maininventory() {
     expiryDate: '',
     status: ''
   });
-  const [msg, setMsg] = useState('');
   const [nextItemId, setNextItemId] = useState(inventory.length + 1);
   const [name, setName] = useState('');
   const [file, setFile] = useState(null);

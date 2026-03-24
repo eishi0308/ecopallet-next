@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
 
-export const RecipeCard = ({ recipe, flipStates, setFlipStates, finalizeInventory }) => {
+export const RecipeCard = ({ recipe, finalizeInventory }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
   const handleCardFlip = () => {
-    // Toggle the flip state of the clicked card
     setIsFlipped(!isFlipped);
-
-    // Reset flip state of all other cards
-    const newFlipStates = flipStates.map(() => false);
-    setFlipStates(newFlipStates);
   };
 
   const handleCookingClick = (event) => {

@@ -1,15 +1,3 @@
-/* Updated App.css */
-
-/* body, html {
-  margin: 0;
-  padding: 0;
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f4f4;
-  background-image: url('images/inventoryback.jpeg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center 25%; /* Adjust background position to start from 1/4 of the page */
-/*} */
 
 /* Define the blinking animation */
 @keyframes blink-animation {

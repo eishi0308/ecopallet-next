@@ -6,14 +6,11 @@
 
 // Imports:
 import './recipe.css';
-import InventoryList from './InventoryList';
 import React, { useState, useEffect } from 'react';
 import { SearchBar } from './SearchBar';
 import { RecipeCard } from './RecipeCard';
 import { SRecipeCard } from './SRecipeCard';
 import { calculateStatus } from './calculateStatus';
-import { finalizeInventory, handleResetInventory } from './inventoryUtils';
-import { fetchRecipes, fetchRecipeDetails } from './apiUtils';
 
 // Recipes Component:
 export const Recipes = () => {
@@ -314,18 +311,6 @@ const recipesWithIngredients = recipeDetails.map((recipeDetail, index) => ({
     }
   };
 
-  // Function to Reset Inventory:
-  const handleResetInventory = () => {
-    // Recalculate status for each item in the main inventory
-    const updatedDisplayedInventory = inventory.map(item => {
-      const status = calculateStatus(item.expiryDate);
-      return { ...item, status: status };
-    });
-    // Update displayed inventory with recalculated status
-    setDisplayedInventory(updatedDisplayedInventory);
-    alert("Your inventory state has been reset!")
-  };
-
   // Function to Remove Selected Item:
   const handleRemoveSelected = (itemName) => {
     setSelectedItems(prevItems => prevItems.filter(item => item !== itemName));
@@ -345,9 +330,6 @@ useEffect(() => {
   // Function to get the first 3 ingredients from inventory
 
 
-// Fetch Recipes from Inventory:
-// Fetch Recipes from Inventory:
-// Fetch Recipes from Inventory:
 // Fetch Recipes from Inventory:
 const fetchRecipesFromInventory = async () => {
   try {
