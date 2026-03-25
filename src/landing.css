@@ -1,75 +1,174 @@
-/* Landing page — body padding-top already set by style.css */
-.app { /* spacer for any non-fixed content */ }
+/* =============================================
+   Fridgely Landing Page
+   ============================================= */
 
-.full-width-card {
+.landing-root {
   position: fixed;
   inset: 0;
-  top: var(--nav-height, 64px);
-  background-size: cover;
-  background-position: center;
+  top: 64px; /* below fixed navbar */
+}
+
+/* ── Background: pure CSS gradient, no image ── */
+.landing-bg {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0F172A 0%, #0f2318 55%, #14532d 100%);
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1;
+  overflow: hidden;
 }
 
-.full-width-card::before {
-  content: "";
+/* Radial green glow — top right */
+.landing-bg::before {
+  content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(160deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%);
-  z-index: 1;
+  top: -10%;
+  right: -5%;
+  width: 55%;
+  height: 70%;
+  background: radial-gradient(ellipse, rgba(22,163,74,0.22) 0%, transparent 65%);
+  pointer-events: none;
 }
 
-.overlay {
+/* Subtle second glow — bottom left */
+.landing-bg::after {
+  content: '';
+  position: absolute;
+  bottom: -15%;
+  left: -5%;
+  width: 40%;
+  height: 55%;
+  background: radial-gradient(ellipse, rgba(22,163,74,0.1) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* ── Content ── */
+.landing-content {
   position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   text-align: center;
   padding: 0 24px;
-  max-width: 700px;
+  max-width: 680px;
+  gap: 0;
 }
 
-.headline-container { margin-bottom: 40px; }
-
-.full-width-card h1 {
+/* Brand name */
+.landing-brand {
   font-family: 'Inter', -apple-system, sans-serif;
-  font-size: clamp(2.8rem, 8vw, 5.5rem);
-  font-weight: 800;
-  color: #ffffff;
-  line-height: 1.08;
-  margin: 0 0 4px;
-  letter-spacing: -2px;
-  text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #86efac;
+  background: rgba(22,163,74,0.15);
+  border: 1px solid rgba(22,163,74,0.35);
+  padding: 6px 16px;
+  border-radius: 9999px;
+  margin-bottom: 32px;
 }
-.full-width-card h1:last-child { color: #86efac; }
 
-.button-container { display: flex; justify-content: center; }
+/* Headline */
+.landing-headline {
+  margin-bottom: 20px;
+}
 
-.get-started-button {
+.landing-h1-white,
+.landing-h1-green {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: clamp(2.6rem, 7vw, 5rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -2px;
+  margin: 0 0 6px;
+}
+
+.landing-h1-white {
+  color: #ffffff;
+}
+
+.landing-h1-green {
+  color: #86efac;
+}
+
+/* Subtitle */
+.landing-sub {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: clamp(15px, 2vw, 18px);
+  color: rgba(255, 255, 255, 0.58);
+  line-height: 1.6;
+  margin: 0 0 32px;
+  max-width: 480px;
+}
+
+/* Feature chips */
+.landing-chips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 44px;
+}
+
+.landing-chip {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(8px);
+  padding: 8px 16px;
+  border-radius: 9999px;
+  letter-spacing: 0.01em;
+}
+
+/* CTA button */
+.landing-cta {
   display: inline-flex;
   align-items: center;
+  gap: 6px;
   font-family: 'Inter', -apple-system, sans-serif;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   color: #fff;
   background: #16A34A;
   border: none;
-  border-radius: 100px;
-  padding: 16px 40px;
+  border-radius: 9999px;
+  padding: 18px 48px;
   cursor: pointer;
   text-decoration: none;
-  transition: background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
-  box-shadow: 0 4px 20px rgba(22,163,74,0.45);
   letter-spacing: 0.2px;
+  box-shadow: 0 4px 24px rgba(22, 163, 74, 0.45), 0 0 0 1px rgba(22,163,74,0.3);
+  transition: background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
 }
-.get-started-button:hover {
+
+.landing-cta:hover {
   background: #15803D;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(22,163,74,0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 32px rgba(22, 163, 74, 0.55), 0 0 0 1px rgba(22,163,74,0.4);
   color: #fff;
+  text-decoration: none;
 }
-.get-started-button:active { transform: translateY(0); }
+
+.landing-cta:active {
+  transform: translateY(-1px);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .landing-h1-white,
+  .landing-h1-green {
+    letter-spacing: -1px;
+  }
+  .landing-chips {
+    gap: 8px;
+  }
+  .landing-cta {
+    padding: 16px 36px;
+  }
+}

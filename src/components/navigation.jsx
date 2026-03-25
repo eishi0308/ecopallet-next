@@ -127,7 +127,7 @@ const msg1Int = parseInt(msg1);
                 <img src={logo} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', display: 'block' }} />
               </a>
               <a className="navbar-brand page-scroll" style={{ padding: '25px' }} href="/">
-              Ecopalette
+              Fridgely
             </a>{" "}
           </div>
         </div>
