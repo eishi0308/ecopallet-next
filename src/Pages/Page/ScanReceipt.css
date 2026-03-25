@@ -1,60 +1,74 @@
-.scan-receipt-section {
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    margin-top: 100px; /* Increase margin-top to push the section lower */
-    text-align: center;
-    max-width: 600px;
-    width: calc(100% - 250px); /* Adjust width to take sidebar into account */
-    margin-left: 250px; /* Align with the main content */
-}
-
-
-.scan-receipt-section h2 {
-    margin-bottom: 10px;
-}
-
-.scan-receipt-section p {
-    margin-bottom: 20px;
-}
-
-.scan-receipt-section button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.scan-receipt-section button:disabled {
-    background-color: #ccc;
-}
-
-.loading-animation {
-    margin-top: 20px;
-}
-
+/* =============================================
+   Scan Receipt
+   ============================================= */
 
 .app-container {
-    display: flex;
-    flex-direction: column; /* Stack vertically */
+  display: flex;
+  flex-direction: column;
 }
 
 .main-content {
-    padding-top: 100px; /* Add padding to separate from the scan section */
-    display: flex; /* Use flexbox to center */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
+  padding-top: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .scan-receipt-section {
-    width: calc(100% - 250px); /* Adjust width to take sidebar into account */
-    max-width: 600px; /* Limit the width */
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background: var(--surface, #fff);
+  border: 1px solid var(--border, #E2E8F0);
+  border-radius: var(--radius-lg, 16px);
+  box-shadow: var(--shadow-md);
+  padding: 32px;
+  max-width: 560px;
+  width: 100%;
+  text-align: center;
+  margin: 32px auto;
+}
+
+.scan-receipt-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-1, #0F172A);
+  margin: 0 0 8px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.scan-receipt-section p {
+  font-size: 14px;
+  color: var(--text-2, #475569);
+  margin: 0 0 24px;
+}
+
+.scan-receipt-section button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 24px;
+  background: var(--accent, #16A34A);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-full, 9999px);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+.scan-receipt-section button:hover { background: var(--accent-dark, #15803D); }
+.scan-receipt-section button:disabled {
+  background: var(--border, #E2E8F0);
+  color: var(--text-3, #94A3B8);
+  cursor: not-allowed;
+}
+
+.loading-animation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  color: var(--text-2, #475569);
+  font-size: 14px;
+  gap: 8px;
 }

@@ -341,68 +341,94 @@ export const Tips = () => {
 
   return (
     <div className="tips-whole-page">
-      <div className="quick-category-tips">
-        <h2 className="tips-section-title">Quick Category Tips</h2>
-        <p className="guidance-paragraph">What is the best way to store your food by categories? Hover over the images below to find out!</p>
+
+      {/* ── Hero ── */}
+      <div className="tips-hero">
+        <span className="tips-eyebrow">🌿 Food Storage Guide</span>
+        <h1 className="tips-hero-title">Store smarter, waste less</h1>
+        <p className="tips-hero-sub">Discover the best ways to store your food and extend shelf life — organised by category and tailored to your pantry.</p>
+      </div>
+
+      {/* ── Quick Category Cards ── */}
+      <section className="tips-panel">
+        <div className="tips-panel-header">
+          <div>
+            <span className="tips-eyebrow">Quick Reference</span>
+            <h2 className="tips-panel-title">Storage Tips by Category</h2>
+          </div>
+          <p className="tips-panel-sub">Hover (or tap) each card to reveal storage tips</p>
+        </div>
         <div className="category-tips-container">
           {categoryTips.map((item, index) => (
-            <CategoryTipItem key={index} frontLogo={item.frontLogo} backLogo={item.backLogo} />
+            <div key={index} className="category-tip-wrap">
+              <CategoryTipItem frontLogo={item.frontLogo} backLogo={item.backLogo} />
+              <span className="category-tip-label">{item.category}</span>
+            </div>
           ))}
         </div>
-      </div>
+      </section>
 
-      <div className="detailed-storage-tips">
-        <h2 className="tips-section-title">Not enough? Try More Below</h2>
-        {/* <p className="guidance-paragraph">Not enough? Try More Below</p> */}
-      </div>
-      {/* Detailed Storage Tips content */}
-      <h2 className="centered-title">Your Inventory</h2>
-      <p className="explanatory-text">Try clicking on the item below and scroll down, you may get ways to extend their shelf life.</p>
-      <div className="inventory-tips-container">
-        {validInventoryNames.length > 0 ? (
-          validInventoryNames
-            .slice((currentPage - 1) * 10, currentPage * 10)  // Only show 10 items per page
-            .map((name, index) => (
-              <button
-                key={index}
-                className={`inventory-item-button ${searchValue === name ? 'selected' : ''}`}
-                onClick={() => handleSearch(name)}
-              >
-                <span className="item-text">{name}</span>
-              </button>
-            ))
-        ) : (
-          <p className="centered-message-inventory">
-            Sorry, There are NO items in your inventory or all items have EXPIRED. Click here to {' '}
-            <Link to="/inventory" className="link-style">ADD FRESH ONES</Link> to inventory or use the Search Bar below to manually search for storage tips.
-          </p>
+      {/* ── Your Inventory ── */}
+      <section className="tips-panel">
+        <div className="tips-panel-header">
+          <div>
+            <span className="tips-eyebrow">From Your Pantry</span>
+            <h2 className="tips-panel-title">Your Inventory</h2>
+          </div>
+          <p className="tips-panel-sub">Click any item to get personalised storage tips</p>
+        </div>
+        <div className="inventory-tips-container">
+          {validInventoryNames.length > 0 ? (
+            validInventoryNames
+              .slice((currentPage - 1) * 10, currentPage * 10)
+              .map((name, index) => (
+                <button
+                  key={index}
+                  className={`inventory-item-button ${searchValue === name ? 'selected' : ''}`}
+                  onClick={() => handleSearch(name)}
+                >
+                  <span className="item-text">{name}</span>
+                </button>
+              ))
+          ) : (
+            <p className="centered-message-inventory">
+              No active items found.{' '}
+              <Link to="/inventory" className="link-style">Add items to your pantry</Link>{' '}
+              or use the search bar below.
+            </p>
+          )}
+        </div>
+        {totalPages > 1 && (
+          <div className="tips-pagination-controls">
+            {renderPageNumbers()}
+          </div>
         )}
-      </div>
-      <div className="tips-pagination-controls">
-        {renderPageNumbers()}
-      </div>
+      </section>
 
-
-      <h2 className="centered-title">Search By Keywords</h2>
-      <p className="explanatory-text">We may handle keywords Incorrectly above,or you wanna Find Out More, so try entering more explicit keywords manually below!</p>
-      <div className="tips-search-area">
-        <input
-          type="text"
-          value={searchValue}
-          onChange={e => setSearchValue(e.target.value)}
-          placeholder="Enter some keywords like oil, cheese ..."
-        />
-        <button
-          className="tips-search-button"
-          onClick={() => handleSearch(searchValue)}
-        >
-          Search
-        </button>
-      </div>
+      {/* ── Search ── */}
+      <section className="tips-panel tips-search-panel">
+        <div className="tips-panel-header tips-panel-header--centered">
+          <span className="tips-eyebrow">Deep Dive</span>
+          <h2 className="tips-panel-title">Search for Storage Tips</h2>
+          <p className="tips-panel-sub">Enter any ingredient or food name to find detailed storage guidance</p>
+        </div>
+        <div className="tips-search-area">
+          <input
+            type="text"
+            value={searchValue}
+            onChange={e => setSearchValue(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleSearch(searchValue)}
+            placeholder="e.g. milk, chicken, olive oil…"
+          />
+          <button className="tips-search-button" onClick={() => handleSearch(searchValue)}>
+            Search
+          </button>
+        </div>
+      </section>
 
       {searchResults.length === 0 && showInitialContent && (
         <div className="initial-content-footer">
-          <img src={footer} alt="Footer Image" />
+          <img src={footer} alt="Footer" />
         </div>
       )}
 
@@ -415,14 +441,16 @@ export const Tips = () => {
                 className={`tips-result-item ${selectedResult === result ? 'selected' : ''}`}
                 onClick={() => handleResultSelection(result)}
               >
-                {result.Category_Name} — {result.Name}
+                <span className="tips-result-category">{result.Category_Name}</span>
+                <span className="tips-result-name">{result.Name}</span>
               </div>
             ))}
           </div>
 
           {!selectedResult && (
             <div className="tips-initial-placeholder">
-              <p>Click on any of the results on the left to view the relevant storage tips.</p>
+              <span className="tips-placeholder-icon">👆</span>
+              <p>Select a result to view storage tips</p>
             </div>
           )}
 
