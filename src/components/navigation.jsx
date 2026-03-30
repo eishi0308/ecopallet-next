@@ -1,236 +1,186 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Webcam from "react-webcam";
-import logo from "../ProjectLogo.png"; // Import the image
-import samimg2 from "./2.jpeg"; // Import the image
+import logo from "../ProjectLogo.png";
+import samimg2 from "./2.jpeg";
+import './navigation.css';
 
-export const Navigation = (props) => {
+export const Navigation = () => {
   const [showScanProducePopup, setShowScanProducePopup] = useState(false);
   const [showUploadInfoPopup, setShowUploadInfoPopup] = useState(false);
   const [msg1, setMsg1] = useState('');
   const [file1, setFile1] = useState(null);
   const [imgSrc1, setImgSrc1] = useState('');
-  const [extractedText1, setExtractedText1] = useState('');
-  
-  const togglePopup = (popupType) => {
-    setShowScanProducePopup(false);
 
-    switch (popupType) {
-      case 'produce':
-        setShowScanProducePopup(!showScanProducePopup);
-        break;
-      case 'uploadInfo':
-        setShowUploadInfoPopup(!showUploadInfoPopup);
-        break;  
-      default:
-        break;
+  const webcamRef = useRef(null);
+  const produceTooltipRef = useRef(null);
+
+  // Bootstrap 5 tooltip init
+  useEffect(() => {
+    if (produceTooltipRef.current && window.bootstrap) {
+      new window.bootstrap.Tooltip(produceTooltipRef.current);
     }
-  };
+  }, []);
 
   const capturePhoto = () => {
     const imageSrc = webcamRef.current.getScreenshot();
-    
-    // Convert data URI to Blob
     const byteString = atob(imageSrc.split(',')[1]);
     const mimeType = imageSrc.split(',')[0].split(':')[1].split(';')[0];
     const ab = new ArrayBuffer(byteString.length);
     const ia = new Uint8Array(ab);
-    
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-
+    for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
     const blob = new Blob([ab], { type: mimeType });
-    const file = new File([blob], 'photo.jpg', { type: mimeType });
-
-    setFile1(file);
+    setFile1(new File([blob], 'photo.jpg', { type: mimeType }));
     setImgSrc1(imageSrc);
   };
-  const webcamRef = useRef(null);
 
+  const handleFileChange = (e) => setFile1(e.target.files[0]);
 
-  const handleFileChange1 = (e) => {
-    setFile1(e.target.files[0]);
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    if (!file1) { alert('Please select a file.'); return; }
+    const formData = new FormData();
+    formData.append('file1', file1);
+    setShowScanProducePopup(false);
+    try {
+      const response = await fetch('https://rohan2101new.pythonanywhere.com/pred', {
+        method: 'POST',
+        body: formData,
+      });
+      if (!response.ok) throw new Error('Error reading image data.');
+      const data = await response.json();
+      setImgSrc1(data.imgSrc1);
+      setMsg1(data.msg1);
+      setShowUploadInfoPopup(true);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Error reading image data, try another image.');
+    }
   };
 
-const handleUpload2 = async (e) => {
-  e.preventDefault(); // Prevent default form submission behavior
-
-  // Check if a file has been selected
-  if (!file1) {
-    alert('Please select a file.');
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append('file1', file1);
-
-  setShowScanProducePopup(false); // Close the popup
-
-  try {
-    const response = await fetch('https://rohan2101new.pythonanywhere.com/pred', {
-      method: 'POST',
-      body: formData
-    });
-
-    if (!response.ok) {
-      // If response status is not OK, throw an error
-      throw new Error('Error reading image data, try another image.');
-    }
-
-    const data = await response.json();
-    console.log(data);
-
-    // Handle response data as needed
-    // Update state variables accordingly
-    setImgSrc1(data.imgSrc1);
-    setExtractedText1(data.extracted_text1);
-    setMsg1(data.msg1);
-    togglePopup('uploadInfo');
-    const daysToAdd = parseInt(data.msg1, 10);
-    const currentDate = new Date();
-
-    currentDate.setDate(currentDate.getDate() + daysToAdd);
-    const day = currentDate.getDate();
-    const month = new Intl.DateTimeFormat('en', { month: 'long' }).format(currentDate);
-    const year = currentDate.getFullYear();
-    const formattedDate = `${day} ${month} ${year}`;
-    console.log(formattedDate); // Output: "13 May 2024"
-
-  } catch (error) {
-    console.error('Error uploading image:', error);
-    alert('Error reading image data, try another image.');
-    setMsg1('Failed to upload image');
-  }
-};
-const msg1Int = parseInt(msg1);
-
+  const msg1Int = parseInt(msg1);
 
   return (
-    <nav id="menu" className="navbar navbar-default navbar-fixed-top">
-      <div className="container">
-        <div className="navbar-header">
-          <button
-            type="button"
-            className="navbar-toggle collapsed"
-            data-toggle="collapse"
-            data-target="#bs-example-navbar-collapse-1"
-          >
-            {" "}
-            <span className="sr-only">Toggle navigation</span>{" "}
-            <span className="icon-bar"></span>{" "}
-            <span className="icon-bar"></span>{" "}
-            <span className="icon-bar"></span>{" "}
-          </button>
-          {/* Container for the logo and text */}
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-              <a href="/">
-                <img src={logo} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', display: 'block' }} />
-              </a>
-              <a className="navbar-brand page-scroll" style={{ padding: '25px' }} href="/">
-              Fridgely
-            </a>{" "}
+    <>
+      {/* ── Main Navbar ── */}
+      <nav className="navbar fixed-top fridgely-nav">
+        <div className="container">
+
+          {/* Brand */}
+          <a className="navbar-brand" href="/">
+            <img src={logo} className="nav-logo" alt="Fridgely logo" />
+            Fridgely
+          </a>
+
+          {/* Desktop links — hidden on mobile */}
+          <div className="d-none d-lg-flex align-items-center gap-1">
+            <a className="nav-link" href="/inventory">Inventory</a>
+            <a className="nav-link" href="/recipes">Recipes</a>
+            <a className="nav-link" href="/tips">Tips</a>
+            <button
+              ref={produceTooltipRef}
+              className="nav-produce-btn"
+              onClick={() => setShowScanProducePopup(true)}
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
+              title="AI-powered shelf life predictor — scan fresh produce"
+            >
+              🌿 Fresh Produce
+            </button>
           </div>
+
+          {/* Mobile: offcanvas trigger */}
+          <button
+            className="navbar-toggler d-lg-none"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#fridgelyOffcanvas"
+            aria-controls="fridgelyOffcanvas"
+            aria-label="Open menu"
+          >
+            <span className="navbar-toggler-icon" />
+          </button>
+
         </div>
+      </nav>
 
-        <div
-          className="collapse navbar-collapse"
-          id="bs-example-navbar-collapse-1"
-        >
-          <ul className="nav navbar-nav navbar-right">
-            <li>
-              <a href="/inventory" >
-                Inventory
-              </a>
-            </li>
-            <li>
-              <a href="/recipes" className="page-scroll">
-                Recipes
-              </a>
-            </li>
-
-
-            <li>
-              <a href="/tips" className="page-scroll"> 
-                Tips
-              </a>
-            </li>
-
-
-            {/* <li>
-              <a href="/About" className="page-scroll">
-                About
-              </a>
-            </li> */}
-            <li>
-              <button
-                onClick={() => togglePopup('produce')}
-                className="nav-produce-btn"
-                title="AI-powered shelf life predictor — scan fresh produce to estimate how long it will last"
-              >
-                🌿 Fresh Produce Predictor
-              </button>
-            </li>
-          {/* Scan Fresh Produce Popup */}
-          {showScanProducePopup && (
-
-<div className="popup">
-<h2 style={{textAlign: 'center', fontFamily: 'Arial, sans-serif'}}>Scan Your fresh Produce to get an estimated shelf life</h2>
-<div className="scan-options">
-  {/* <form id="uploadForm" onSubmit={handleUpload2} encType="multipart/form-data">
-    <input type="file" name="file1" onChange={handleFileChange1} />
-    <input type="submit" value="Upload" />
-  </form> */}
-  <h3 style={{textAlign: 'center', fontFamily: 'Arial, sans-serif'}}>Capture a Picture</h3>
-  <Webcam
-    audio={false}
-    ref={webcamRef}
-    screenshotFormat="image/jpeg"
-    width={320}
-    height={240}
-  />
-  <h3> </h3>
-  <button onClick={capturePhoto} style={{display: 'block', margin: '0 auto'}}>Capture Photo</button>
-  <h3> </h3>
-  {imgSrc1 && <img src={imgSrc1} alt="Uploaded" />}
-  <form id="uploadForm" onSubmit={handleUpload2} encType="multipart/form-data">
-  <input type="submit" value="Upload" />
-  </form>
-  <h3 style={{textAlign: 'center', fontFamily: 'Arial, sans-serif'}}>Or Choose a Picture</h3>
-  <form id="uploadForm" onSubmit={handleUpload2} encType="multipart/form-data">
-    <input type="file" name="file1" onChange={handleFileChange1} />
-    <input type="submit" value="Upload" />
-    <img src={samimg2} alt="Sample Image" width="25" height="25" />
-      <a href={samimg2} download>  Download Sample Image</a>
-    </form>
-  {/* populateItems(extractedText1, '', '', msg1, ''); */}
-</div>
-<button onClick={() => togglePopup('produce')} style={{display: 'block', margin: '0 auto'}}>Cancel</button>
-</div>
-
-)}
-            {/* Upload Info Popup */}
-            {showUploadInfoPopup && (
-              <div className="popup">
-                <h2 style={{textAlign: 'center', fontFamily: 'Arial, sans-serif'}}>Estimated Shelf life(in days):</h2>
-                {!isNaN(msg1Int) && msg1Int > 0 ? (
-  <h2 style={{textAlign: 'center', fontFamily: 'Arial, sans-serif'}}>{msg1Int}</h2>
-) : (
-  <h4 style={{textAlign: 'center', fontFamily: 'Arial, sans-serif'}}>Rotten or incorrect image uploaded</h4>
-)}
-                <div>
-                  {/* <p>Fruit Name: {extractedText1}</p> */}
-                  {/* <p>Estimated Shelf life(in days): {msg1}</p> */}
-                </div>
-                <button onClick={() => togglePopup('uploadInfo')} style={{
-        display: 'block',
-        margin: '0 auto',
-    }}>Close</button>
-              </div>
-            )}
-          </ul>
+      {/* ── Offcanvas drawer (mobile) ── */}
+      <div
+        className="offcanvas offcanvas-end fridgely-offcanvas"
+        tabIndex="-1"
+        id="fridgelyOffcanvas"
+        aria-labelledby="fridgelyOffcanvasLabel"
+      >
+        <div className="offcanvas-header">
+          <span className="offcanvas-title" id="fridgelyOffcanvasLabel">
+            <img src={logo} className="nav-logo" alt="" style={{ marginRight: 8 }} />
+            Fridgely
+          </span>
+          <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" />
+        </div>
+        <div className="offcanvas-body">
+          <a className="nav-link" href="/inventory">📦 Inventory</a>
+          <a className="nav-link" href="/recipes">🍽 Recipes</a>
+          <a className="nav-link" href="/tips">💡 Tips</a>
+          <button
+            className="nav-produce-btn"
+            onClick={() => {
+              setShowScanProducePopup(true);
+              // close offcanvas
+              const el = document.getElementById('fridgelyOffcanvas');
+              if (el && window.bootstrap) window.bootstrap.Offcanvas.getInstance(el)?.hide();
+            }}
+          >
+            🌿 Fresh Produce Predictor
+          </button>
         </div>
       </div>
-    </nav>
+
+      {/* ── Scan Fresh Produce Popup ── */}
+      {showScanProducePopup && (
+        <div className="nav-popup-overlay" onClick={() => setShowScanProducePopup(false)}>
+          <div className="nav-popup" onClick={e => e.stopPropagation()}>
+            <h2>🌿 Fresh Produce Predictor</h2>
+            <h3>Scan or upload a photo to estimate shelf life</h3>
+            <Webcam
+              audio={false}
+              ref={webcamRef}
+              screenshotFormat="image/jpeg"
+              width="100%"
+              style={{ borderRadius: '10px' }}
+            />
+            <button className="nav-popup-btn" onClick={capturePhoto}>📷 Capture Photo</button>
+            {imgSrc1 && <img src={imgSrc1} alt="Captured" />}
+            <form onSubmit={handleUpload} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <h3>Or choose a file</h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <input type="file" name="file1" onChange={handleFileChange} />
+                <a href={samimg2} download style={{ fontSize: 12, color: '#86efac' }}>Sample ↓</a>
+              </div>
+              <button type="submit" className="nav-popup-btn">Upload &amp; Predict</button>
+            </form>
+            <button className="nav-popup-btn secondary" onClick={() => setShowScanProducePopup(false)}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Result Popup ── */}
+      {showUploadInfoPopup && (
+        <div className="nav-popup-overlay" onClick={() => setShowUploadInfoPopup(false)}>
+          <div className="nav-popup" onClick={e => e.stopPropagation()}>
+            <h2>Estimated Shelf Life</h2>
+            {!isNaN(msg1Int) && msg1Int > 0 ? (
+              <>
+                <div className="nav-popup-result">{msg1Int}</div>
+                <div className="nav-popup-result-label">days remaining</div>
+              </>
+            ) : (
+              <h3 style={{ color: '#f87171' }}>Rotten or unrecognised image — try another photo</h3>
+            )}
+            <button className="nav-popup-btn" onClick={() => setShowUploadInfoPopup(false)}>Done</button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

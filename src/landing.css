@@ -80,10 +80,10 @@
 .landing-h1-white,
 .landing-h1-green {
   font-family: 'Inter', -apple-system, sans-serif;
-  font-size: clamp(2.6rem, 7vw, 5rem);
+  font-size: clamp(1.8rem, 4vw, 3rem);
   font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -2px;
+  line-height: 1.1;
+  letter-spacing: -1px;
   margin: 0 0 6px;
 }
 
@@ -98,11 +98,11 @@
 /* Subtitle */
 .landing-sub {
   font-family: 'Inter', -apple-system, sans-serif;
-  font-size: clamp(15px, 2vw, 18px);
+  font-size: clamp(13px, 1.6vw, 16px);
   color: rgba(255, 255, 255, 0.58);
   line-height: 1.6;
-  margin: 0 0 32px;
-  max-width: 480px;
+  margin: 0 0 28px;
+  max-width: 440px;
 }
 
 /* Feature chips */
@@ -116,15 +116,15 @@
 
 .landing-chip {
   font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.75);
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.8) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   backdrop-filter: blur(8px);
-  padding: 8px 16px;
+  padding: 7px 14px;
   border-radius: 9999px;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
 }
 
 /* CTA button */
@@ -133,13 +133,13 @@
   align-items: center;
   gap: 6px;
   font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: #fff;
   background: #16A34A;
   border: none;
   border-radius: 9999px;
-  padding: 18px 48px;
+  padding: 14px 40px;
   cursor: pointer;
   text-decoration: none;
   letter-spacing: 0.2px;

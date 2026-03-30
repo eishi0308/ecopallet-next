@@ -28,10 +28,10 @@ export const Landing = () => {
             Smart pantry tracking that turns your fridge into zero waste.
           </p>
 
-          {/* Feature chips */}
+          {/* Feature chips — Bootstrap badges */}
           <div className="landing-chips">
             {features.map((f) => (
-              <span key={f.label} className="landing-chip">
+              <span key={f.label} className="badge landing-chip">
                 {f.icon} {f.label}
               </span>
             ))}

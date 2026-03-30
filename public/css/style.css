@@ -85,33 +85,7 @@ body {
   width: calc(100% - 32px) !important;
 }
 
-/* ── Fresh Produce Predictor button ── */
-.nav-produce-btn {
-  display: inline-flex !important;
-  align-items: center;
-  gap: 5px;
-  font-family: 'Inter', -apple-system, sans-serif !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  color: #035828 !important;
-  background: #ffffff !important;
-  border: none !important;
-  border-radius: 100px !important;
-  padding: 8px 16px !important;
-  cursor: pointer !important;
-  transition: background-color 150ms ease, transform 150ms ease !important;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.15) !important;
-  white-space: nowrap;
-  line-height: 1.4 !important;
-  text-transform: none !important;
-  margin: 13px 0 0 8px !important;
-}
-.nav-produce-btn:hover {
-  background: #f0fdf4 !important;
-  transform: translateY(-1px) !important;
-  color: #064e3b !important;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.2) !important;
-}
+/* .nav-produce-btn styles moved to navigation.css */
 
 /* ── Mobile hamburger ── */
 .navbar-default .navbar-toggle {
@@ -134,7 +108,6 @@ body {
   }
   #menu.navbar-default .navbar-nav > li > a::after { display: none; }
   #menu.navbar-default .navbar-nav > li > a { padding: 12px 20px; }
-  .nav-produce-btn { margin: 8px 15px 12px !important; }
 }
 
 /* ── Popup (used by navigation.jsx) ── */
