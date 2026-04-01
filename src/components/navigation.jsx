@@ -5,6 +5,7 @@ import samimg2 from "./2.jpeg";
 import './navigation.css';
 
 export const Navigation = () => {
+  const [navOpen, setNavOpen] = useState(false);
   const [showScanProducePopup, setShowScanProducePopup] = useState(false);
   const [showUploadInfoPopup, setShowUploadInfoPopup] = useState(false);
   const [msg1, setMsg1] = useState('');
@@ -12,14 +13,15 @@ export const Navigation = () => {
   const [imgSrc1, setImgSrc1] = useState('');
 
   const webcamRef = useRef(null);
-  const produceTooltipRef = useRef(null);
 
-  // Bootstrap 5 tooltip init
+  // Close nav on window resize to desktop width
   useEffect(() => {
-    if (produceTooltipRef.current && window.bootstrap) {
-      new window.bootstrap.Tooltip(produceTooltipRef.current);
-    }
+    const handleResize = () => { if (window.innerWidth >= 992) setNavOpen(false); };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const closeNav = () => setNavOpen(false);
 
   const capturePhoto = () => {
     const imageSrc = webcamRef.current.getScreenshot();
@@ -43,8 +45,7 @@ export const Navigation = () => {
     setShowScanProducePopup(false);
     try {
       const response = await fetch('https://rohan2101new.pythonanywhere.com/pred', {
-        method: 'POST',
-        body: formData,
+        method: 'POST', body: formData,
       });
       if (!response.ok) throw new Error('Error reading image data.');
       const data = await response.json();
@@ -61,79 +62,60 @@ export const Navigation = () => {
 
   return (
     <>
-      {/* ── Main Navbar ── */}
-      <nav className="navbar fixed-top fridgely-nav">
+      {/* ── Bootstrap navbar-expand-lg ── */}
+      <nav className="navbar navbar-expand-lg fixed-top fridgely-nav">
         <div className="container">
 
           {/* Brand */}
-          <a className="navbar-brand" href="/">
-            <img src={logo} className="nav-logo" alt="Fridgely logo" />
+          <a className="navbar-brand fridgely-brand" href="/">
+            <img src={logo} className="nav-logo" alt="Fridgely" />
             Fridgely
           </a>
 
-          {/* Desktop links — hidden on mobile */}
-          <div className="d-none d-lg-flex align-items-center gap-1">
-            <a className="nav-link" href="/inventory">Inventory</a>
-            <a className="nav-link" href="/recipes">Recipes</a>
-            <a className="nav-link" href="/tips">Tips</a>
-            <button
-              ref={produceTooltipRef}
-              className="nav-produce-btn"
-              onClick={() => setShowScanProducePopup(true)}
-              data-bs-toggle="tooltip"
-              data-bs-placement="bottom"
-              title="AI-powered shelf life predictor — scan fresh produce"
-            >
-              🌿 Fresh Produce
-            </button>
-          </div>
-
-          {/* Mobile: offcanvas trigger */}
+          {/* Bootstrap hamburger toggler — React state controlled */}
           <button
-            className="navbar-toggler d-lg-none"
+            className="navbar-toggler fridgely-toggler"
             type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#fridgelyOffcanvas"
-            aria-controls="fridgelyOffcanvas"
-            aria-label="Open menu"
+            onClick={() => setNavOpen(o => !o)}
+            aria-expanded={navOpen}
+            aria-label="Toggle navigation"
           >
-            <span className="navbar-toggler-icon" />
+            <span className={`toggler-bar ${navOpen ? 'open' : ''}`} />
+            <span className={`toggler-bar ${navOpen ? 'open' : ''}`} />
+            <span className={`toggler-bar ${navOpen ? 'open' : ''}`} />
           </button>
+
+          {/* Bootstrap navbar-collapse — show class toggled by React */}
+          <div className={`navbar-collapse ${navOpen ? 'show' : 'collapse'}`} id="fridgelyNav">
+            <ul className="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+              <li className="nav-item">
+                <a className="nav-link fridgely-link" href="/inventory" onClick={closeNav}>
+                  <i className="bi bi-box-seam me-2" />Inventory
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link fridgely-link" href="/recipes" onClick={closeNav}>
+                  <i className="bi bi-egg-fried me-2" />Recipes
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link fridgely-link" href="/tips" onClick={closeNav}>
+                  <i className="bi bi-lightbulb me-2" />Tips
+                </a>
+              </li>
+              <li className="nav-item mt-2 mt-lg-0 ms-lg-2">
+                <button
+                  className="nav-produce-btn"
+                  onClick={() => { closeNav(); setShowScanProducePopup(true); }}
+                >
+                  🌿 Fresh Produce
+                </button>
+              </li>
+            </ul>
+          </div>
 
         </div>
       </nav>
-
-      {/* ── Offcanvas drawer (mobile) ── */}
-      <div
-        className="offcanvas offcanvas-end fridgely-offcanvas"
-        tabIndex="-1"
-        id="fridgelyOffcanvas"
-        aria-labelledby="fridgelyOffcanvasLabel"
-      >
-        <div className="offcanvas-header">
-          <span className="offcanvas-title" id="fridgelyOffcanvasLabel">
-            <img src={logo} className="nav-logo" alt="" style={{ marginRight: 8 }} />
-            Fridgely
-          </span>
-          <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" />
-        </div>
-        <div className="offcanvas-body">
-          <a className="nav-link" href="/inventory">📦 Inventory</a>
-          <a className="nav-link" href="/recipes">🍽 Recipes</a>
-          <a className="nav-link" href="/tips">💡 Tips</a>
-          <button
-            className="nav-produce-btn"
-            onClick={() => {
-              setShowScanProducePopup(true);
-              // close offcanvas
-              const el = document.getElementById('fridgelyOffcanvas');
-              if (el && window.bootstrap) window.bootstrap.Offcanvas.getInstance(el)?.hide();
-            }}
-          >
-            🌿 Fresh Produce Predictor
-          </button>
-        </div>
-      </div>
 
       {/* ── Scan Fresh Produce Popup ── */}
       {showScanProducePopup && (
@@ -141,16 +123,12 @@ export const Navigation = () => {
           <div className="nav-popup" onClick={e => e.stopPropagation()}>
             <h2>🌿 Fresh Produce Predictor</h2>
             <h3>Scan or upload a photo to estimate shelf life</h3>
-            <Webcam
-              audio={false}
-              ref={webcamRef}
-              screenshotFormat="image/jpeg"
-              width="100%"
-              style={{ borderRadius: '10px' }}
-            />
+            <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg"
+              width="100%" style={{ borderRadius: '10px' }} />
             <button className="nav-popup-btn" onClick={capturePhoto}>📷 Capture Photo</button>
             {imgSrc1 && <img src={imgSrc1} alt="Captured" />}
-            <form onSubmit={handleUpload} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <form onSubmit={handleUpload} encType="multipart/form-data"
+              style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <h3>Or choose a file</h3>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <input type="file" name="file1" onChange={handleFileChange} />
@@ -158,7 +136,8 @@ export const Navigation = () => {
               </div>
               <button type="submit" className="nav-popup-btn">Upload &amp; Predict</button>
             </form>
-            <button className="nav-popup-btn secondary" onClick={() => setShowScanProducePopup(false)}>Cancel</button>
+            <button className="nav-popup-btn secondary"
+              onClick={() => setShowScanProducePopup(false)}>Cancel</button>
           </div>
         </div>
       )}
@@ -176,7 +155,8 @@ export const Navigation = () => {
             ) : (
               <h3 style={{ color: '#f87171' }}>Rotten or unrecognised image — try another photo</h3>
             )}
-            <button className="nav-popup-btn" onClick={() => setShowUploadInfoPopup(false)}>Done</button>
+            <button className="nav-popup-btn"
+              onClick={() => setShowUploadInfoPopup(false)}>Done</button>
           </div>
         </div>
       )}
