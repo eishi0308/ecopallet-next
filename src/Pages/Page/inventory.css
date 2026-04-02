@@ -767,6 +767,240 @@ header { display: none; }
 }
 
 /* ══════════════════════════════════════════
+   PREMIUM ENHANCEMENTS
+══════════════════════════════════════════ */
+
+/* Page wrapper — subtle radial glow at top */
+.App::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 700px; height: 350px;
+  background: radial-gradient(ellipse at center top, rgba(22,163,74,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Header — add shimmer */
+.inv-page-header {
+  position: relative;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.22);
+}
+.inv-page-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(22,163,74,0.4), transparent);
+}
+
+/* Stats — richer cards */
+.inv-stat-card {
+  border-radius: 18px;
+  padding: 22px 26px;
+  position: relative;
+  overflow: hidden;
+}
+.inv-stat-card::before {
+  content: '';
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 80px; height: 80px;
+  background: radial-gradient(circle, rgba(22,163,74,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.inv-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+.inv-stat-num {
+  font-size: 2.4rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+.inv-stat-warning::before {
+  background: radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%);
+}
+.inv-stat-danger::before {
+  background: radial-gradient(circle, rgba(239,68,68,0.1) 0%, transparent 70%);
+}
+
+/* Toolbar — add container shadow */
+.inv-toolbar {
+  background: var(--surface, #fff);
+  border: 1px solid var(--border, #E2E8F0);
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 16px;
+}
+.inv-action-btn {
+  padding: 11px 20px;
+  font-size: 13px;
+  border-radius: 10px;
+  transition: all 160ms ease;
+}
+.inv-action-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+}
+.inv-action-primary {
+  box-shadow: 0 4px 16px rgba(22,163,74,0.35);
+}
+.inv-action-primary:hover:not(:disabled) {
+  box-shadow: 0 6px 20px rgba(22,163,74,0.5);
+  transform: translateY(-2px);
+}
+
+/* Table container — top accent stripe */
+.inventory-table-container {
+  border-radius: 18px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  position: relative;
+}
+.inventory-table-container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #16A34A, #059669, #0d9488);
+  border-radius: 18px 18px 0 0;
+  z-index: 1;
+}
+
+/* Table header — gradient background */
+.inventory-table-container th {
+  background: linear-gradient(to bottom, #F8FAFC, #F1F5F9);
+  font-size: 11.5px;
+}
+
+/* Table rows — smoother, richer hover */
+.inventory-table-container tbody tr:hover td {
+  background: linear-gradient(to right, rgba(22,163,74,0.03), rgba(22,163,74,0.01));
+}
+.inventory-table-container tbody tr:hover td:first-child {
+  padding-left: 20px;
+}
+
+/* Status badges — slightly larger */
+.status-badge {
+  font-size: 11.5px;
+  padding: 5px 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.status-safe {
+  box-shadow: 0 1px 6px rgba(22,163,74,0.15);
+}
+.status-warning {
+  box-shadow: 0 1px 6px rgba(245,158,11,0.15);
+}
+.status-danger {
+  box-shadow: 0 1px 6px rgba(239,68,68,0.15);
+}
+
+/* Row action buttons — bolder */
+.row-btn {
+  padding: 6px 14px;
+  font-size: 12px;
+  border-radius: 8px;
+  transition: all 160ms ease;
+}
+.row-btn-save:hover {
+  box-shadow: 0 3px 10px rgba(22,163,74,0.35);
+  transform: translateY(-1px);
+}
+.row-btn-delete:hover:not(:disabled) {
+  box-shadow: 0 3px 10px rgba(239,68,68,0.35);
+  transform: translateY(-1px);
+}
+
+/* Empty state — more beautiful */
+.empty-inventory-message {
+  padding: 64px 20px;
+}
+.empty-inventory-message h2 {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  margin-bottom: 10px;
+}
+.empty-inventory-message p {
+  font-size: 15px;
+  color: var(--text-3, #94A3B8);
+  line-height: 1.6;
+}
+.empty-cart-image {
+  width: 120px;
+  height: 120px;
+  opacity: 0.35;
+  filter: grayscale(0.3);
+}
+
+/* Popup — glassier, deeper */
+.popup {
+  border-radius: 20px;
+  box-shadow: 0 32px 64px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.04);
+}
+.popup h2 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border, #E2E8F0);
+  margin-bottom: 20px;
+}
+.popup label {
+  font-size: 11px;
+  color: var(--text-2, #475569);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+}
+
+/* Delete confirmation — icon + richer styling */
+.delete-confirmation-popup {
+  border-radius: 20px;
+  box-shadow: 0 32px 64px rgba(0,0,0,0.2), 0 0 0 1px rgba(239,68,68,0.08);
+  padding: 32px;
+  text-align: center;
+}
+.delete-confirmation-popup p {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-1, #0F172A);
+}
+.delete-confirmation-popup p::before {
+  content: '⚠️';
+  display: block;
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+.delete-confirmation-popup button {
+  padding: 11px 24px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.delete-confirmation-popup button:first-child {
+  box-shadow: 0 4px 14px rgba(239,68,68,0.35);
+}
+
+/* Congrats toast — richer */
+.congrats-popup {
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+  border-left-width: 5px;
+}
+.congrats-popup p {
+  font-size: 14px;
+  font-weight: 600;
+}
+.congrats-popup p::before {
+  content: '🎉 ';
+}
+
+/* ══════════════════════════════════════════
    DATEPICKER CALENDAR OVERRIDES
 ══════════════════════════════════════════ */
 .react-datepicker {

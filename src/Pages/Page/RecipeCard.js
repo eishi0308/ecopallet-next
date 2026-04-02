@@ -36,68 +36,64 @@ export const RecipeCard = ({ recipe, finalizeInventory }) => {
 
   return (
     <div className={`recipe-card ${isFlipped ? 'is-flipped' : ''}`} onClick={handleCardFlip}>
-      {/* Front side of the card */}
-      <div className="card-front">
-        {/* Preparation time */}
-        <div className="recipe-minutes">
-          <p style={{ textAlign: "right" }}>
-            Preparation Time (minutes):{" "}
-            {recipe.preparationMinutes !== -1 ? (
-              <span className="recipe-minutes">{recipe.preparationMinutes}</span>
-            ) : (
-              <span className="recipe-minutes">Data not available</span>
-            )}
-          </p>
-        </div>
 
-        {/* Display recipe image */}
+      {/* ── Front face ── */}
+      <div className="card-front">
         <div className="recipe-image-placeholder">
           <img src={recipe.image} alt="Recipe" />
+          {/* Prep time badge over image */}
+          <div className="recipe-minutes">
+            ⏱ {recipe.preparationMinutes !== -1 ? `${recipe.preparationMinutes} min` : 'N/A'}
+          </div>
         </div>
-        {/* Recipe title */}
-        <h2 className="recipe-title">{recipe.title}</h2>
+        <div className="card-front-body">
+          <h2 className="recipe-title">{recipe.title}</h2>
+          <span className="card-flip-hint">Tap to see recipe →</span>
+        </div>
       </div>
 
-      {/* Back side of the card */}
+      {/* ── Back face ── */}
       <div className="card-back">
-        {/* Recipe instructions */}
-        {/* Preparation time */}
-        <div className="recipe-minutes-div">
-          <p className="recipe-minutes" style={{ textAlign: "right" }}>
-            Preparation Time (minutes):{" "}
-            {recipe.preparationMinutes !== -1 ? (
-              <span className="recipe-minutes">{recipe.preparationMinutes}</span>
-            ) : (
-              <span className="recipe-minutes">Data not available</span>
+        <div className="card-back-header">
+          <p className="card-back-title">{recipe.title}</p>
+          <div className="card-back-meta">
+            {recipe.searchedIngredients && (
+              <span className="card-back-tag">🌿 {recipe.searchedIngredients}</span>
             )}
-          </p>
+            {recipe.preparationMinutes !== -1 && (
+              <span className="card-back-tag card-back-tag--time">⏱ {recipe.preparationMinutes} min</span>
+            )}
+          </div>
         </div>
-        {/* Recipe searched ingredients */}
-        <div className="recipe-instructions">Searched Ingredients:</div>
-        <div className="recipe-ingredients">{recipe.searchedIngredients}</div>
-        {/* Recipe instructions */}
-        <div className="recipe-instructions">Instructions:</div>
-        <div className="recipe-ingredients">
-          <ol>
-            {recipe.analyzedInstructions.length > 0 ? recipe.analyzedInstructions[0].steps.map((step, index) => (
-              <li key={index}>{`Step ${index + 1}: ${step.step}`}</li>
-            )) : <li>No instructions available</li>}
-          </ol>
+
+        <div className="card-back-scroll">
+          <div className="recipe-instructions">Instructions</div>
+          <div className="recipe-ingredients">
+            <ol>
+              {recipe.analyzedInstructions.length > 0
+                ? recipe.analyzedInstructions[0].steps.map((step, index) => (
+                    <li key={index}>{step.step}</li>
+                  ))
+                : <li>No instructions available</li>}
+            </ol>
+          </div>
         </div>
-        {/* "I'm cooking this" button */}
-        <button className="cooking-button" onClick={handleCookingClick}>
-          I'm cooking this
-        </button>
+
+        <div className="card-back-footer">
+          <button className="cooking-button" onClick={handleCookingClick}>
+            I'm cooking this
+          </button>
+        </div>
       </div>
 
-      {/* Popup */}
+      {/* ── Confirm popup ── */}
       {showPopup && (
         <div className="rec-popup">
           <div className="rec-popup-content">
-            <p>Do you want to update your inventory to remove the used ingredients?</p>
+            <p>Update your inventory to remove the used ingredients?</p>
             <div className="rec-popup-buttons">
-              <button onClick={handleConfirm}>Yes</button>
-              <button onClick={handleCancel}>No</button>
+              <button onClick={handleConfirm}>Yes, update</button>
+              <button onClick={handleCancel}>No thanks</button>
             </div>
           </div>
         </div>

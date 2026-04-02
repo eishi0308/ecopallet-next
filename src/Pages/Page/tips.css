@@ -513,6 +513,214 @@
 .modal-button:hover { background: var(--accent-dark, #15803D); }
 
 /* ══════════════════════════════════════════
+   PREMIUM ENHANCEMENTS
+══════════════════════════════════════════ */
+
+/* Panel — add top accent stripe */
+.tips-panel {
+  position: relative;
+  overflow: hidden;
+}
+.tips-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #16A34A, #059669, #0d9488);
+  border-radius: 20px 20px 0 0;
+}
+
+/* Hero — add shimmer overlay */
+.tips-hero {
+  position: relative;
+}
+.tips-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: -40px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Category cards — color-coded per category */
+.category-tip-wrap:nth-child(1) .category-tip-item {
+  border-color: rgba(239,68,68,0.3);
+  box-shadow: 0 2px 12px rgba(239,68,68,0.1);
+}
+.category-tip-wrap:nth-child(1) .category-tip-item:hover {
+  box-shadow: 0 12px 32px rgba(239,68,68,0.2);
+  border-color: rgba(239,68,68,0.5);
+}
+.category-tip-wrap:nth-child(1) .category-tip-label { color: #DC2626; font-weight: 700; }
+
+.category-tip-wrap:nth-child(2) .category-tip-item {
+  border-color: rgba(251,146,60,0.3);
+  box-shadow: 0 2px 12px rgba(251,146,60,0.1);
+}
+.category-tip-wrap:nth-child(2) .category-tip-item:hover {
+  box-shadow: 0 12px 32px rgba(251,146,60,0.22);
+  border-color: rgba(251,146,60,0.5);
+}
+.category-tip-wrap:nth-child(2) .category-tip-label { color: #EA580C; font-weight: 700; }
+
+.category-tip-wrap:nth-child(3) .category-tip-item {
+  border-color: rgba(22,163,74,0.3);
+  box-shadow: 0 2px 12px rgba(22,163,74,0.1);
+}
+.category-tip-wrap:nth-child(3) .category-tip-item:hover {
+  box-shadow: 0 12px 32px rgba(22,163,74,0.22);
+  border-color: rgba(22,163,74,0.5);
+}
+.category-tip-wrap:nth-child(3) .category-tip-label { color: #15803D; font-weight: 700; }
+
+.category-tip-wrap:nth-child(4) .category-tip-item {
+  border-color: rgba(59,130,246,0.3);
+  box-shadow: 0 2px 12px rgba(59,130,246,0.1);
+}
+.category-tip-wrap:nth-child(4) .category-tip-item:hover {
+  box-shadow: 0 12px 32px rgba(59,130,246,0.22);
+  border-color: rgba(59,130,246,0.5);
+}
+.category-tip-wrap:nth-child(4) .category-tip-label { color: #1D4ED8; font-weight: 700; }
+
+.category-tip-wrap:nth-child(5) .category-tip-item {
+  border-color: rgba(234,179,8,0.3);
+  box-shadow: 0 2px 12px rgba(234,179,8,0.1);
+}
+.category-tip-wrap:nth-child(5) .category-tip-item:hover {
+  box-shadow: 0 12px 32px rgba(234,179,8,0.22);
+  border-color: rgba(234,179,8,0.5);
+}
+.category-tip-wrap:nth-child(5) .category-tip-label { color: #B45309; font-weight: 700; }
+
+.category-tip-wrap:nth-child(6) .category-tip-item {
+  border-color: rgba(139,92,246,0.3);
+  box-shadow: 0 2px 12px rgba(139,92,246,0.1);
+}
+.category-tip-wrap:nth-child(6) .category-tip-item:hover {
+  box-shadow: 0 12px 32px rgba(139,92,246,0.22);
+  border-color: rgba(139,92,246,0.5);
+}
+.category-tip-wrap:nth-child(6) .category-tip-label { color: #7C3AED; font-weight: 700; }
+
+/* Category cards — bigger, more impactful */
+.category-tip-item {
+  aspect-ratio: 2/3;
+  border-radius: 18px;
+}
+.category-tip-item:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+
+/* Inventory pills — more visual depth */
+.inventory-item-button {
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  font-size: 13px;
+  padding: 9px 18px;
+  transition: all 180ms ease;
+}
+.inventory-item-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(22,163,74,0.18);
+}
+.inventory-item-button.selected {
+  box-shadow: 0 4px 16px rgba(22,163,74,0.35);
+  transform: translateY(-1px);
+}
+
+/* Search panel — more premium gradient */
+.tips-search-panel {
+  background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 50%, #F7FEE7 100%);
+  border-color: rgba(22,163,74,0.25);
+  box-shadow: 0 4px 24px rgba(22,163,74,0.08);
+}
+.tips-search-panel::before { background: linear-gradient(90deg, #16A34A, #059669); }
+
+/* Search area — bigger, bolder */
+.tips-search-area input[type="text"] {
+  width: 480px;
+  font-size: 16px;
+  padding: 15px 22px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  border-radius: 14px;
+}
+.tips-search-button {
+  padding: 15px 32px;
+  font-size: 15px;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(22,163,74,0.4);
+}
+
+/* Results — left sidebar gets color accent */
+.tips-result-item {
+  border-radius: 12px;
+  transition: all 160ms ease;
+  position: relative;
+  overflow: hidden;
+}
+.tips-result-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--accent, #16A34A);
+  opacity: 0;
+  transition: opacity 160ms ease;
+  border-radius: 0 2px 2px 0;
+}
+.tips-result-item:hover::before,
+.tips-result-item.selected::before { opacity: 1; }
+.tips-result-item:hover { transform: translateX(4px); padding-left: 20px; }
+.tips-result-item.selected { padding-left: 20px; }
+
+/* Tip content sections — colored left border */
+.tips-section {
+  padding: 18px 0;
+  position: relative;
+  padding-left: 16px;
+  border-left: 3px solid var(--border, #E2E8F0);
+  border-bottom: 1px solid var(--border, #E2E8F0);
+  margin-left: 4px;
+  transition: border-color 200ms;
+  animation: fadeSlideIn 250ms ease both;
+}
+.tips-section:nth-child(1) { border-left-color: #16A34A; animation-delay: 0ms; }
+.tips-section:nth-child(2) { border-left-color: #3B82F6; animation-delay: 50ms; }
+.tips-section:nth-child(3) { border-left-color: #F59E0B; animation-delay: 100ms; }
+.tips-section:nth-child(4) { border-left-color: #8B5CF6; animation-delay: 150ms; }
+.tips-section:last-child { border-bottom: none; }
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.tips-section h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.tips-section p {
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+/* Final content panel — slightly warmer bg */
+.tips-final-content {
+  background: linear-gradient(145deg, #fff 0%, #FAFCFF 100%);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  padding: 28px 32px;
+}
+
+/* Tips initial placeholder — more polished */
+.tips-initial-placeholder {
+  background: linear-gradient(145deg, #F8FAFC, #F1F5F9);
+  border-radius: 18px;
+}
+.tips-placeholder-icon { font-size: 2.5rem; opacity: 0.35; }
+
+/* ══════════════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════════════ */
 @media (max-width: 1024px) {

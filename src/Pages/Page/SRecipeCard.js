@@ -8,12 +8,12 @@ export const SRecipeCard = ({ recipe }) => {
       <div className="srecipe-card" onClick={() => setIsPopupOpen(true)}>
         <div className="srecipe-img-wrap">
           <img src={recipe.image} alt={recipe.title} />
-        </div>
-        <div className="srecipe-info">
-          <p className="srecipe-title">{recipe.title}</p>
           {recipe.preparationMinutes > 0 && (
             <span className="srecipe-time">⏱ {recipe.preparationMinutes} min</span>
           )}
+        </div>
+        <div className="srecipe-info">
+          <p className="srecipe-title">{recipe.title}</p>
         </div>
       </div>
 
@@ -22,25 +22,27 @@ export const SRecipeCard = ({ recipe }) => {
           <div className="srec-modal" onClick={e => e.stopPropagation()}>
             <button className="srec-modal-close" onClick={() => setIsPopupOpen(false)}>×</button>
             <img src={recipe.image} alt={recipe.title} className="srec-modal-img" />
-            <h3 className="srec-modal-title">{recipe.title}</h3>
-            <div className="srec-modal-meta">
-              {recipe.searchedIngredients && (
-                <span className="srec-modal-tag">🌿 {recipe.searchedIngredients}</span>
-              )}
-              {recipe.preparationMinutes > 0 && (
-                <span className="srec-modal-tag">⏱ {recipe.preparationMinutes} min</span>
-              )}
+            <div className="srec-modal-body">
+              <h3 className="srec-modal-title">{recipe.title}</h3>
+              <div className="srec-modal-meta">
+                {recipe.searchedIngredients && (
+                  <span className="srec-modal-tag">🌿 {recipe.searchedIngredients}</span>
+                )}
+                {recipe.preparationMinutes > 0 && (
+                  <span className="srec-modal-tag">⏱ {recipe.preparationMinutes} min</span>
+                )}
+              </div>
+              <p className="srec-modal-section-label">Instructions</p>
+              <ol className="srec-modal-steps">
+                {recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0 ? (
+                  recipe.analyzedInstructions[0].steps.map((step, index) => (
+                    <li key={index}>{step.step}</li>
+                  ))
+                ) : (
+                  <li>No instructions available</li>
+                )}
+              </ol>
             </div>
-            <p className="srec-modal-section-label">Instructions</p>
-            <ol className="srec-modal-steps">
-              {recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0 ? (
-                recipe.analyzedInstructions[0].steps.map((step, index) => (
-                  <li key={index}>{step.step}</li>
-                ))
-              ) : (
-                <li>No instructions available</li>
-              )}
-            </ol>
           </div>
         </div>
       )}
