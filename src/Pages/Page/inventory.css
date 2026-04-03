@@ -1025,15 +1025,21 @@ header { display: none; }
 .react-datepicker__day--selected { background: var(--accent, #16A34A) !important; color: #fff; }
 .react-datepicker__day--today { font-weight: 800; }
 .react-datepicker__day--disabled { color: var(--text-3); }
+.react-datepicker-popper { z-index: 9999 !important; }
 
 /* ══════════════════════════════════════════
    DASHBOARD — Spending Analytics
 ══════════════════════════════════════════ */
+#dashboard-section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
 .dash {
-  margin: 40px 40px 0;
-  max-width: calc(1280px - 80px);
-  font-family: 'Inter', -apple-system, sans-serif;
+  margin-top: 40px;
   padding-bottom: 64px;
+  font-family: 'Inter', -apple-system, sans-serif;
 }
 
 /* ── Dashboard header ── */
@@ -1366,7 +1372,8 @@ header { display: none; }
 }
 @media (max-width: 900px) {
   .App { padding: 24px 20px 40px; }
-  .dash { margin: 32px 20px 0; }
+  #dashboard-section { padding: 0 20px; }
+  .dash { margin-top: 32px; }
   .inv-stats-row { flex-wrap: wrap; }
   .inv-toolbar { flex-wrap: wrap; }
   .inventory-table-container table { table-layout: auto; }
@@ -1375,7 +1382,8 @@ header { display: none; }
 }
 @media (max-width: 640px) {
   .App { padding: 16px 12px 32px; }
-  .dash { margin: 24px 12px 0; }
+  #dashboard-section { padding: 0 12px; }
+  .dash { margin-top: 24px; padding-bottom: 32px; }
   .inv-page-header { flex-direction: column; align-items: flex-start; }
   .inv-stats-row .inv-stat-card { flex: 1; min-width: 80px; }
   .inv-action-btn { font-size: 12px; padding: 8px 14px; }
@@ -1384,4 +1392,143 @@ header { display: none; }
   /* Hide price column on mobile */
   .inventory-table-container table th:nth-child(5),
   .inventory-table-container table td:nth-child(5) { display: none; }
+}
+
+/* ══════════════════════════════════════════
+   EXPIRED ITEMS MODAL
+══════════════════════════════════════════ */
+.expired-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 1100;
+}
+.expired-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1101;
+  background: var(--surface, #fff);
+  border-radius: 20px;
+  padding: 32px 28px 28px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.expired-modal-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+.expired-modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-1, #0F172A);
+  margin: 0 0 6px;
+}
+.expired-modal-subtitle {
+  font-size: 14px;
+  color: var(--text-2, #475569);
+  margin: 0 0 20px;
+}
+.expired-modal-list {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.expired-modal-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+.expired-modal-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1, #0F172A);
+}
+.expired-modal-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: #DC2626;
+  background: #FEE2E2;
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+.expired-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+.expired-modal-btn-delete {
+  background: #DC2626;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 13px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, sans-serif;
+  cursor: pointer;
+  transition: background 150ms, transform 150ms;
+}
+.expired-modal-btn-delete:hover {
+  background: #B91C1C;
+  transform: translateY(-1px);
+}
+.expired-modal-btn-keep {
+  background: var(--surface-2, #F1F5F9);
+  color: var(--text-2, #475569);
+  border: 1px solid var(--border, #E2E8F0);
+  border-radius: 12px;
+  padding: 13px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Inter', -apple-system, sans-serif;
+  cursor: pointer;
+  transition: background 150ms;
+}
+.expired-modal-btn-keep:hover {
+  background: var(--border, #E2E8F0);
+}
+
+/* ══════════════════════════════════════════
+   TOAST NOTIFICATION
+══════════════════════════════════════════ */
+.inv-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1200;
+  background: #0F172A;
+  color: #fff;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px 22px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  animation: toastIn 200ms ease;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }

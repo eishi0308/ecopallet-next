@@ -193,6 +193,8 @@ const InventoryList = ({ inventory, onEdit, onDelete, togglePopup, onEditingItem
                         onChange={handleDateChange}
                         dateFormat="dd MMM yyyy"
                         className="date-picker edit-date-picker"
+                        popperPlacement="bottom-start"
+                        portalId="root"
                       />
                     : item.expiryDate}
                 </td>

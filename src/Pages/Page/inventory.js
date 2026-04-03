@@ -80,6 +80,9 @@ export function Maininventory() {
   );
   const [editingItem, setEditingItem] = useState(null);
   const [showStatusModal, setShowStatusModal] = useState(false);
+  const [showExpiredModal, setShowExpiredModal] = useState(false);
+  const [expiredItemsList, setExpiredItemsList] = useState([]);
+  const [toastMsg, setToastMsg] = useState('');
 
   const handleEditingItemChange = (itemId) => setEditingItem(itemId);
 
@@ -152,29 +155,40 @@ export function Maininventory() {
   useEffect(() => {
     const expired = inventory.filter(item => calculateStatus(item.expiryDate).color === 'red');
     if (expired.length > 0 && !confirmationShown) {
-      if (window.confirm('Some items have expired. Delete them?')) {
-        // All auto-deleted expired items → wasted (they're expired by definition)
-        const newEntries = expired.map(item => ({
-          id: Date.now() + Math.random(),
-          name: item.name.split(' - ')[0],
-          amount: item.amount,
-          spent: parseFloat(item.spent) || 0,
-          category: 'wasted',
-          deletedAt: new Date().toISOString(),
-        }));
-        const newHistory = [...deletionHistory, ...newEntries];
-        setDeletionHistory(newHistory);
-        localStorage.setItem('deletionHistory', JSON.stringify(newHistory));
-        const updated = inventory.filter(item => !expired.includes(item));
-        setInventory(updated);
-        localStorage.setItem('inventory', JSON.stringify(updated));
-        alert('Expired items deleted.');
-      } else {
-        alert('Deletion canceled.');
-      }
+      setExpiredItemsList(expired);
+      setShowExpiredModal(true);
       setConfirmationShown(true);
     }
   }, [inventory, confirmationShown]);
+
+  const showToast = (msg) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(''), 3000);
+  };
+
+  const handleDeleteExpired = () => {
+    const newEntries = expiredItemsList.map(item => ({
+      id: Date.now() + Math.random(),
+      name: item.name.split(' - ')[0],
+      amount: item.amount,
+      spent: parseFloat(item.spent) || 0,
+      category: 'wasted',
+      deletedAt: new Date().toISOString(),
+    }));
+    const newHistory = [...deletionHistory, ...newEntries];
+    setDeletionHistory(newHistory);
+    localStorage.setItem('deletionHistory', JSON.stringify(newHistory));
+    const updated = inventory.filter(item => !expiredItemsList.includes(item));
+    setInventory(updated);
+    localStorage.setItem('inventory', JSON.stringify(updated));
+    setShowExpiredModal(false);
+    showToast(`${expiredItemsList.length} expired item${expiredItemsList.length > 1 ? 's' : ''} removed.`);
+  };
+
+  const handleKeepExpired = () => {
+    setShowExpiredModal(false);
+    showToast('Expired items kept. You can remove them manually anytime.');
+  };
 
   const handleDeleteItem = (id) => {
     const item = inventory.find(i => i.id === id);
@@ -566,6 +580,44 @@ export function Maininventory() {
           <Dashboard inventory={inventory} deletionHistory={deletionHistory} />
         </div>
       </div>
+
+      {/* ── Expired Items Modal ── */}
+      {showExpiredModal && (
+        <>
+          <div className="expired-modal-overlay" onClick={handleKeepExpired} />
+          <div className="expired-modal">
+            <div className="expired-modal-icon">⚠️</div>
+            <h2 className="expired-modal-title">Expired Items Found</h2>
+            <p className="expired-modal-subtitle">
+              {expiredItemsList.length} item{expiredItemsList.length > 1 ? 's have' : ' has'} passed their expiry date.
+            </p>
+            <ul className="expired-modal-list">
+              {expiredItemsList.map(item => {
+                const status = calculateStatus(item.expiryDate);
+                return (
+                  <li key={item.id} className="expired-modal-item">
+                    <span className="expired-modal-name">{item.name.split(' - ')[0]}</span>
+                    <span className="expired-modal-badge">{status.message}</span>
+                  </li>
+                );
+              })}
+            </ul>
+            <div className="expired-modal-actions">
+              <button className="expired-modal-btn-delete" onClick={handleDeleteExpired}>
+                🗑 Delete All Expired
+              </button>
+              <button className="expired-modal-btn-keep" onClick={handleKeepExpired}>
+                Keep for Now
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* ── Toast notification ── */}
+      {toastMsg && (
+        <div className="inv-toast">{toastMsg}</div>
+      )}
     </div>
   );
 }
