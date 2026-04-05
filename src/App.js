@@ -5,7 +5,6 @@ import { Landing } from "./landing";
 import { Maininventory } from "./Pages/Page/inventory";
 import { Recipes } from "./Pages/Page/recipes";
 import { Tips } from "./Pages/Page/tips";
-import { Knowledge } from "./Pages/Page/knowledge";
 import { Recycling } from "./Pages/Page/recycling";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -39,15 +38,6 @@ function App() {
           element={
             <div style={{ width: "100%", height: "100%" }}>
               <Tips />
-            </div>
-          }
-        />
-
-        <Route
-          path="/knowledge"
-          element={
-            <div style={{ width: "100%", height: "100%" }}>
-              <Knowledge />
             </div>
           }
         />
