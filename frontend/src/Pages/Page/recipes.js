@@ -8,6 +8,8 @@ import { RecipeCard } from './RecipeCard';
 import { SRecipeCard } from './SRecipeCard';
 import { calculateStatus } from './calculateStatus';
 
+const BACKEND_URL = 'http://localhost:8000';
+
 // Recipes Component:
 export const Recipes = () => {
   const [input, setInput] = useState('');
@@ -15,7 +17,6 @@ export const Recipes = () => {
   const [srecipes, setsRecipes] = useState([]);
   const [inventory, setInventory] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [pyodideLoaded, setPyodideLoaded] = useState(false);
   const [displayedInventory, setDisplayedInventory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const recipesPerPage = 4;
@@ -30,6 +31,7 @@ export const Recipes = () => {
 
   const handleInputChange = (value) => setInput(value);
 
+  // Load inventory from localStorage on mount
   useEffect(() => {
     try {
       const storedInventory = localStorage.getItem('inventory');
@@ -47,21 +49,7 @@ export const Recipes = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/pyodide/v0.21.2/full/pyodide.js';
-    script.async = true;
-    script.onload = async () => {
-      window.languagePluginUrl = 'https://cdn.jsdelivr.net/pyodide/v0.21.2/full/';
-      window.pyodide = await window.loadPyodide({
-        indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.21.2/full/',
-      });
-      setPyodideLoaded(true);
-    };
-    document.body.appendChild(script);
-    return () => { document.body.removeChild(script); };
-  }, []);
-
+  // Scroll to results when manual search recipes load
   useEffect(() => {
     if (recipes.length > 0) {
       window.scrollTo({
@@ -71,57 +59,25 @@ export const Recipes = () => {
     }
   }, [recipes]);
 
-  const fetchWithBackoff = async (url, options, delay) => {
-    const maxRetries = 3;
-    let retries = 0;
-    while (retries < maxRetries) {
-      try {
-        return await fetch(url, options);
-      } catch (error) {
-        if (error.name !== 'AbortError' && retries === maxRetries - 1) throw error;
-        await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, retries)));
-        retries++;
-      }
-    }
-  };
-
+  // Call backend: find recipes by ingredients string
   const fetchRecipes = async (ingredientsString = '') => {
-    if (!pyodideLoaded) return;
-    let ingredients = ingredientsString.trim() !== ''
-      ? ingredientsString.split(',')
-      : selectedItems;
+    const ingredients = ingredientsString.trim() !== ''
+      ? ingredientsString.split(',').map(i => i.trim()).join(',')
+      : selectedItems.join(',');
 
-    const baseUrl = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients";
-    const apiKey = "c28caa21ebmshad90569c94c63b6p1bed38jsn8049f9342f0f";
-    const queryParams = new URLSearchParams({ ingredients: ingredients.join(','), number: 15, ranking: 1, ignorePantry: true });
-    const url = `${baseUrl}?${queryParams}`;
-    const options = { method: 'GET', headers: { "X-RapidAPI-Key": apiKey, "X-RapidAPI-Host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com" } };
-
-    try {
-      const response = await fetchWithBackoff(url, options, 1000);
-      if (!response.ok) throw new Error(response.status === 429 ? 'Too many requests' : 'Failed to fetch data');
-      return await response.json();
-    } catch (error) {
-      console.error("Error fetching recipes:", error.message);
-      throw error;
-    }
+    const response = await fetch(`${BACKEND_URL}/recipes?ingredients=${encodeURIComponent(ingredients)}&number=15`);
+    if (!response.ok) throw new Error(response.status === 429 ? 'Too many requests' : 'Failed to fetch recipes');
+    return response.json();
   };
 
+  // Call backend: get full details for one recipe
   const fetchRecipeDetails = async (recipeId) => {
-    if (!pyodideLoaded) return;
-    const baseUrl = `https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/${recipeId}/information`;
-    const apiKey = "c28caa21ebmshad90569c94c63b6p1bed38jsn8049f9342f0f";
-    const options = { method: 'GET', headers: { "X-RapidAPI-Key": apiKey, "X-RapidAPI-Host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com" } };
-    try {
-      const response = await fetchWithBackoff(baseUrl, options, 1000);
-      if (!response.ok) throw new Error(response.status === 429 ? 'Too many requests' : 'Failed to fetch data');
-      return await response.json();
-    } catch (error) {
-      console.error("Error fetching recipe details:", error.message);
-      throw error;
-    }
+    const response = await fetch(`${BACKEND_URL}/recipes/${recipeId}`);
+    if (!response.ok) throw new Error(response.status === 429 ? 'Too many requests' : 'Failed to fetch recipe details');
+    return response.json();
   };
 
+  // Manual search triggered by user clicking "Generate"
   const handleFetchRecipes = async () => {
     try {
       const result = await fetchRecipes();
@@ -182,6 +138,7 @@ export const Recipes = () => {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Auto-fetch recipes from top 3 soonest-expiring inventory items
   useEffect(() => {
     const fetchRecipesFromInventory = async () => {
       try {
@@ -202,8 +159,8 @@ export const Recipes = () => {
       }
     };
 
-    if (pyodideLoaded) fetchRecipesFromInventory();
-  }, [inventory, pyodideLoaded]);
+    if (inventory.length > 0) fetchRecipesFromInventory();
+  }, [inventory]);
 
   const expiringIngredients = srecipes.length > 0
     ? srecipes[0].searchedIngredients.split(',').map(s => s.trim()).filter(Boolean)
