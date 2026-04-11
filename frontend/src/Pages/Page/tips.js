@@ -53,39 +53,46 @@ const ErrorModal = ({ isOpen, onClose }) => {
 const TipsContent = ({ selectedResult }) => {
   if (!selectedResult) return null;
 
-  // Split using line breaks
   const sections = selectedResult.Tips.split(/\n/);
+
+  const getCardMeta = (title) => {
+    const t = title.toLowerCase();
+    if (t.includes('pantry'))      return { icon: '🏺', color: '#F59E0B', bg: '#FFFBEB', border: '#FDE68A', logo: pantryLogo };
+    if (t.includes('freezer'))     return { icon: '❄️', color: '#3B82F6', bg: '#EFF6FF', border: '#BFDBFE', logo: freezerLogo };
+    if (t.includes('refrigerat'))  return { icon: '🧊', color: '#06B6D4', bg: '#ECFEFF', border: '#A5F3FC', logo: refrigeratorLogo };
+    return                                { icon: '💡', color: '#8B5CF6', bg: '#F5F3FF', border: '#DDD6FE', logo: additionalLogo };
+  };
 
   return (
     <div className="tips-final-content">
-      {sections.map((section, index) => {
-        // Cutting titles and content
-        const splitIndex = section.indexOf(':');
-        const title = section.substring(0, splitIndex).trim();
-        const content = section.substring(splitIndex + 1).trim();
+      <div className="tips-result-header">
+        <h3 className="tips-result-food-name">{selectedResult.Name}</h3>
+        <span className="tips-result-food-category">{selectedResult.Category_Name}</span>
+      </div>
+      <div className="tips-cards-grid">
+        {sections.map((section, index) => {
+          const splitIndex = section.indexOf(':');
+          if (splitIndex === -1) return null;
+          const title = section.substring(0, splitIndex).trim();
+          const content = section.substring(splitIndex + 1).trim();
+          const { icon, color, bg, border, logo } = getCardMeta(title);
 
-        // Determine the logo based on the title
-        let logo;
-        if (title.toLowerCase().includes('pantry')) {
-          logo = pantryLogo;
-        } else if (title.toLowerCase().includes('freezer')) {
-          logo = freezerLogo;
-        } else if (title.toLowerCase().includes('refrigerat')) {
-          logo = refrigeratorLogo;
-        } else {
-          logo = additionalLogo;
-        }
-
-        return (
-          <div key={index} className="tips-section">
-            <h4>
-              {title}
-              <img src={logo} alt={`${title} logo`} className="title-logo" />
-            </h4>
-            <p>{content}</p>
-          </div>
-        );
-      })}
+          return (
+            <div key={index} className="tips-card" style={{ '--card-color': color, '--card-bg': bg, '--card-border': border }}>
+              <div className="tips-card-header">
+                <div className="tips-card-icon-wrap">
+                  <img src={logo} alt={title} className="tips-card-logo" />
+                </div>
+                <div className="tips-card-title-row">
+                  <span className="tips-card-emoji">{icon}</span>
+                  <h4 className="tips-card-title">{title}</h4>
+                </div>
+              </div>
+              <p className="tips-card-body">{content}</p>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

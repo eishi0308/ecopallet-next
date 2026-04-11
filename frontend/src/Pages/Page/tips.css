@@ -375,30 +375,114 @@
   margin: 0;
 }
 
-/* ── Tip content sections ── */
-.tips-section {
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border, #E2E8F0);
-}
-.tips-section:last-child { border-bottom: none; }
-
-.tips-section h4 {
+/* ── Tip result header ── */
+.tips-result-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-family: 'Inter', -apple-system, sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--text-1, #0F172A);
-  margin: 0 0 8px;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
 }
-.title-logo { height: 1.4em; object-fit: contain; }
+.tips-result-food-name {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-1, #0F172A);
+  margin: 0;
+  letter-spacing: -0.4px;
+}
+.tips-result-food-category {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent, #16A34A);
+  background: var(--accent-light, #F0FDF4);
+  border: 1px solid var(--accent-border, #BBF7D0);
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
 
-.tips-section p {
+/* ── Tips cards grid ── */
+.tips-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tips-card {
+  background: var(--card-bg, #F8FAFC);
+  border: 1.5px solid var(--card-border, #E2E8F0);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+  animation: fadeSlideIn 300ms ease both;
+  position: relative;
+  overflow: hidden;
+}
+.tips-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--card-color, #16A34A);
+  border-radius: 16px 16px 0 0;
+}
+.tips-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+}
+.tips-card:nth-child(1) { animation-delay: 0ms; }
+.tips-card:nth-child(2) { animation-delay: 60ms; }
+.tips-card:nth-child(3) { animation-delay: 120ms; }
+.tips-card:nth-child(4) { animation-delay: 180ms; }
+
+.tips-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tips-card-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.8);
+  border: 1px solid var(--card-border, #E2E8F0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.tips-card-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+.tips-card-title-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tips-card-emoji {
+  font-size: 12px;
+  line-height: 1;
+}
+.tips-card-title {
   font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--card-color, #0F172A);
+  margin: 0;
+  line-height: 1.2;
+}
+.tips-card-body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 13.5px;
   color: var(--text-2, #475569);
-  line-height: 1.7;
+  line-height: 1.75;
   margin: 0;
 }
 
@@ -674,35 +758,9 @@
 .tips-result-item:hover { transform: translateX(4px); padding-left: 20px; }
 .tips-result-item.selected { padding-left: 20px; }
 
-/* Tip content sections — colored left border */
-.tips-section {
-  padding: 18px 0;
-  position: relative;
-  padding-left: 16px;
-  border-left: 3px solid var(--border, #E2E8F0);
-  border-bottom: 1px solid var(--border, #E2E8F0);
-  margin-left: 4px;
-  transition: border-color 200ms;
-  animation: fadeSlideIn 250ms ease both;
-}
-.tips-section:nth-child(1) { border-left-color: #16A34A; animation-delay: 0ms; }
-.tips-section:nth-child(2) { border-left-color: #3B82F6; animation-delay: 50ms; }
-.tips-section:nth-child(3) { border-left-color: #F59E0B; animation-delay: 100ms; }
-.tips-section:nth-child(4) { border-left-color: #8B5CF6; animation-delay: 150ms; }
-.tips-section:last-child { border-bottom: none; }
 @keyframes fadeSlideIn {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
-}
-
-.tips-section h4 {
-  font-size: 15px;
-  font-weight: 700;
-  margin: 0 0 8px;
-}
-.tips-section p {
-  font-size: 14px;
-  line-height: 1.75;
 }
 
 /* Final content panel — slightly warmer bg */
