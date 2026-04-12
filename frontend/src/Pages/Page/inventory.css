@@ -266,19 +266,28 @@ header { display: none; }
 
 .inventory-table-container tr:last-child td { border-bottom: none; }
 
-/* Row status — left accent bar via box-shadow on first td */
-.inventory-table-container tbody tr.row-status-danger td:first-child { box-shadow: inset 3px 0 0 #EF4444; }
-.inventory-table-container tbody tr.row-status-warning td:first-child { box-shadow: inset 3px 0 0 #F59E0B; }
-.inventory-table-container tbody tr.row-status-safe td:first-child { box-shadow: inset 3px 0 0 #16A34A; }
+/* Row status — bold left accent bar + background tint */
+.inventory-table-container tbody tr.row-status-danger td:first-child {
+  box-shadow: inset 8px 0 0 #EF4444, inset 9px 0 0 rgba(239,68,68,0.2);
+}
+.inventory-table-container tbody tr.row-status-warning td:first-child {
+  box-shadow: inset 8px 0 0 #F59E0B, inset 9px 0 0 rgba(245,158,11,0.2);
+}
+.inventory-table-container tbody tr.row-status-safe td:first-child {
+  box-shadow: inset 8px 0 0 #16A34A, inset 9px 0 0 rgba(22,163,74,0.2);
+}
+
+.inventory-table-container tbody tr.row-status-danger td { background-color: rgba(239, 68, 68, 0.18); }
+.inventory-table-container tbody tr.row-status-warning td { background-color: rgba(245, 158, 11, 0.18); }
+.inventory-table-container tbody tr.row-status-safe td { background-color: rgba(22, 163, 74, 0.15); }
 
 /* Row hover */
 .inventory-table-container tbody tr { transition: background 120ms ease; }
-.inventory-table-container tbody tr:hover td { background: #F8FAFC; }
+.inventory-table-container tbody tr:hover td { filter: brightness(0.97); }
 .inventory-table-container tbody tr:hover td:first-child { padding-left: 19px; }
 
-/* Row action buttons — hidden until row hover */
-.inventory-table-container tbody tr .row-actions { opacity: 0.3; transition: opacity 150ms ease; }
-.inventory-table-container tbody tr:hover .row-actions { opacity: 1; }
+/* Row action buttons — always visible */
+.inventory-table-container tbody tr .row-actions { opacity: 1; }
 .inventory-table-container tbody tr.row-editing .row-actions { opacity: 1; }
 
 .inventory-table-container tbody tr.row-editing td { background: var(--accent-light, #F0FDF4); }
