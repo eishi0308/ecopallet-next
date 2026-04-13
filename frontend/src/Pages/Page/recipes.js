@@ -8,7 +8,7 @@ import { RecipeCard } from './RecipeCard';
 import { SRecipeCard } from './SRecipeCard';
 import { calculateStatus } from './calculateStatus';
 
-const BACKEND_URL = 'http://localhost:8000';
+const BACKEND_URL = 'https://ecopallet-next.onrender.com';
 
 // Recipes Component:
 export const Recipes = () => {
