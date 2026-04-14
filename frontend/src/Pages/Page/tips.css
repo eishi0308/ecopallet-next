@@ -220,10 +220,9 @@
 }
 
 .item-text {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 160px;
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
 }
 
 /* ══════════════════════════════════════════
