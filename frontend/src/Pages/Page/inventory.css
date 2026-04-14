@@ -249,11 +249,11 @@ header { display: none; }
   white-space: nowrap;
 }
 
+
 /* ── FIXED ROW HEIGHT — key fix for edit mode ── */
 .inventory-table-container td {
-  /* height acts as min-height; vertical padding removed so inputs control the space */
-  height: 56px;
-  padding: 0 16px;
+  min-height: 56px;
+  padding: 10px 16px;
   vertical-align: middle;
   font-size: 14px;
   color: var(--text-1, #0F172A);
@@ -262,6 +262,15 @@ header { display: none; }
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+/* Name column — wrap full text */
+.inventory-table-container td:nth-child(1) {
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.4;
+  overflow: visible;
+  text-overflow: unset;
 }
 
 .inventory-table-container tr:last-child td { border-bottom: none; }
@@ -292,19 +301,19 @@ header { display: none; }
 
 .inventory-table-container tbody tr.row-editing td { background: var(--accent-light, #F0FDF4); }
 
-/* Column widths */
+/* Column widths — Name is wide, Actions pinned to right */
 .inventory-table-container table th:nth-child(1),
-.inventory-table-container table td:nth-child(1) { width: 22%; }
+.inventory-table-container table td:nth-child(1) { width: 35%; }
 .inventory-table-container table th:nth-child(2),
-.inventory-table-container table td:nth-child(2) { width: 7%; }
+.inventory-table-container table td:nth-child(2) { width: 6%; }
 .inventory-table-container table th:nth-child(3),
-.inventory-table-container table td:nth-child(3) { width: 16%; }
+.inventory-table-container table td:nth-child(3) { width: 13%; }
 .inventory-table-container table th:nth-child(4),
-.inventory-table-container table td:nth-child(4) { width: 16%; }
+.inventory-table-container table td:nth-child(4) { width: 13%; }
 .inventory-table-container table th:nth-child(5),
-.inventory-table-container table td:nth-child(5) { width: 10%; }
+.inventory-table-container table td:nth-child(5) { width: 9%; }
 .inventory-table-container table th:nth-child(6),
-.inventory-table-container table td:nth-child(6) { width: 29%; overflow: visible; }
+.inventory-table-container table td:nth-child(6) { width: 24%; overflow: visible; }
 
 /* ── Edit inputs — MUST fit inside 56px row ── */
 .edit-cell-input {

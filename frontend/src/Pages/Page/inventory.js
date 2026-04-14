@@ -47,6 +47,11 @@ export function Maininventory() {
   const [showScanReceiptPopup, setShowScanReceiptPopup] = useState(false);
   const [showScanProducePopup, setShowScanProducePopup] = useState(false);
   const [showScanPackagePopup, setShowScanPackagePopup] = useState(false);
+  const [showPdfReceiptPopup, setShowPdfReceiptPopup] = useState(false);
+  const [pdfFile, setPdfFile] = useState(null);
+  const [pdfItems, setPdfItems] = useState([]);
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const [pdfError, setPdfError] = useState('');
   const [expiryPlaceholder, setExpiryPlaceholder] = useState(new Date());
   const [newItem, setNewItem] = useState({ name: '', amount: '', spent: '', expiryDate: '', status: '' });
   const [nextItemId, setNextItemId] = useState(inventory.length + 1);
@@ -213,12 +218,16 @@ export function Maininventory() {
     }
   };
 
-  const isPopupActive = showAddPopup || showScanReceiptPopup || showScanProducePopup || showScanPackagePopup;
+  const isPopupActive = showAddPopup || showScanReceiptPopup || showScanProducePopup || showScanPackagePopup || showPdfReceiptPopup;
   const closeAllPopups = () => {
     setShowAddPopup(false);
     setShowScanReceiptPopup(false);
     setShowScanProducePopup(false);
     setShowScanPackagePopup(false);
+    setShowPdfReceiptPopup(false);
+    setPdfItems([]);
+    setPdfFile(null);
+    setPdfError('');
   };
 
   const scrollToDashboard = () => {
@@ -384,6 +393,51 @@ export function Maininventory() {
     }
   };
 
+  const handlePdfUpload = async (e) => {
+    e.preventDefault();
+    if (!pdfFile) { setPdfError('Please select a PDF file.'); return; }
+    setPdfLoading(true);
+    setPdfError('');
+    const formData = new FormData();
+    formData.append('file', pdfFile);
+    try {
+      const response = await fetch('http://localhost:8000/ereceipt', { method: 'POST', body: formData });
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.detail || 'Failed to parse receipt');
+      }
+      const data = await response.json();
+      setPdfItems(data.items.map(item => ({ ...item, expiryDate: item.expiry_date })));
+    } catch (error) {
+      setPdfError(error.message || 'Something went wrong. Please try again.');
+    } finally {
+      setPdfLoading(false);
+    }
+  };
+
+  const handlePdfItemChange = (index, field, value) => {
+    setPdfItems(prev => prev.map((item, i) => i === index ? { ...item, [field]: value } : item));
+  };
+
+  const handleConfirmPdfItems = () => {
+    const startId = inventory.length + 1;
+    const newItems = pdfItems.map((item, index) => ({
+      id: startId + index,
+      name: item.name,
+      amount: item.qty,
+      spent: item.unit_price.toFixed(2),
+      expiryDate: item.expiryDate,
+      status: calculateStatus(item.expiryDate),
+    }));
+    const updated = [...inventory, ...newItems];
+    setInventory(updated);
+    localStorage.setItem('inventory', JSON.stringify(updated));
+    setShowPdfReceiptPopup(false);
+    setPdfItems([]);
+    setPdfFile(null);
+    showToast(`${newItems.length} item${newItems.length > 1 ? 's' : ''} added from receipt.`);
+  };
+
   useEffect(() => {
     if (!hasBlinked) {
       const blinkInterval = setInterval(() => setBlink(prev => !prev), 1000);
@@ -437,6 +491,13 @@ export function Maininventory() {
               disabled={editingItem !== null}
             >
               📷 Scan Receipt
+            </button>
+            <button
+              className="inv-action-btn inv-action-primary"
+              onClick={() => { closeAllPopups(); setShowPdfReceiptPopup(true); }}
+              disabled={editingItem !== null}
+            >
+              📄 Upload PDF Receipt
             </button>
             <button className="inv-action-btn" onClick={() => togglePopup('add')} disabled={editingItem !== null}>
               + Add Item
@@ -536,6 +597,126 @@ export function Maininventory() {
                 {imgSrc2 && <img src={imgSrc2} alt="Uploaded" />}
               </div>
               <button className="popup-cancel-btn" onClick={() => togglePopup('package')}>Cancel</button>
+            </div>
+          )}
+
+          {/* ── PDF Receipt Popup ── */}
+          {showPdfReceiptPopup && (
+            <div className="popup" style={{ maxWidth: 760, width: '95vw', maxHeight: '85vh', overflowY: 'auto' }}>
+              <h2 style={{ marginBottom: 4 }}>📄 Upload PDF Receipt</h2>
+
+              {/* Step 1: file picker */}
+              {pdfItems.length === 0 && (
+                <>
+                  <p style={{ color: '#666', fontSize: 14, marginBottom: 16 }}>
+                    Upload a Woolworths e-receipt PDF. Items will be parsed and expiry dates estimated by AI automatically.
+                  </p>
+                  <form onSubmit={handlePdfUpload} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                    <label style={{
+                      display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px',
+                      border: '2px dashed #ccc', borderRadius: 8, cursor: 'pointer', background: '#fafafa'
+                    }}>
+                      <span style={{ fontSize: 28 }}>📂</span>
+                      <span style={{ color: '#555', fontSize: 14 }}>
+                        {pdfFile ? pdfFile.name : 'Click to choose a PDF file…'}
+                      </span>
+                      <input
+                        type="file" accept=".pdf" style={{ display: 'none' }}
+                        onChange={e => { setPdfFile(e.target.files[0]); setPdfError(''); }}
+                      />
+                    </label>
+                    {pdfError && <p style={{ color: '#c0392b', margin: 0, fontSize: 13 }}>⚠️ {pdfError}</p>}
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <button type="submit" disabled={pdfLoading} style={{ flex: 1 }}>
+                        {pdfLoading ? '⏳ Parsing & estimating expiry…' : '🔍 Upload & Parse'}
+                      </button>
+                      <button type="button" className="popup-cancel-btn" onClick={closeAllPopups}>Cancel</button>
+                    </div>
+                  </form>
+                </>
+              )}
+
+              {/* Step 2: review cards */}
+              {pdfItems.length > 0 && (
+                <>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                    <p style={{ color: '#555', fontSize: 13, margin: 0 }}>
+                      {pdfItems.length} items found — expiry dates estimated by AI. Edit anything before adding.
+                    </p>
+                    <span style={{ fontSize: 12, color: '#888' }}>🤖 AI estimated</span>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {pdfItems.map((item, idx) => (
+                      <div key={idx} style={{
+                        border: '1px solid #e0e0e0', borderRadius: 8, padding: '10px 14px',
+                        background: '#fff', boxShadow: '0 1px 3px rgba(0,0,0,0.06)'
+                      }}>
+                        {/* Item name — full width, wraps */}
+                        <div style={{ marginBottom: 8 }}>
+                          <input
+                            type="text"
+                            value={item.name}
+                            onChange={e => handlePdfItemChange(idx, 'name', e.target.value)}
+                            style={{
+                              width: '100%', border: 'none', borderBottom: '1px solid #ddd',
+                              fontSize: 14, fontWeight: 600, color: '#222',
+                              padding: '2px 0', background: 'transparent', outline: 'none'
+                            }}
+                          />
+                          <span style={{ fontSize: 11, color: '#aaa' }}>
+                            {item.category} · {item.shelf_days}d estimated shelf life
+                          </span>
+                        </div>
+
+                        {/* Editable fields in a row */}
+                        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end' }}>
+                          <label style={{ display: 'flex', flexDirection: 'column', gap: 3, fontSize: 11, color: '#777' }}>
+                            QTY
+                            <input
+                              type="number" value={item.qty} min={1}
+                              onChange={e => handlePdfItemChange(idx, 'qty', parseInt(e.target.value) || 1)}
+                              style={{ width: 56, border: '1px solid #ddd', borderRadius: 4, padding: '4px 6px', fontSize: 13 }}
+                            />
+                          </label>
+                          <label style={{ display: 'flex', flexDirection: 'column', gap: 3, fontSize: 11, color: '#777' }}>
+                            PRICE ($)
+                            <input
+                              type="number" value={item.unit_price} min={0} step={0.01}
+                              onChange={e => handlePdfItemChange(idx, 'unit_price', parseFloat(e.target.value) || 0)}
+                              style={{ width: 80, border: '1px solid #ddd', borderRadius: 4, padding: '4px 6px', fontSize: 13 }}
+                            />
+                          </label>
+                          <label style={{ display: 'flex', flexDirection: 'column', gap: 3, fontSize: 11, color: '#777', flex: 1, minWidth: 120 }}>
+                            EXPIRY DATE
+                            <input
+                              type="text" value={item.expiryDate}
+                              onChange={e => handlePdfItemChange(idx, 'expiryDate', e.target.value)}
+                              style={{ border: '1px solid #ddd', borderRadius: 4, padding: '4px 6px', fontSize: 13 }}
+                            />
+                          </label>
+                          <button
+                            onClick={() => setPdfItems(prev => prev.filter((_, i) => i !== idx))}
+                            style={{
+                              background: 'none', border: '1px solid #eee', borderRadius: 4,
+                              color: '#bbb', cursor: 'pointer', padding: '4px 8px', fontSize: 13,
+                              alignSelf: 'flex-end'
+                            }}
+                            title="Remove this item"
+                          >✕</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
+                    <button onClick={handleConfirmPdfItems} style={{ flex: 1 }}>
+                      ✅ Add {pdfItems.length} Item{pdfItems.length > 1 ? 's' : ''} to Inventory
+                    </button>
+                    <button className="popup-cancel-btn" onClick={closeAllPopups}>Cancel</button>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
