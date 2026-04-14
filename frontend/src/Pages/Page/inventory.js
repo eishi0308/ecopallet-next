@@ -401,7 +401,7 @@ export function Maininventory() {
     const formData = new FormData();
     formData.append('file', pdfFile);
     try {
-      const response = await fetch('http://localhost:8000/ereceipt', { method: 'POST', body: formData });
+      const response = await fetch('https://ecopallet-next.onrender.com/ereceipt', { method: 'POST', body: formData });
       if (!response.ok) {
         const err = await response.json();
         throw new Error(err.detail || 'Failed to parse receipt');
