@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import InventoryList from './InventoryList';
-import Webcam from "react-webcam";
 import './inventory.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Dashboard from './Dashboard';
-import samimg1 from "./1.jpeg";
 import samimg2 from "./2.jpeg";
+import samplePdf from "./woolworth_sample_ereceipt.pdf";
 
 
 const MONTH_MAP = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11 };
@@ -44,7 +43,6 @@ export function Maininventory() {
     return stored ? JSON.parse(stored) : [];
   });
   const [showAddPopup, setShowAddPopup] = useState(false);
-  const [showScanReceiptPopup, setShowScanReceiptPopup] = useState(false);
   const [showScanProducePopup, setShowScanProducePopup] = useState(false);
   const [showScanPackagePopup, setShowScanPackagePopup] = useState(false);
   const [showPdfReceiptPopup, setShowPdfReceiptPopup] = useState(false);
@@ -54,11 +52,6 @@ export function Maininventory() {
   const [pdfError, setPdfError] = useState('');
   const [expiryPlaceholder, setExpiryPlaceholder] = useState(new Date());
   const [newItem, setNewItem] = useState({ name: '', amount: '', spent: '', expiryDate: '', status: '' });
-  const [nextItemId, setNextItemId] = useState(inventory.length + 1);
-  const [name, setName] = useState('');
-  const [file, setFile] = useState(null);
-  const [imgSrc, setImgSrc] = useState('');
-  const [extractedText, setExtractedText] = useState('');
   const [msg1, setMsg1] = useState('');
   const [file1, setFile1] = useState(null);
   const [imgSrc1, setImgSrc1] = useState('');
@@ -91,20 +84,6 @@ export function Maininventory() {
 
   const handleEditingItemChange = (itemId) => setEditingItem(itemId);
 
-  const webcamRef = useRef(null);
-
-  const capturePhoto = () => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    const byteString = atob(imageSrc.split(',')[1]);
-    const mimeType = imageSrc.split(',')[0].split(':')[1].split(';')[0];
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
-    const blob = new Blob([ab], { type: mimeType });
-    const f = new File([blob], 'photo.jpg', { type: mimeType });
-    setFile1(f);
-    setImgSrc1(imageSrc);
-  };
 
   useEffect(() => {
     const timeout = setTimeout(() => setShowCongratsTimer(false), 3000);
@@ -218,10 +197,9 @@ export function Maininventory() {
     }
   };
 
-  const isPopupActive = showAddPopup || showScanReceiptPopup || showScanProducePopup || showScanPackagePopup || showPdfReceiptPopup;
+  const isPopupActive = showAddPopup || showScanProducePopup || showScanPackagePopup || showPdfReceiptPopup;
   const closeAllPopups = () => {
     setShowAddPopup(false);
-    setShowScanReceiptPopup(false);
     setShowScanProducePopup(false);
     setShowScanPackagePopup(false);
     setShowPdfReceiptPopup(false);
@@ -246,7 +224,6 @@ export function Maininventory() {
 
   const togglePopup = (popupType) => {
     setShowAddPopup(false);
-    setShowScanReceiptPopup(false);
     setShowScanProducePopup(false);
     setShowScanPackagePopup(false);
     setShowStatusModal(false);
@@ -261,7 +238,6 @@ export function Maininventory() {
         }
         setShowAddPopup(!showAddPopup);
         break;
-      case 'receipt':  setShowScanReceiptPopup(!showScanReceiptPopup);  break;
       case 'produce':  setShowScanProducePopup(!showScanProducePopup);  break;
       case 'package':  setShowScanPackagePopup(!showScanPackagePopup);  break;
       case 'statusInfo': setShowStatusModal(!showStatusModal); break;
@@ -309,36 +285,8 @@ export function Maininventory() {
     setInventory(prev => [...prev, newInventoryItem]);
   };
 
-  const handleFileChange = (e) => setFile(e.target.files[0]);
   const handleFileChange1 = (e) => setFile1(e.target.files[0]);
   const handleFileChange2 = (e) => setFile2(e.target.files[0]);
-
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    setUploadingImage(true);
-    const formData = new FormData();
-    formData.append('file', file);
-    try {
-      const response = await fetch('https://rohan222.pythonanywhere.com/rc', { method: 'POST', body: formData });
-      const data = await response.json();
-      setName(data.name); setImgSrc(data.imgSrc); setExtractedText(data.extracted_text);
-      setNewItem(prev => ({ ...prev, name: data.name, amount: data.extracted_text, spent: data.msg, expiryDate: '', status: '' }));
-      const startingId = inventory.length + 1;
-      data.extracted_text.forEach((item, index) => {
-        const newItem = { id: startingId + index, name: item.name, amount: item.amount, spent: item.spent, expiryDate: "29 Apr 2024", status: '' };
-        setInventory(prev => [...prev, newItem]);
-        setShowScanReceiptPopup(false);
-      });
-      setUploadingImage(false);
-      setNextItemId(startingId + data.extracted_text.length);
-      setNewItem({ name: '', amount: 0, spent: '', expiryDate: '', status: '' });
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      alert('Something went wrong, please try again.');
-      setUploadingImage(false);
-      setShowScanReceiptPopup(false);
-    }
-  };
 
   const handleUpload2 = async (e) => {
     e.preventDefault();
@@ -487,13 +435,6 @@ export function Maininventory() {
           <div className="inv-toolbar">
             <button
               className="inv-action-btn inv-action-primary"
-              onClick={() => togglePopup('receipt')}
-              disabled={editingItem !== null}
-            >
-              📷 Scan Receipt
-            </button>
-            <button
-              className="inv-action-btn inv-action-primary"
               onClick={() => { closeAllPopups(); setShowPdfReceiptPopup(true); }}
               disabled={editingItem !== null}
             >
@@ -557,33 +498,6 @@ export function Maininventory() {
             </>
           )}
 
-          {/* ── Scan Receipt Popup ── */}
-          {showScanReceiptPopup && (
-            <div className="popup">
-              <h2>Scan Receipt</h2>
-              {uploadingImage && <div className="loading-overlay">Loading…</div>}
-              <h3 style={{ textAlign: 'center' }}>Capture a Picture</h3>
-              <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" width={320} height={240} />
-              <h3> </h3>
-              <button onClick={capturePhoto} style={{ display: 'block', margin: '0 auto' }}>Capture Photo</button>
-              <h3> </h3>
-              {imgSrc && <img src={imgSrc} alt="Uploaded" />}
-              <form id="uploadForm" onSubmit={handleUpload2} encType="multipart/form-data">
-                <input type="submit" value="Upload" />
-              </form>
-              <h3 style={{ textAlign: 'center' }}>Or Choose a Picture</h3>
-              <div className="scan-options">
-                <form onSubmit={handleUpload} encType="multipart/form-data">
-                  <input type="file" name="file" onChange={handleFileChange} />
-                  <input type="submit" value="Upload" />
-                </form>
-                {imgSrc && <img src={imgSrc} alt="Uploaded" />}
-                <img src={samimg1} alt="Sample" width="25" height="25" />
-                <a href={samimg1} download> Download Sample Image</a>
-              </div>
-              <button className="popup-cancel-btn" onClick={() => togglePopup('receipt')}>Cancel</button>
-            </div>
-          )}
 
           {/* ── Scan Package Popup ── */}
           {showScanPackagePopup && (
@@ -633,6 +547,12 @@ export function Maininventory() {
                       <button type="button" className="popup-cancel-btn" onClick={closeAllPopups}>Cancel</button>
                     </div>
                   </form>
+                  <p style={{ marginTop: 12, fontSize: 13, color: '#888' }}>
+                    Don't have a receipt handy?{' '}
+                    <a href={samplePdf} download="woolworth_sample_ereceipt.pdf" style={{ color: '#2563eb' }}>
+                      📥 Download sample PDF
+                    </a>{' '}to try it out.
+                  </p>
                 </>
               )}
 
@@ -687,12 +607,12 @@ export function Maininventory() {
                               style={{ width: 80, border: '1px solid #ddd', borderRadius: 4, padding: '4px 6px', fontSize: 13 }}
                             />
                           </label>
-                          <label style={{ display: 'flex', flexDirection: 'column', gap: 3, fontSize: 11, color: '#777', flex: 1, minWidth: 120 }}>
+                          <label style={{ display: 'flex', flexDirection: 'column', gap: 3, fontSize: 11, color: '#777' }}>
                             EXPIRY DATE
                             <input
                               type="text" value={item.expiryDate}
                               onChange={e => handlePdfItemChange(idx, 'expiryDate', e.target.value)}
-                              style={{ border: '1px solid #ddd', borderRadius: 4, padding: '4px 6px', fontSize: 13 }}
+                              style={{ width: 110, border: '1px solid #ddd', borderRadius: 4, padding: '4px 6px', fontSize: 13 }}
                             />
                           </label>
                           <button
