@@ -11,6 +11,39 @@ const getStatusBadgeClass = (color) => {
   return 'status-safe';
 };
 
+const CATEGORY_STYLES = {
+  'Dairy':        { bg: '#EFF6FF', color: '#1D4ED8', emoji: '🧀' },
+  'Meat':         { bg: '#FEF2F2', color: '#B91C1C', emoji: '🥩' },
+  'Serviced':     { bg: '#FEF2F2', color: '#B91C1C', emoji: '🥩' },
+  'Chilled':      { bg: '#F0F9FF', color: '#0369A1', emoji: '❄️' },
+  'Frozen':       { bg: '#ECFEFF', color: '#0E7490', emoji: '🧊' },
+  'Fruit':        { bg: '#F0FDF4', color: '#15803D', emoji: '🍎' },
+  'Bakery':       { bg: '#FFFBEB', color: '#B45309', emoji: '🍞' },
+  'Pantry':       { bg: '#FFF7ED', color: '#C2410C', emoji: '🏺' },
+  'Cooking':      { bg: '#FFF7ED', color: '#C2410C', emoji: '🍳' },
+  'Drinks':       { bg: '#F5F3FF', color: '#6D28D9', emoji: '🥤' },
+  'Health':       { bg: '#F0FDF4', color: '#166534', emoji: '💊' },
+  'Toiletries':   { bg: '#FAF5FF', color: '#7E22CE', emoji: '🧴' },
+  'Household':    { bg: '#F8FAFC', color: '#475569', emoji: '🏠' },
+  'Baby':         { bg: '#FDF2F8', color: '#BE185D', emoji: '👶' },
+  'Pet':          { bg: '#FFF7ED', color: '#92400E', emoji: '🐾' },
+};
+
+const CategoryBadge = ({ category }) => {
+  if (!category || category === 'Uncategorised') return null;
+  const style = CATEGORY_STYLES[category] || { bg: '#F1F5F9', color: '#475569', emoji: '🏷️' };
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 3,
+      marginTop: 4, padding: '2px 7px', borderRadius: 999,
+      fontSize: 11, fontWeight: 600, letterSpacing: '0.03em',
+      background: style.bg, color: style.color,
+    }}>
+      {style.emoji} {category}
+    </span>
+  );
+};
+
 const InventoryList = ({ inventory, onEdit, onDelete, togglePopup, onEditingItemChange }) => {
   const [editingItem, setEditingItem] = useState(null);
   const [updatedValues, setUpdatedValues] = useState({});
@@ -174,7 +207,12 @@ const InventoryList = ({ inventory, onEdit, onDelete, togglePopup, onEditingItem
                 <td>
                   {isEditing
                     ? <input className="edit-cell-input" type="text" value={updatedValues.name} onChange={(e) => handleInputChange(e, 'name')} />
-                    : item.name}
+                    : (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <span>{item.name}</span>
+                        <CategoryBadge category={item.category} />
+                      </div>
+                    )}
                 </td>
                 <td>
                   {isEditing
