@@ -262,8 +262,8 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
                   {isEditing
                     ? <input className="edit-cell-input" type="text" value={updatedValues.name} onChange={(e) => handleInputChange(e, 'name')} />
                     : (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        <span>{item.name}</span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 2, overflow: 'hidden', maxHeight: 42 }}>
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</span>
                         <CategoryBadge category={item.category} />
                       </div>
                     )}

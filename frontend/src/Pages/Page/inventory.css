@@ -260,11 +260,13 @@ header { display: none; }
 /* ── FIXED ROW HEIGHT — key fix for edit mode ── */
 .inventory-table-container tbody tr {
   height: 62px;
+  max-height: 62px;
 }
 .inventory-table-container td {
   height: 62px;
   max-height: 62px;
   overflow: hidden;
+  position: relative;
   padding: 10px 16px;
   vertical-align: middle;
   font-size: 14px;
@@ -503,6 +505,7 @@ header { display: none; }
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-wrap: nowrap;
 }
 
 .row-btn {
