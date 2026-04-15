@@ -420,6 +420,7 @@ export function Maininventory() {
   }, [hasBlinked]);
 
   // Computed stats
+  const freshCount    = inventory.filter(i => calculateStatus(i.expiryDate).color === 'green').length;
   const expiringCount = inventory.filter(i => calculateStatus(i.expiryDate).color === '#DAA520').length;
   const expiredCount  = inventory.filter(i => calculateStatus(i.expiryDate).color === 'red').length;
 
@@ -445,6 +446,10 @@ export function Maininventory() {
             <div className="inv-stat-card">
               <span className="inv-stat-num">{inventory.length}</span>
               <span className="inv-stat-label">Total items</span>
+            </div>
+            <div className="inv-stat-card inv-stat-fresh">
+              <span className="inv-stat-num">{freshCount}</span>
+              <span className="inv-stat-label">Fresh</span>
             </div>
             <div className="inv-stat-card inv-stat-warning">
               <span className="inv-stat-num">{expiringCount}</span>

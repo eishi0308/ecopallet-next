@@ -139,6 +139,13 @@ header { display: none; }
   letter-spacing: 0.06em;
 }
 
+.inv-stat-fresh {
+  background: #F0FDF4;
+  border-color: #86EFAC;
+}
+.inv-stat-fresh .inv-stat-num { color: #15803D; }
+.inv-stat-fresh .inv-stat-label { color: #16A34A; }
+
 .inv-stat-warning {
   background: #FFFBEB;
   border-color: #FDE68A;
@@ -932,6 +939,9 @@ header { display: none; }
   font-size: 2.4rem;
   font-weight: 900;
   letter-spacing: -1px;
+}
+.inv-stat-fresh::before {
+  background: radial-gradient(circle, rgba(22,163,74,0.15) 0%, transparent 70%);
 }
 .inv-stat-warning::before {
   background: radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%);
