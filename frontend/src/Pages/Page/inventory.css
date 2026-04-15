@@ -257,16 +257,28 @@ header { display: none; }
 }
 
 
-/* ── FIXED ROW HEIGHT — key fix for edit mode ── */
+/* ── FIXED ROW HEIGHT — inner wrapper enforces height so table never reflows ── */
 .inventory-table-container tbody tr {
   height: 62px;
-  max-height: 62px;
+}
+/* cell-inner is a fixed-height div inside every td — this is the only reliable way
+   to prevent table row height from changing when cell content switches (edit vs display) */
+.cell-inner {
+  height: 42px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.cell-inner--center {
+  justify-content: center;
+}
+.cell-inner--col {
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2px;
 }
 .inventory-table-container td {
-  height: 62px;
-  max-height: 62px;
-  overflow: hidden;
-  position: relative;
   padding: 10px 16px;
   vertical-align: middle;
   font-size: 14px;

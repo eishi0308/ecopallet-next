@@ -251,52 +251,65 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
             return (
               <tr key={item.id} className={`${isEditing ? 'row-editing' : ''} row-status-${statusKey}`}>
                 <td className="col-checkbox">
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    onChange={() => toggleSelectOne(item.id)}
-                    aria-label={`Select ${item.name}`}
-                  />
+                  <div className="cell-inner cell-inner--center">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => toggleSelectOne(item.id)}
+                      aria-label={`Select ${item.name}`}
+                    />
+                  </div>
                 </td>
                 <td>
-                  {isEditing
-                    ? <input className="edit-cell-input" type="text" value={updatedValues.name} onChange={(e) => handleInputChange(e, 'name')} />
-                    : (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 2, overflow: 'hidden', maxHeight: 42 }}>
-                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</span>
-                        <CategoryBadge category={item.category} />
-                      </div>
-                    )}
+                  <div className="cell-inner cell-inner--col">
+                    {isEditing
+                      ? <input className="edit-cell-input" type="text" value={updatedValues.name} onChange={(e) => handleInputChange(e, 'name')} />
+                      : (
+                        <>
+                          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</span>
+                          <CategoryBadge category={item.category} />
+                        </>
+                      )}
+                  </div>
                 </td>
                 <td>
-                  {isEditing
-                    ? <input className="edit-cell-input edit-cell-input--sm" type="text" value={updatedValues.amount} onChange={(e) => handleInputChange(e, 'amount')} />
-                    : item.amount}
+                  <div className="cell-inner">
+                    {isEditing
+                      ? <input className="edit-cell-input edit-cell-input--sm" type="text" value={updatedValues.amount} onChange={(e) => handleInputChange(e, 'amount')} />
+                      : item.amount}
+                  </div>
                 </td>
                 <td>
-                  <span className={`status-badge status-${getStatusBadgeClass(status.color)}`}>
-                    <span className="status-badge-icon">{status.icon}</span>
-                    <span className="status-badge-text">{status.text}</span>
-                  </span>
+                  <div className="cell-inner">
+                    <span className={`status-badge status-${getStatusBadgeClass(status.color)}`}>
+                      <span className="status-badge-icon">{status.icon}</span>
+                      <span className="status-badge-text">{status.text}</span>
+                    </span>
+                  </div>
                 </td>
                 <td>
-                  {isEditing
-                    ? <DatePicker
-                        selected={updatedValues.expiryDate}
-                        onChange={handleDateChange}
-                        dateFormat="dd MMM yyyy"
-                        className="date-picker edit-date-picker"
-                        popperPlacement="bottom-start"
-                        portalId="root"
-                      />
-                    : item.expiryDate}
+                  <div className="cell-inner">
+                    {isEditing
+                      ? <DatePicker
+                          selected={updatedValues.expiryDate}
+                          onChange={handleDateChange}
+                          dateFormat="dd MMM yyyy"
+                          className="date-picker edit-date-picker"
+                          popperPlacement="bottom-start"
+                          portalId="root"
+                        />
+                      : item.expiryDate}
+                  </div>
                 </td>
                 <td>
-                  {isEditing
-                    ? <input className="edit-cell-input edit-cell-input--sm" type="text" value={updatedValues.spent} onChange={(e) => handleInputChange(e, 'spent')} />
-                    : `$${item.spent}`}
+                  <div className="cell-inner">
+                    {isEditing
+                      ? <input className="edit-cell-input edit-cell-input--sm" type="text" value={updatedValues.spent} onChange={(e) => handleInputChange(e, 'spent')} />
+                      : `$${item.spent}`}
+                  </div>
                 </td>
                 <td>
+                  <div className="cell-inner">
                   <div className="row-actions">
                     {isEditing ? (
                       <>
@@ -328,6 +341,7 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
                         </button>
                       </>
                     )}
+                  </div>
                   </div>
                 </td>
               </tr>
