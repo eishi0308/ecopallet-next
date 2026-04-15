@@ -562,7 +562,7 @@ export function Maininventory() {
                       border: '2px dashed #ccc', borderRadius: 8, cursor: 'pointer', background: '#fafafa'
                     }}>
                       <span style={{ fontSize: 28 }}>📂</span>
-                      <span style={{ color: '#555', fontSize: 14 }}>
+                      <span style={{ color: '#555', fontSize: 14, textTransform: 'none' }}>
                         {pdfFile ? pdfFile.name : 'Click to choose a PDF file…'}
                       </span>
                       <input
