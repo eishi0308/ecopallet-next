@@ -590,81 +590,157 @@ export function Maininventory() {
               {/* Step 2: review cards */}
               {pdfItems.length > 0 && (
                 <>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                    <p style={{ color: '#555', fontSize: 13, margin: 0 }}>
-                      {pdfItems.length} items found — expiry dates estimated by AI. Edit anything before adding.
-                    </p>
-                    <span style={{ fontSize: 12, color: '#888' }}>🤖 AI estimated</span>
+                  {/* Header */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 18 }}>
+                    <div>
+                      <div style={{ fontSize: 18, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.3px' }}>
+                        {pdfItems.length} items found
+                      </div>
+                      <div style={{ fontSize: 13, color: '#64748B', marginTop: 2 }}>
+                        Review and edit before adding to your pantry
+                      </div>
+                    </div>
+                    <span style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 5,
+                      background: '#EFF6FF', color: '#1D4ED8', border: '1px solid #BFDBFE',
+                      borderRadius: 999, padding: '4px 12px', fontSize: 12, fontWeight: 600,
+                      whiteSpace: 'nowrap',
+                    }}>
+                      🤖 AI estimated
+                    </span>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {pdfItems.map((item, idx) => (
-                      <div key={idx} style={{
-                        border: '1px solid #e0e0e0', borderRadius: 8, padding: '10px 14px',
-                        background: '#fff', boxShadow: '0 1px 3px rgba(0,0,0,0.06)'
-                      }}>
-                        {/* Item name — full width, wraps */}
-                        <div style={{ marginBottom: 8 }}>
-                          <input
-                            type="text"
-                            value={item.name}
-                            onChange={e => handlePdfItemChange(idx, 'name', e.target.value)}
-                            style={{
-                              width: '100%', border: 'none', borderBottom: '1px solid #ddd',
-                              fontSize: 14, fontWeight: 600, color: '#222',
-                              padding: '2px 0', background: 'transparent', outline: 'none'
-                            }}
-                          />
-                          <span style={{ fontSize: 11, color: '#aaa' }}>
-                            {item.category} · {item.shelf_days}d estimated shelf life
-                          </span>
-                        </div>
-
-                        {/* Editable fields in a row */}
-                        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end' }}>
-                          <label style={{ display: 'flex', flexDirection: 'column', gap: 3, fontSize: 11, color: '#777' }}>
-                            QTY
-                            <input
-                              type="number" value={item.qty} min={1}
-                              onChange={e => handlePdfItemChange(idx, 'qty', parseInt(e.target.value) || 1)}
-                              style={{ width: 56, border: '1px solid #ddd', borderRadius: 4, padding: '4px 6px', fontSize: 13 }}
-                            />
-                          </label>
-                          <label style={{ display: 'flex', flexDirection: 'column', gap: 3, fontSize: 11, color: '#777' }}>
-                            PRICE ($)
-                            <input
-                              type="number" value={item.unit_price} min={0} step={0.01}
-                              onChange={e => handlePdfItemChange(idx, 'unit_price', parseFloat(e.target.value) || 0)}
-                              style={{ width: 80, border: '1px solid #ddd', borderRadius: 4, padding: '4px 6px', fontSize: 13 }}
-                            />
-                          </label>
-                          <label style={{ display: 'flex', flexDirection: 'column', gap: 3, fontSize: 11, color: '#777' }}>
-                            EXPIRY DATE
-                            <input
-                              type="text" value={item.expiryDate}
-                              onChange={e => handlePdfItemChange(idx, 'expiryDate', e.target.value)}
-                              style={{ width: 110, border: '1px solid #ddd', borderRadius: 4, padding: '4px 6px', fontSize: 13 }}
-                            />
-                          </label>
+                  {/* Item cards */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {pdfItems.map((item, idx) => {
+                      const CAT = {
+                        'Dairy':      { bg: '#EFF6FF', color: '#1D4ED8', emoji: '🧀', accent: '#3B82F6' },
+                        'Meat':       { bg: '#FEF2F2', color: '#B91C1C', emoji: '🥩', accent: '#EF4444' },
+                        'Serviced':   { bg: '#FEF2F2', color: '#B91C1C', emoji: '🥩', accent: '#EF4444' },
+                        'Chilled':    { bg: '#F0F9FF', color: '#0369A1', emoji: '❄️', accent: '#0EA5E9' },
+                        'Frozen':     { bg: '#ECFEFF', color: '#0E7490', emoji: '🧊', accent: '#06B6D4' },
+                        'Fruit':      { bg: '#F0FDF4', color: '#15803D', emoji: '🍎', accent: '#22C55E' },
+                        'Bakery':     { bg: '#FFFBEB', color: '#B45309', emoji: '🍞', accent: '#F59E0B' },
+                        'Pantry':     { bg: '#FFF7ED', color: '#C2410C', emoji: '🏺', accent: '#F97316' },
+                        'Cooking':    { bg: '#FFF7ED', color: '#C2410C', emoji: '🍳', accent: '#F97316' },
+                        'Drinks':     { bg: '#F5F3FF', color: '#6D28D9', emoji: '🥤', accent: '#8B5CF6' },
+                        'Health':     { bg: '#F0FDF4', color: '#166534', emoji: '💊', accent: '#16A34A' },
+                        'Toiletries': { bg: '#FAF5FF', color: '#7E22CE', emoji: '🧴', accent: '#A855F7' },
+                        'Household':  { bg: '#F8FAFC', color: '#475569', emoji: '🏠', accent: '#64748B' },
+                        'Baby':       { bg: '#FDF2F8', color: '#BE185D', emoji: '👶', accent: '#EC4899' },
+                        'Pet':        { bg: '#FFF7ED', color: '#92400E', emoji: '🐾', accent: '#D97706' },
+                      };
+                      const cat = CAT[item.category] || { bg: '#F1F5F9', color: '#475569', emoji: '🏷️', accent: '#94A3B8' };
+                      const fieldInput = {
+                        background: '#F8FAFC', border: '1.5px solid #E2E8F0',
+                        borderRadius: 8, padding: '7px 10px', fontSize: 13,
+                        color: '#0F172A', outline: 'none', fontFamily: 'Inter, sans-serif',
+                      };
+                      return (
+                        <div key={idx} style={{
+                          background: '#fff', borderRadius: 14,
+                          border: '1px solid #F1F5F9',
+                          borderLeft: `4px solid ${cat.accent}`,
+                          padding: '14px 16px',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                          position: 'relative',
+                        }}>
+                          {/* Remove button */}
                           <button
                             onClick={() => setPdfItems(prev => prev.filter((_, i) => i !== idx))}
+                            title="Remove"
                             style={{
-                              background: 'none', border: '1px solid #eee', borderRadius: 4,
-                              color: '#bbb', cursor: 'pointer', padding: '4px 8px', fontSize: 13,
-                              alignSelf: 'flex-end'
+                              position: 'absolute', top: 10, right: 10,
+                              background: 'none', border: 'none', cursor: 'pointer',
+                              color: '#CBD5E1', fontSize: 15, lineHeight: 1, padding: 4,
+                              borderRadius: 4, transition: 'color 150ms',
                             }}
-                            title="Remove this item"
+                            onMouseEnter={e => e.currentTarget.style.color = '#EF4444'}
+                            onMouseLeave={e => e.currentTarget.style.color = '#CBD5E1'}
                           >✕</button>
+
+                          {/* Name */}
+                          <input
+                            type="text" value={item.name}
+                            onChange={e => handlePdfItemChange(idx, 'name', e.target.value)}
+                            style={{
+                              width: '100%', border: 'none', borderBottom: '1.5px solid #E2E8F0',
+                              fontSize: 14, fontWeight: 700, color: '#0F172A',
+                              padding: '0 0 6px', background: 'transparent', outline: 'none',
+                              paddingRight: 28, boxSizing: 'border-box',
+                            }}
+                          />
+
+                          {/* Category badge + shelf life */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 7, marginBottom: 12 }}>
+                            <span style={{
+                              display: 'inline-flex', alignItems: 'center', gap: 4,
+                              background: cat.bg, color: cat.color,
+                              borderRadius: 999, padding: '2px 9px',
+                              fontSize: 11, fontWeight: 600,
+                            }}>
+                              {cat.emoji} {item.category}
+                            </span>
+                            <span style={{ fontSize: 11, color: '#94A3B8' }}>
+                              · {item.shelf_days}d shelf life
+                            </span>
+                          </div>
+
+                          {/* Fields */}
+                          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                            <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                              <span style={{ fontSize: 10, fontWeight: 700, color: '#94A3B8', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Qty</span>
+                              <input
+                                type="number" value={item.qty} min={1}
+                                onChange={e => handlePdfItemChange(idx, 'qty', parseInt(e.target.value) || 1)}
+                                style={{ ...fieldInput, width: 60, textAlign: 'center' }}
+                              />
+                            </label>
+                            <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                              <span style={{ fontSize: 10, fontWeight: 700, color: '#94A3B8', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Price ($)</span>
+                              <input
+                                type="number" value={item.unit_price} min={0} step={0.01}
+                                onChange={e => handlePdfItemChange(idx, 'unit_price', parseFloat(e.target.value) || 0)}
+                                style={{ ...fieldInput, width: 80 }}
+                              />
+                            </label>
+                            <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                              <span style={{ fontSize: 10, fontWeight: 700, color: '#94A3B8', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Expiry date</span>
+                              <input
+                                type="text" value={item.expiryDate}
+                                onChange={e => handlePdfItemChange(idx, 'expiryDate', e.target.value)}
+                                style={{ ...fieldInput, width: 118 }}
+                              />
+                            </label>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
 
-                  <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
-                    <button onClick={handleConfirmPdfItems} style={{ flex: 1 }}>
-                      ✅ Add {pdfItems.length} Item{pdfItems.length > 1 ? 's' : ''} to Inventory
+                  {/* Footer */}
+                  <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <button
+                      onClick={handleConfirmPdfItems}
+                      style={{
+                        width: '100%', background: '#16A34A', color: '#fff',
+                        border: 'none', borderRadius: 12, padding: '14px',
+                        fontSize: 15, fontWeight: 700, cursor: 'pointer',
+                        boxShadow: '0 4px 14px rgba(22,163,74,0.3)',
+                        transition: 'background 150ms',
+                      }}
+                    >
+                      ✅ Add {pdfItems.length} item{pdfItems.length > 1 ? 's' : ''} to pantry
                     </button>
-                    <button className="popup-cancel-btn" onClick={closeAllPopups}>Cancel</button>
+                    <button
+                      onClick={closeAllPopups}
+                      style={{
+                        background: 'none', border: 'none', color: '#94A3B8',
+                        fontSize: 13, cursor: 'pointer', padding: '4px',
+                      }}
+                    >
+                      Cancel
+                    </button>
                   </div>
                 </>
               )}
