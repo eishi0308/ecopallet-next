@@ -258,8 +258,13 @@ header { display: none; }
 
 
 /* ── FIXED ROW HEIGHT — key fix for edit mode ── */
+.inventory-table-container tbody tr {
+  height: 62px;
+}
 .inventory-table-container td {
-  min-height: 56px;
+  height: 62px;
+  max-height: 62px;
+  overflow: hidden;
   padding: 10px 16px;
   vertical-align: middle;
   font-size: 14px;
