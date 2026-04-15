@@ -44,7 +44,7 @@ const CategoryBadge = ({ category }) => {
   );
 };
 
-const InventoryList = ({ inventory, onEdit, onDelete, togglePopup, onEditingItemChange }) => {
+const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup, onEditingItemChange }) => {
   const [editingItem, setEditingItem] = useState(null);
   const [updatedValues, setUpdatedValues] = useState({});
   const [originalValues, setOriginalValues] = useState({});
@@ -59,6 +59,8 @@ const InventoryList = ({ inventory, onEdit, onDelete, togglePopup, onEditingItem
   const [scanningItemId, setScanningItemId] = useState(null);
   const [sortingOrder, setSortingOrder] = useState('asc');
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
 
   const toggleSortingOrder = () => setSortingOrder(o => o === 'asc' ? 'desc' : 'asc');
 
@@ -69,6 +71,31 @@ const InventoryList = ({ inventory, onEdit, onDelete, togglePopup, onEditingItem
       return sortingOrder === 'asc' ? dateA - dateB : dateB - dateA;
     });
   }, [inventory, sortingOrder]);
+
+  const allSelected = sortedInventory.length > 0 && selectedIds.size === sortedInventory.length;
+
+  const toggleSelectAll = () => {
+    if (allSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(sortedInventory.map(i => i.id)));
+    }
+  };
+
+  const toggleSelectOne = (id) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const handleBulkDeleteConfirmed = () => {
+    if (onBulkDelete) onBulkDelete(Array.from(selectedIds));
+    setSelectedIds(new Set());
+    setShowBulkDeleteConfirm(false);
+  };
 
   const handleFileChange = (e) => setFile2(e.target.files[0]);
 
@@ -179,11 +206,29 @@ const InventoryList = ({ inventory, onEdit, onDelete, togglePopup, onEditingItem
     setItemToDelete(null);
   };
 
+  const bulkSelectedItems = sortedInventory.filter(i => selectedIds.has(i.id));
+
   return (
     <div>
+      {/* Action bar — always rendered to pre-reserve space, visibility toggled */}
+      <div className="bulk-action-bar" style={{ visibility: selectedIds.size > 0 ? 'visible' : 'hidden' }}>
+        <span className="bulk-action-count">{selectedIds.size} item{selectedIds.size !== 1 ? 's' : ''} selected</span>
+        <button className="bulk-delete-btn" onClick={() => setShowBulkDeleteConfirm(true)}>
+          🗑 Delete Selected
+        </button>
+      </div>
+
       <table>
         <thead>
           <tr>
+            <th className="col-checkbox">
+              <input
+                type="checkbox"
+                checked={allSelected}
+                onChange={toggleSelectAll}
+                aria-label="Select all"
+              />
+            </th>
             <th>Name</th>
             <th>Qty</th>
             <th>
@@ -201,9 +246,18 @@ const InventoryList = ({ inventory, onEdit, onDelete, togglePopup, onEditingItem
           {sortedInventory.map((item) => {
             const status = calculateStatus(item.expiryDate);
             const isEditing = editingItem === item.id;
+            const isSelected = selectedIds.has(item.id);
             const statusKey = status.color === 'red' ? 'danger' : status.color === '#DAA520' ? 'warning' : 'safe';
             return (
               <tr key={item.id} className={`${isEditing ? 'row-editing' : ''} row-status-${statusKey}`}>
+                <td className="col-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={() => toggleSelectOne(item.id)}
+                    aria-label={`Select ${item.name}`}
+                  />
+                </td>
                 <td>
                   {isEditing
                     ? <input className="edit-cell-input" type="text" value={updatedValues.name} onChange={(e) => handleInputChange(e, 'name')} />
@@ -221,7 +275,8 @@ const InventoryList = ({ inventory, onEdit, onDelete, togglePopup, onEditingItem
                 </td>
                 <td>
                   <span className={`status-badge status-${getStatusBadgeClass(status.color)}`}>
-                    {status.message}
+                    <span className="status-badge-icon">{status.icon}</span>
+                    <span className="status-badge-text">{status.text}</span>
                   </span>
                 </td>
                 <td>
@@ -314,6 +369,32 @@ const InventoryList = ({ inventory, onEdit, onDelete, togglePopup, onEditingItem
           <button onClick={handleDelete}>Yes, delete</button>
           <button onClick={cancelDelete}>Cancel</button>
         </div>
+      )}
+
+      {showBulkDeleteConfirm && (
+        <>
+          <div className="modal-overlay" onClick={() => setShowBulkDeleteConfirm(false)} />
+          <div className="bulk-delete-modal">
+            <div className="bulk-delete-modal-icon">🗑</div>
+            <h2 className="bulk-delete-modal-title">Delete {selectedIds.size} item{selectedIds.size !== 1 ? 's' : ''}?</h2>
+            <p className="bulk-delete-modal-subtitle">This cannot be undone. The following items will be removed:</p>
+            <ul className="bulk-delete-modal-list">
+              {bulkSelectedItems.map(item => (
+                <li key={item.id} className="bulk-delete-modal-item">
+                  <span>{item.name.split(' - ')[0]}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="bulk-delete-modal-actions">
+              <button className="bulk-delete-modal-btn-confirm" onClick={handleBulkDeleteConfirmed}>
+                Yes, delete all
+              </button>
+              <button className="bulk-delete-modal-btn-cancel" onClick={() => setShowBulkDeleteConfirm(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

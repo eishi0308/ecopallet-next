@@ -29,11 +29,11 @@ export const calculateStatus = (expiryDate) => {
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
   expiry.setHours(0, 0, 0, 0);
-  const diffDays = (expiry - currentDate) / (1000 * 60 * 60 * 24);
-  if (Math.ceil(diffDays) < 0)   return { message: 'Expired ' + Math.abs(Math.ceil(diffDays)) + 'd', color: 'red' };
-  if (Math.ceil(diffDays) === 0)  return { message: 'Expires Today', color: 'red' };
-  if (Math.ceil(diffDays) <= 5)   return { message: Math.ceil(diffDays) + 'd to Expire', color: '#DAA520' };
-  return { message: 'Safe (>5d)', color: 'green' };
+  const days = Math.ceil((expiry - currentDate) / (1000 * 60 * 60 * 24));
+  if (days < 0)   return { icon: '✕', text: `${Math.abs(days)}d ago`, message: `✕ ${Math.abs(days)}d ago`, color: 'red' };
+  if (days === 0) return { icon: '⚠', text: 'Today',                  message: '⚠ Today',                  color: 'red' };
+  if (days <= 5)  return { icon: '⚡', text: `${days}d`,              message: `⚡ ${days}d`,              color: '#DAA520' };
+  return           { icon: '✓', text: `${days}d`,                     message: `✓ ${days}d`,              color: 'green' };
 };
 
 
@@ -195,6 +195,30 @@ export function Maininventory() {
       localStorage.setItem('deletionHistory', JSON.stringify(newHistory));
       setInventory(prev => prev.filter(i => i.id !== id));
     }
+  };
+
+  const handleBulkDeleteItems = (ids) => {
+    const idsSet = new Set(ids);
+    const toDelete = inventory.filter(i => idsSet.has(i.id));
+    const newEntries = toDelete.map(item => {
+      const status = calculateStatus(item.expiryDate);
+      const category = status.color === 'red' ? 'wasted' : 'saved';
+      return {
+        id: Date.now() + Math.random(),
+        name: item.name.split(' - ')[0],
+        amount: item.amount,
+        spent: parseFloat(item.spent) || 0,
+        category,
+        deletedAt: new Date().toISOString(),
+      };
+    });
+    const newHistory = [...deletionHistory, ...newEntries];
+    setDeletionHistory(newHistory);
+    localStorage.setItem('deletionHistory', JSON.stringify(newHistory));
+    const updated = inventory.filter(i => !idsSet.has(i.id));
+    setInventory(updated);
+    localStorage.setItem('inventory', JSON.stringify(updated));
+    showToast(`${ids.length} item${ids.length !== 1 ? 's' : ''} deleted.`);
   };
 
   const isPopupActive = showAddPopup || showScanProducePopup || showScanPackagePopup || showPdfReceiptPopup;
@@ -455,6 +479,7 @@ export function Maininventory() {
               inventory={currentInventory}
               onEdit={handleEditItem}
               onDelete={handleDeleteItem}
+              onBulkDelete={handleBulkDeleteItems}
               togglePopup={togglePopup}
               onEditingItemChange={handleEditingItemChange}
             />

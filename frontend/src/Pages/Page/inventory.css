@@ -264,8 +264,8 @@ header { display: none; }
   text-overflow: ellipsis;
 }
 
-/* Name column — wrap full text */
-.inventory-table-container td:nth-child(1) {
+/* Name column — wrap full text (nth-child 2: after checkbox col) */
+.inventory-table-container td:nth-child(2) {
   white-space: normal;
   word-break: break-word;
   line-height: 1.4;
@@ -275,15 +275,15 @@ header { display: none; }
 
 .inventory-table-container tr:last-child td { border-bottom: none; }
 
-/* Row status — bold left accent bar + background tint */
-.inventory-table-container tbody tr.row-status-danger td:first-child {
-  box-shadow: inset 8px 0 0 #EF4444, inset 9px 0 0 rgba(239,68,68,0.2);
+/* Row status — bold left accent bar on the NAME column (nth-child 2) */
+.inventory-table-container tbody tr.row-status-danger td:nth-child(2) {
+  box-shadow: inset 8px 0 0 #EF4444;
 }
-.inventory-table-container tbody tr.row-status-warning td:first-child {
-  box-shadow: inset 8px 0 0 #F59E0B, inset 9px 0 0 rgba(245,158,11,0.2);
+.inventory-table-container tbody tr.row-status-warning td:nth-child(2) {
+  box-shadow: inset 8px 0 0 #F59E0B;
 }
-.inventory-table-container tbody tr.row-status-safe td:first-child {
-  box-shadow: inset 8px 0 0 #16A34A, inset 9px 0 0 rgba(22,163,74,0.2);
+.inventory-table-container tbody tr.row-status-safe td:nth-child(2) {
+  box-shadow: inset 8px 0 0 #16A34A;
 }
 
 .inventory-table-container tbody tr.row-status-danger td { background-color: rgba(239, 68, 68, 0.18); }
@@ -293,7 +293,7 @@ header { display: none; }
 /* Row hover */
 .inventory-table-container tbody tr { transition: background 120ms ease; }
 .inventory-table-container tbody tr:hover td { filter: brightness(0.97); }
-.inventory-table-container tbody tr:hover td:first-child { padding-left: 19px; }
+.inventory-table-container tbody tr:hover td:nth-child(2) { padding-left: 19px; }
 
 /* Row action buttons — always visible */
 .inventory-table-container tbody tr .row-actions { opacity: 1; }
@@ -301,19 +301,114 @@ header { display: none; }
 
 .inventory-table-container tbody tr.row-editing td { background: var(--accent-light, #F0FDF4); }
 
-/* Column widths — Name is wide, Actions pinned to right */
+/* Column widths — checkbox(1) | Name(2) | Qty(3) | Status(4) | Expiry(5) | Price(6) | Actions(7) */
 .inventory-table-container table th:nth-child(1),
-.inventory-table-container table td:nth-child(1) { width: 35%; }
+.inventory-table-container table td:nth-child(1) { width: 3%; padding: 10px 4px; text-align: center; }
 .inventory-table-container table th:nth-child(2),
-.inventory-table-container table td:nth-child(2) { width: 6%; }
+.inventory-table-container table td:nth-child(2) { width: 32%; }
 .inventory-table-container table th:nth-child(3),
-.inventory-table-container table td:nth-child(3) { width: 13%; }
+.inventory-table-container table td:nth-child(3) { width: 6%; }
 .inventory-table-container table th:nth-child(4),
 .inventory-table-container table td:nth-child(4) { width: 13%; }
 .inventory-table-container table th:nth-child(5),
-.inventory-table-container table td:nth-child(5) { width: 9%; }
+.inventory-table-container table td:nth-child(5) { width: 13%; }
 .inventory-table-container table th:nth-child(6),
-.inventory-table-container table td:nth-child(6) { width: 24%; overflow: visible; }
+.inventory-table-container table td:nth-child(6) { width: 9%; }
+.inventory-table-container table th:nth-child(7),
+.inventory-table-container table td:nth-child(7) { width: 24%; overflow: visible; }
+
+/* ── Bulk action bar ── */
+.bulk-action-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
+  padding: 0 16px;
+  margin-bottom: 8px;
+  background: #1E293B;
+  border-radius: 8px;
+  color: #fff;
+}
+.bulk-action-count {
+  font-size: 13px;
+  font-weight: 500;
+  flex: 1;
+}
+.bulk-delete-btn {
+  background: #EF4444;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms;
+}
+.bulk-delete-btn:hover { background: #DC2626; }
+
+/* ── Bulk delete confirmation modal ── */
+.bulk-delete-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1100;
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 28px 24px;
+  width: 360px;
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  text-align: center;
+}
+.bulk-delete-modal-icon { font-size: 40px; margin-bottom: 12px; }
+.bulk-delete-modal-title { font-size: 18px; font-weight: 700; color: #0F172A; margin: 0 0 8px; }
+.bulk-delete-modal-subtitle { font-size: 13px; color: #64748B; margin: 0 0 16px; }
+.bulk-delete-modal-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  text-align: left;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+}
+.bulk-delete-modal-item {
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #374151;
+  border-bottom: 1px solid #F1F5F9;
+}
+.bulk-delete-modal-item:last-child { border-bottom: none; }
+.bulk-delete-modal-actions { display: flex; gap: 10px; justify-content: center; }
+.bulk-delete-modal-btn-confirm {
+  background: #EF4444;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  flex: 1;
+}
+.bulk-delete-modal-btn-confirm:hover { background: #DC2626; }
+.bulk-delete-modal-btn-cancel {
+  background: #F1F5F9;
+  color: #374151;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  flex: 1;
+}
+.bulk-delete-modal-btn-cancel:hover { background: #E2E8F0; }
 
 /* ── Edit inputs — MUST fit inside 56px row ── */
 .edit-cell-input {
@@ -364,7 +459,8 @@ header { display: none; }
 .status-badge {
   display: inline-flex;
   align-items: center;
-  font-size: 11px;
+  gap: 5px;
+  font-size: 12px;
   font-weight: 600;
   padding: 4px 10px;
   border-radius: var(--radius-full, 9999px);
@@ -373,21 +469,21 @@ header { display: none; }
 }
 
 .status-safe {
-  background: var(--accent-light, #F0FDF4);
-  color: var(--accent-dark, #15803D);
-  border: 1px solid var(--accent-border, #BBF7D0);
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #86EFAC;
 }
 
 .status-warning {
   background: #FEF3C7;
-  color: #92400E;
-  border: 1px solid #FDE68A;
+  color: #B45309;
+  border: 1px solid #FCD34D;
 }
 
 .status-danger {
-  background: var(--danger-light, #FEF2F2);
-  color: var(--danger, #EF4444);
-  border: 1px solid #FECACA;
+  background: #FEE2E2;
+  color: #DC2626;
+  border: 1px solid #FCA5A5;
 }
 
 /* ── Row action buttons ── */
@@ -897,25 +993,37 @@ header { display: none; }
 .inventory-table-container tbody tr:hover td {
   background: linear-gradient(to right, rgba(22,163,74,0.03), rgba(22,163,74,0.01));
 }
-.inventory-table-container tbody tr:hover td:first-child {
+.inventory-table-container tbody tr:hover td:nth-child(2) {
   padding-left: 20px;
 }
 
-/* Status badges — slightly larger */
+/* Status badges — modern compact pill */
 .status-badge {
-  font-size: 11.5px;
-  padding: 5px 12px;
+  font-size: 12px;
+  padding: 5px 11px;
   font-weight: 700;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
+  border-radius: 999px;
+  gap: 5px;
+}
+.status-badge-icon {
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.status-badge-text {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
 }
 .status-safe {
-  box-shadow: 0 1px 6px rgba(22,163,74,0.15);
+  box-shadow: 0 1px 4px rgba(22,163,74,0.2);
 }
 .status-warning {
-  box-shadow: 0 1px 6px rgba(245,158,11,0.15);
+  box-shadow: 0 1px 4px rgba(245,158,11,0.2);
 }
 .status-danger {
-  box-shadow: 0 1px 6px rgba(239,68,68,0.15);
+  box-shadow: 0 1px 4px rgba(239,68,68,0.2);
 }
 
 /* Row action buttons — bolder */
@@ -1407,9 +1515,9 @@ header { display: none; }
   .inv-action-btn { font-size: 12px; padding: 8px 14px; }
   .dash-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .dash-header { flex-direction: column; }
-  /* Hide price column on mobile */
-  .inventory-table-container table th:nth-child(5),
-  .inventory-table-container table td:nth-child(5) { display: none; }
+  /* Hide price column on mobile (now nth-child 6 after checkbox col) */
+  .inventory-table-container table th:nth-child(6),
+  .inventory-table-container table td:nth-child(6) { display: none; }
 }
 
 /* ══════════════════════════════════════════
