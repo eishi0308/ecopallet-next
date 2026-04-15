@@ -436,40 +436,37 @@ header { display: none; }
 }
 .bulk-delete-modal-btn-cancel:hover { background: #E2E8F0; }
 
-/* ── Edit inputs — MUST fit inside 56px row ── */
+/* ── Edit inputs — underline only so text stays at exact same position as display text ── */
 .edit-cell-input {
   font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-1, #0F172A);
-  background: var(--surface, #fff);
-  border: 1px solid var(--border, #E2E8F0);
-  border-radius: var(--radius-sm, 6px);
-  /* height + padding must not exceed 56px row height */
-  height: 36px;
-  padding: 0 10px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #3B82F6;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
   width: 100%;
   box-sizing: border-box;
   outline: none;
-  transition: border-color 150ms, box-shadow 150ms;
+  transition: border-color 150ms;
   display: block;
 }
-.edit-cell-input:focus {
-  border-color: var(--accent, #16A34A);
-  box-shadow: 0 0 0 2px rgba(22,163,74,0.15);
-}
-.edit-cell-input--sm { width: 80px; }
+.edit-cell-input--sm { width: 100%; }
 
 /* DatePicker in edit mode — same height as inputs */
 .react-datepicker-wrapper { width: 100%; display: block; }
 .date-picker.edit-date-picker {
   font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-1, #0F172A);
-  background: var(--surface, #fff);
-  border: 1px solid var(--border, #E2E8F0);
-  border-radius: var(--radius-sm, 6px);
-  height: 36px;
-  padding: 0 10px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #3B82F6;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
   width: 100%;
   box-sizing: border-box;
   outline: none;
@@ -477,8 +474,7 @@ header { display: none; }
   transition: border-color 150ms;
 }
 .date-picker.edit-date-picker:focus {
-  border-color: var(--accent, #16A34A);
-  box-shadow: 0 0 0 2px rgba(22,163,74,0.15);
+  border-bottom-color: #2563EB;
 }
 
 /* ── Status badge pills ── */
