@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import InventoryList from './InventoryList';
 import './inventory.css';
 import DatePicker from 'react-datepicker';
@@ -38,6 +39,7 @@ export const calculateStatus = (expiryDate) => {
 
 
 export function Maininventory() {
+  const navigate = useNavigate();
   const [inventory, setInventory] = useState(() => {
     const stored = localStorage.getItem('inventory');
     return stored ? JSON.parse(stored) : [];
@@ -162,7 +164,8 @@ export function Maininventory() {
     const newHistory = [...deletionHistory, ...newEntries];
     setDeletionHistory(newHistory);
     localStorage.setItem('deletionHistory', JSON.stringify(newHistory));
-    const updated = inventory.filter(item => !expiredItemsList.includes(item));
+    const expiredIds = new Set(expiredItemsList.map(item => item.id));
+    const updated = inventory.filter(item => !expiredIds.has(item.id));
     setInventory(updated);
     localStorage.setItem('inventory', JSON.stringify(updated));
     setShowExpiredModal(false);
@@ -475,6 +478,26 @@ export function Maininventory() {
             </button>
             <button className="inv-action-btn" onClick={() => togglePopup('produce')} disabled={editingItem !== null}>
               🌿 Scan Produce
+            </button>
+            <button
+              onClick={() => navigate('/recipes')}
+              style={{
+                background: 'linear-gradient(135deg, #F97316, #EC4899)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 12,
+                padding: '11px 20px',
+                fontSize: 13,
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: '0 4px 20px rgba(249,115,22,0.45)',
+                letterSpacing: '0.01em',
+                transition: 'transform 150ms, box-shadow 150ms',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(236,72,153,0.45)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 20px rgba(249,115,22,0.45)'; }}
+            >
+              🍳 What Can I Cook?
             </button>
           </div>
 
