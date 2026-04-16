@@ -218,6 +218,86 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
         </button>
       </div>
 
+      {/* ── Mobile sort bar (card view only) ── */}
+      <div className="inv-mobile-sort-bar">
+        <span className="inv-mobile-sort-label">Sort by expiry</span>
+        <button className="inv-mobile-sort-btn" onClick={toggleSortingOrder}>
+          {sortingOrder === 'asc' ? '↑ Soonest first' : '↓ Latest first'}
+        </button>
+      </div>
+
+      {/* ── Mobile card list ── */}
+      <div className="inv-card-list">
+        {sortedInventory.map((item) => {
+          const status = calculateStatus(item.expiryDate);
+          const isEditing = editingItem === item.id;
+          const isSelected = selectedIds.has(item.id);
+          const statusKey = status.color === 'red' ? 'danger' : status.color === '#DAA520' ? 'warning' : 'safe';
+          return (
+            <div key={item.id} className={`inv-card inv-card--${statusKey}${isEditing ? ' inv-card--editing' : ''}`}>
+              <div className="inv-card-header">
+                <input
+                  type="checkbox"
+                  className="inv-card-checkbox"
+                  checked={isSelected}
+                  onChange={() => toggleSelectOne(item.id)}
+                  aria-label={`Select ${item.name}`}
+                />
+                <div className="inv-card-name-block">
+                  {isEditing
+                    ? <input className="edit-cell-input" type="text" value={updatedValues.name} onChange={(e) => handleInputChange(e, 'name')} />
+                    : <span className="inv-card-name">{item.name}</span>
+                  }
+                  <CategoryBadge category={item.category} />
+                </div>
+                <span className={`status-badge status-${getStatusBadgeClass(status.color)}`}>
+                  <span className="status-badge-icon">{status.icon}</span>
+                  <span className="status-badge-text">{status.text}</span>
+                </span>
+              </div>
+              <div className="inv-card-meta">
+                <div className="inv-card-field inv-card-field--expiry">
+                  <span className="inv-card-field-label">Expiry</span>
+                  {isEditing
+                    ? <DatePicker selected={updatedValues.expiryDate} onChange={handleDateChange} dateFormat="dd MMM yyyy" className="date-picker edit-date-picker" popperPlacement="bottom-start" portalId="root" />
+                    : <span className="inv-card-field-value">{item.expiryDate}</span>
+                  }
+                </div>
+                <div className="inv-card-field">
+                  <span className="inv-card-field-label">Qty</span>
+                  {isEditing
+                    ? <input className="edit-cell-input edit-cell-input--sm" type="text" value={updatedValues.amount} onChange={(e) => handleInputChange(e, 'amount')} />
+                    : <span className="inv-card-field-value">{item.amount}</span>
+                  }
+                </div>
+                <div className="inv-card-field">
+                  <span className="inv-card-field-label">Price</span>
+                  {isEditing
+                    ? <input className="edit-cell-input edit-cell-input--sm" type="text" value={updatedValues.spent} onChange={(e) => handleInputChange(e, 'spent')} />
+                    : <span className="inv-card-field-value">${item.spent}</span>
+                  }
+                </div>
+              </div>
+              <div className="inv-card-actions">
+                {isEditing ? (
+                  <>
+                    <button className="row-btn row-btn-save inv-card-btn" onClick={() => handleSave(item.id)}>Save</button>
+                    <button className="row-btn row-btn-cancel inv-card-btn" onClick={handleCancel}>Cancel</button>
+                  </>
+                ) : (
+                  <>
+                    <button className="row-btn row-btn-edit inv-card-btn" onClick={() => handleEdit(item.id, item)} disabled={editingItem !== null && editingItem !== item.id}>Edit</button>
+                    <button className="row-btn row-btn-scan inv-card-btn" onClick={() => handleScanExpiry(item.id, item)} disabled={editingItem !== null}>Scan</button>
+                    <button className="row-btn row-btn-delete inv-card-btn" onClick={() => confirmDelete(item.id)} disabled={editingItem !== null && editingItem !== item.id}>Delete</button>
+                  </>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ── Desktop table ── */}
       <table>
         <thead>
           <tr>

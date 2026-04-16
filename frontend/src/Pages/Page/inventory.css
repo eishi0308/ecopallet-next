@@ -1516,6 +1516,136 @@ header { display: none; }
 }
 
 /* ══════════════════════════════════════════
+   MOBILE CARD VIEW
+══════════════════════════════════════════ */
+
+/* Hidden on desktop — only shown at mobile breakpoint */
+.inv-card-list { display: none; }
+.inv-mobile-sort-bar { display: none; }
+
+/* ── Card item ── */
+.inv-card {
+  background: var(--surface, #fff);
+  border-radius: 14px;
+  border: 1px solid var(--border, #E2E8F0);
+  border-left: 4px solid transparent;
+  padding: 14px 14px 12px;
+  transition: box-shadow 150ms;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.inv-card--danger  { border-left-color: #EF4444; background: rgba(239,68,68,0.03); }
+.inv-card--warning { border-left-color: #F59E0B; background: rgba(245,158,11,0.03); }
+.inv-card--safe    { border-left-color: #16A34A; background: rgba(22,163,74,0.03); }
+.inv-card--editing {
+  border-left-color: #3B82F6 !important;
+  background: #EFF6FF !important;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.18);
+}
+
+/* Card header row: checkbox | name+badge | status pill */
+.inv-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.inv-card-checkbox {
+  margin-top: 4px;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent, #16A34A);
+}
+.inv-card-name-block {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.inv-card-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-1, #0F172A);
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+/* Card meta row: expiry | qty | price */
+.inv-card-meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.inv-card-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.inv-card-field--expiry { flex: 1; min-width: 120px; }
+.inv-card-field-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-3, #94A3B8);
+}
+.inv-card-field-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-1, #0F172A);
+}
+
+/* Card action buttons */
+.inv-card-actions {
+  display: flex;
+  gap: 8px;
+}
+.inv-card-btn {
+  flex: 1;
+  text-align: center;
+  justify-content: center;
+  padding: 8px 6px !important;
+  font-size: 12px !important;
+  border-radius: 10px !important;
+}
+
+/* Mobile sort bar */
+.inv-mobile-sort-bar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2px 10px;
+  gap: 8px;
+}
+.inv-mobile-sort-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-3, #94A3B8);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.inv-mobile-sort-btn {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  background: var(--surface, #fff);
+  color: var(--text-1, #0F172A);
+  border: 1px solid var(--border, #E2E8F0);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 150ms;
+  box-shadow: var(--shadow-sm);
+}
+.inv-mobile-sort-btn:hover {
+  background: var(--surface-2, #F1F5F9);
+  border-color: var(--border-strong, #CBD5E1);
+}
+
+/* ══════════════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════════════ */
 @media (max-width: 1000px) {
@@ -1541,9 +1671,19 @@ header { display: none; }
   .inv-action-btn { font-size: 12px; padding: 8px 14px; }
   .dash-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .dash-header { flex-direction: column; }
-  /* Hide price column on mobile (now nth-child 6 after checkbox col) */
-  .inventory-table-container table th:nth-child(6),
-  .inventory-table-container table td:nth-child(6) { display: none; }
+
+  /* Switch: hide table, show card list */
+  .inventory-table-container table { display: none; }
+  .inv-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 12px 12px;
+  }
+  .inv-mobile-sort-bar {
+    display: flex;
+    padding: 12px 12px 0;
+  }
 }
 
 /* ══════════════════════════════════════════
