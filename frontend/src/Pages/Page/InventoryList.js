@@ -210,8 +210,9 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
 
   return (
     <div>
-      {/* Action bar — always rendered to pre-reserve space, visibility toggled */}
-      <div className="bulk-action-bar" style={{ visibility: selectedIds.size > 0 ? 'visible' : 'hidden' }}>
+      {/* Floating bulk action bar — slides up from bottom when items are selected */}
+      <div className={`bulk-action-bar${selectedIds.size > 0 ? ' bulk-action-bar--active' : ''}`}>
+        <button className="bulk-action-clear" onClick={() => setSelectedIds(new Set())} aria-label="Deselect all">✕</button>
         <span className="bulk-action-count">{selectedIds.size} item{selectedIds.size !== 1 ? 's' : ''} selected</span>
         <button className="bulk-delete-btn" onClick={() => setShowBulkDeleteConfirm(true)}>
           🗑 Delete Selected
