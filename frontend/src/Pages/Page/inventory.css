@@ -1027,20 +1027,12 @@ header { display: none; }
   transform: translateY(-2px);
 }
 
-/* Table container — top accent stripe */
+/* Table container */
 .inventory-table-container {
   border-radius: 18px;
   box-shadow: 0 2px 16px rgba(0,0,0,0.06);
   position: relative;
-}
-.inventory-table-container::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #16A34A, #059669, #0d9488);
-  border-radius: 18px 18px 0 0;
-  z-index: 1;
+  border-top: 3px solid #3B82F6;
 }
 
 /* Table header — gradient background */
