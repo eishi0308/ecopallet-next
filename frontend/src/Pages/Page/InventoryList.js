@@ -18,6 +18,7 @@ const CATEGORY_STYLES = {
   'Chilled':      { bg: '#F0F9FF', color: '#0369A1', emoji: '❄️' },
   'Frozen':       { bg: '#ECFEFF', color: '#0E7490', emoji: '🧊' },
   'Fruit':        { bg: '#F0FDF4', color: '#15803D', emoji: '🍎' },
+  'Vegetable':    { bg: '#F0FDF4', color: '#15803D', emoji: '🥦' },
   'Bakery':       { bg: '#FFFBEB', color: '#B45309', emoji: '🍞' },
   'Pantry':       { bg: '#FFF7ED', color: '#C2410C', emoji: '🏺' },
   'Cooking':      { bg: '#FFF7ED', color: '#C2410C', emoji: '🍳' },

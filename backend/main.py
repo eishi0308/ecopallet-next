@@ -88,15 +88,18 @@ async def parse_receipt(file: UploadFile = File(...)):
 
     # Build a compact list for the OpenAI prompt
     item_list = "\n".join(
-        f"{i+1}. {it['name']} (category: {it['category']})"
+        f"{i+1}. {it['name']} (receipt category: {it['category']})"
         for i, it in enumerate(items)
     )
 
-    prompt = f"""You are a food shelf-life expert. For each grocery item below, estimate how many days it typically lasts after purchase when stored correctly at home.
+    prompt = f"""You are a grocery expert. For each grocery item below, provide three things:
+1. A short clean display name (2-5 words max, no brand names, no store names like "Woolworths"/"Coles"/"Devondale", no weights or sizes) — e.g. "eggs", "mozzarella cheese", "olive oil", "broccoli", "chicken thighs", "toothpaste"
+2. The most specific category from ONLY this list: Fruit, Vegetable, Meat, Dairy, Drinks, Cooking, Bakery, Frozen, Pantry, Chilled, Health, Toiletries, Household, Baby, Pet
+3. How many days the item typically lasts after purchase when stored correctly at home
 
-Reply ONLY with a valid JSON array of integers (one number per item, in the same order). No explanations, no markdown, just the JSON array.
+Reply ONLY with a valid JSON array of objects in the same order as the items. No explanations, no markdown, just the JSON array.
 
-Example: [7, 14, 90, 3]
+Example: [{{"short_name": "eggs", "category": "Dairy", "shelf_days": 21}}, {{"short_name": "broccoli", "category": "Vegetable", "shelf_days": 7}}]
 
 Items:
 {item_list}"""
@@ -107,33 +110,40 @@ Items:
             messages=[{"role": "user", "content": prompt}],
             temperature=0,
         )
-        shelf_days = json.loads(response.choices[0].message.content.strip())
+        ai_results = json.loads(response.choices[0].message.content.strip())
     except Exception:
         # Fallback: category-based defaults if OpenAI fails
         CATEGORY_DEFAULTS = {
             "Chilled": 7, "Dairy": 10, "Meat": 3, "Serviced": 3,
-            "Fruit": 5, "Frozen": 90, "Bakery": 5, "Pantry": 180,
+            "Fruit": 5, "Vegetable": 5, "Frozen": 90, "Bakery": 5, "Pantry": 180,
             "Cooking": 180, "Drinks": 14, "Health": 365,
             "Toiletries": 365, "Household": 365,
         }
-        shelf_days = [
-            CATEGORY_DEFAULTS.get(it["category"], 30) for it in items
+        ai_results = [
+            {
+                "short_name": it["name"],
+                "category":   it["category"],
+                "shelf_days": CATEGORY_DEFAULTS.get(it["category"], 30),
+            }
+            for it in items
         ]
 
     # Build final response
     from datetime import date, timedelta
     today = date.today()
     result = []
-    for it, days in zip(items, shelf_days):
-        expiry = today + timedelta(days=int(days))
+    for it, ai in zip(items, ai_results):
+        days   = int(ai.get("shelf_days", 30))
+        expiry = today + timedelta(days=days)
         result.append({
-            "name":       it["name"],
-            "qty":        it["qty"],
-            "unit_price": it["unit_price"],
-            "total":      it["total"],
-            "category":   it["category"],
-            "shelf_days": int(days),
-            "expiry_date": f"{expiry.day} {expiry.strftime('%b')} {expiry.year}",  # e.g. "21 Apr 2025"
+            "name":        it["name"],
+            "short_name":  ai.get("short_name", it["name"]),
+            "qty":         it["qty"],
+            "unit_price":  it["unit_price"],
+            "total":       it["total"],
+            "category":    ai.get("category", it["category"]),
+            "shelf_days":  days,
+            "expiry_date": f"{expiry.day} {expiry.strftime('%b')} {expiry.year}",
         })
 
     return {"items": result}
