@@ -241,7 +241,12 @@ export const Recipes = () => {
                   <tr key={item.id}>
                     <td>{item.name}</td>
                     <td>{item.amount}</td>
-                    <td>{item.status.message}</td>
+                    <td>
+                      <span className={`status-badge status-${item.status.color === 'red' ? 'danger' : item.status.color === '#DAA520' ? 'warning' : 'safe'}`}>
+                        <span className="status-badge-icon">{item.status.icon}</span>
+                        <span className="status-badge-text">{item.status.text}</span>
+                      </span>
+                    </td>
                     <td>
                       <button className="add-to-search-button" onClick={() => handleAddToSearch(item.name)}>+</button>
                     </td>

@@ -21,13 +21,9 @@ export const calculateStatus = (expiryDate) => {
 
   const diffDays = (expiry - currentDate) / (1000 * 60 * 60 * 24);
 
-  if (Math.ceil(diffDays) < 0) {
-    return { message: 'Expired ' + Math.abs(Math.ceil(diffDays)) + 'd', color: 'red' };
-  } else if (Math.ceil(diffDays) === 0) {
-    return { message: 'Expires Today', color: 'red' };
-  } else if (Math.ceil(diffDays) <= 5) {
-    return { message: Math.ceil(diffDays) + 'd to Expire', color: '#DAA520' };
-  } else {
-    return { message: 'Safe (>5d)', color: 'green' };
-  }
+  const days = Math.ceil(diffDays);
+  if (days < 0)   return { icon: '✕', text: `${Math.abs(days)}d ago`, color: 'red' };
+  if (days === 0) return { icon: '⚠', text: 'Today',                  color: 'red' };
+  if (days <= 5)  return { icon: '⚡', text: `${days}d`,              color: '#DAA520' };
+  return           { icon: '✓', text: `${days}d`,                     color: 'green' };
 };

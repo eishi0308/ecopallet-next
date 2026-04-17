@@ -6,9 +6,9 @@ import './inventory.css';
 import samimg3 from "./3.jpeg";
 
 const getStatusBadgeClass = (color) => {
-  if (color === 'red')      return 'status-danger';
-  if (color === '#DAA520')  return 'status-warning';
-  return 'status-safe';
+  if (color === 'red')      return 'danger';
+  if (color === '#DAA520')  return 'warning';
+  return 'safe';
 };
 
 const CATEGORY_STYLES = {
