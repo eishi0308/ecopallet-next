@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { calculateStatus, parseExpiryDate } from './inventory';
@@ -74,6 +74,14 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
   }, [inventory, sortingOrder]);
 
   const allSelected = sortedInventory.length > 0 && selectedIds.size === sortedInventory.length;
+  const someSelected = selectedIds.size > 0 && !allSelected;
+  const selectAllRef = useRef(null);
+
+  useEffect(() => {
+    if (selectAllRef.current) {
+      selectAllRef.current.indeterminate = someSelected;
+    }
+  }, [someSelected]);
 
   const toggleSelectAll = () => {
     if (allSelected) {
@@ -236,15 +244,17 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
           const isSelected = selectedIds.has(item.id);
           const statusKey = status.color === 'red' ? 'danger' : status.color === '#DAA520' ? 'warning' : 'safe';
           return (
-            <div key={item.id} className={`inv-card inv-card--${statusKey}${isEditing ? ' inv-card--editing' : ''}`}>
+            <div key={item.id} className={`inv-card inv-card--${statusKey}${isEditing ? ' inv-card--editing' : ''}${isSelected ? ' inv-card--selected' : ''}`}>
               <div className="inv-card-header">
-                <input
-                  type="checkbox"
-                  className="inv-card-checkbox"
-                  checked={isSelected}
-                  onChange={() => toggleSelectOne(item.id)}
+                <div
+                  className={`inv-card-sel${isSelected ? ' inv-card-sel--on' : ''}`}
+                  onClick={() => toggleSelectOne(item.id)}
+                  role="checkbox"
+                  aria-checked={isSelected}
                   aria-label={`Select ${item.name}`}
-                />
+                >
+                  {isSelected && '✓'}
+                </div>
                 <div className="inv-card-name-block">
                   {isEditing
                     ? <input className="edit-cell-input" type="text" value={updatedValues.name} onChange={(e) => handleInputChange(e, 'name')} />
@@ -305,6 +315,7 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
           <tr>
             <th className="col-checkbox">
               <input
+                ref={selectAllRef}
                 type="checkbox"
                 checked={allSelected}
                 onChange={toggleSelectAll}
@@ -331,7 +342,7 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
             const isSelected = selectedIds.has(item.id);
             const statusKey = status.color === 'red' ? 'danger' : status.color === '#DAA520' ? 'warning' : 'safe';
             return (
-              <tr key={item.id} className={`${isEditing ? 'row-editing' : ''} row-status-${statusKey}`}>
+              <tr key={item.id} className={`${isEditing ? 'row-editing' : ''} row-status-${statusKey}${isSelected ? ' row-selected' : ''}`}>
                 <td className="col-checkbox">
                   <div className="cell-inner cell-inner--center">
                     <input
