@@ -42,7 +42,19 @@ export function Maininventory() {
   const navigate = useNavigate();
   const [inventory, setInventory] = useState(() => {
     const stored = localStorage.getItem('inventory');
-    return stored ? JSON.parse(stored) : [];
+    if (!stored) return [];
+    const items = JSON.parse(stored);
+    // Fix any duplicate IDs from old data
+    const seenIds = new Set();
+    return items.map((item, i) => {
+      if (seenIds.has(item.id)) {
+        const newId = Date.now() + i + Math.random();
+        seenIds.add(newId);
+        return { ...item, id: newId };
+      }
+      seenIds.add(item.id);
+      return item;
+    });
   });
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [showScanProducePopup, setShowScanProducePopup] = useState(false);
@@ -246,7 +258,19 @@ export function Maininventory() {
 
   useEffect(() => {
     const stored = localStorage.getItem('inventory');
-    if (stored) setInventory(JSON.parse(stored));
+    if (!stored) return;
+    const items = JSON.parse(stored);
+    const seenIds = new Set();
+    const fixed = items.map((item, i) => {
+      if (seenIds.has(item.id)) {
+        const newId = Date.now() + i + Math.random();
+        seenIds.add(newId);
+        return { ...item, id: newId };
+      }
+      seenIds.add(item.id);
+      return item;
+    });
+    setInventory(fixed);
   }, []);
 
   useEffect(() => {
@@ -297,7 +321,7 @@ export function Maininventory() {
     const sameNameItems = inventory.filter(i => i.name === newItem.name);
     const batchNumber = sameNameItems.length + 1;
     const newInventoryItem = {
-      id: inventory.length + 1,
+      id: Date.now(),
       name: batchNumber > 1 ? `${newItem.name} - Batch ${batchNumber}` : newItem.name,
       amount: parseFloat(newItem.amount),
       spent: formattedSpent,
@@ -312,7 +336,7 @@ export function Maininventory() {
   };
 
   const populateItems = (name, amount, spent, expiryDate, status) => {
-    const newInventoryItem = { id: inventory.length + 1, name, amount, spent, expiryDate, status };
+    const newInventoryItem = { id: Date.now() + Math.random(), name, amount, spent, expiryDate, status };
     setInventory(prev => [...prev, newInventoryItem]);
   };
 
@@ -404,9 +428,8 @@ export function Maininventory() {
 
   const handleConfirmPdfItems = (itemsToAdd) => {
     const items = itemsToAdd ?? pdfItems;
-    const startId = inventory.length + 1;
     const newItems = items.map((item, index) => ({
-      id: startId + index,
+      id: Date.now() + index,
       name: item.name,
       amount: item.qty,
       spent: item.unit_price.toFixed(2),
