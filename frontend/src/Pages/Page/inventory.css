@@ -1585,9 +1585,9 @@ header { display: none; }
   transition: box-shadow 150ms;
   box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
-.inv-card--danger  { border-left-color: #EF4444; background: rgba(239,68,68,0.03); }
-.inv-card--warning { border-left-color: #F59E0B; background: rgba(245,158,11,0.03); }
-.inv-card--safe    { border-left-color: #16A34A; background: rgba(22,163,74,0.03); }
+.inv-card--danger  { border-left-color: #EF4444; background: rgba(239,68,68,0.18); }
+.inv-card--warning { border-left-color: #F59E0B; background: rgba(245,158,11,0.18); }
+.inv-card--safe    { border-left-color: #16A34A; background: rgba(22,163,74,0.15); }
 .inv-card--selected {
   border-left-color: #16A34A !important;
   background: rgba(22,163,74,0.06) !important;
