@@ -420,7 +420,8 @@ export function Maininventory() {
     setShowPdfReceiptPopup(false);
     setPdfItems([]);
     setPdfFile(null);
-    showToast(`${newItems.length} item${newItems.length > 1 ? 's' : ''} added from receipt.`);
+    const isFirstScan = inventory.length === 0;
+    showToast(isFirstScan ? '🎉 Your pantry is alive. Great first scan!' : `${newItems.length} item${newItems.length > 1 ? 's' : ''} added from receipt.`);
   };
 
   const handleAddToPantryClick = () => {
@@ -495,11 +496,13 @@ export function Maininventory() {
           {/* ── Toolbar ── */}
           <div className="inv-toolbar">
             <button
-              className="inv-action-btn inv-action-primary"
+              className={`inv-action-btn inv-scan-cta${inventory.length === 0 ? ' inv-scan-cta--pulse' : ''}`}
               onClick={() => { closeAllPopups(); setShowPdfReceiptPopup(true); }}
               disabled={editingItem !== null}
             >
-              📄 Upload PDF Receipt
+              <span className="inv-scan-cta-icon">📄</span>
+              Scan Receipt
+              {inventory.length === 0 && <span className="inv-scan-cta-ring" />}
             </button>
             <button className="inv-action-btn" onClick={() => togglePopup('add')} disabled={editingItem !== null}>
               + Add Item
@@ -528,6 +531,24 @@ export function Maininventory() {
               🍳 What Can I Cook?
             </button>
           </div>
+
+          {/* ── Empty State ── */}
+          {inventory.length === 0 && (
+            <div className="inv-empty-state">
+              <div className="inv-empty-icon-wrap">
+                <span className="inv-empty-scan-line" />
+                <span className="inv-empty-icon">🧾</span>
+              </div>
+              <h2 className="inv-empty-title">Start by scanning a receipt</h2>
+              <p className="inv-empty-sub">Point your camera and we'll fill in the rest</p>
+              <button
+                className="inv-empty-cta"
+                onClick={() => { closeAllPopups(); setShowPdfReceiptPopup(true); }}
+              >
+                📄 Scan Your First Receipt
+              </button>
+            </div>
+          )}
 
           {/* ── Inventory Table ── */}
           <div className="inventory-table-container">

@@ -194,6 +194,126 @@ header { display: none; }
 }
 .inv-action-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
+/* ── Elevated Scan CTA button ── */
+.inv-scan-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #16A34A;
+  color: #fff;
+  border-color: #16A34A;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 11px 22px;
+  box-shadow: 0 4px 18px rgba(22,163,74,0.45);
+  border-radius: var(--radius-full, 9999px) !important;
+  overflow: visible;
+}
+.inv-scan-cta:hover:not(:disabled) {
+  background: #15803D;
+  border-color: #15803D;
+  box-shadow: 0 8px 28px rgba(22,163,74,0.55);
+  transform: translateY(-2px);
+}
+.inv-scan-cta-icon { font-size: 16px; }
+
+/* Pulse ring — shown only when inventory is empty */
+.inv-scan-cta-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 9999px;
+  border: 2px solid rgba(22,163,74,0.5);
+  animation: scanBtnPulse 2s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes scanBtnPulse {
+  0%   { transform: scale(1);    opacity: 0.8; }
+  70%  { transform: scale(1.22); opacity: 0; }
+  100% { transform: scale(1.22); opacity: 0; }
+}
+
+/* ── Empty state ── */
+.inv-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 64px 24px 72px;
+  gap: 0;
+}
+
+.inv-empty-icon-wrap {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  background: rgba(22,163,74,0.1);
+  border: 1.5px solid rgba(22,163,74,0.3);
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 28px;
+  box-shadow: 0 0 32px rgba(22,163,74,0.18);
+}
+
+.inv-empty-icon { font-size: 36px; position: relative; z-index: 1; }
+
+/* Scan line sweeping through the icon */
+.inv-empty-scan-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #86efac, transparent);
+  animation: emptyScanSweep 2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes emptyScanSweep {
+  0%   { top: 10%; opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { top: 90%; opacity: 0; }
+}
+
+.inv-empty-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-1, #0F172A);
+  letter-spacing: -0.4px;
+  margin: 0 0 10px;
+}
+
+.inv-empty-sub {
+  font-size: 14px;
+  color: var(--text-3, #94A3B8);
+  margin: 0 0 32px;
+  line-height: 1.6;
+}
+
+.inv-empty-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  background: #16A34A;
+  border: none;
+  border-radius: 9999px;
+  padding: 14px 36px;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(22,163,74,0.45);
+  transition: background 200ms, transform 200ms, box-shadow 200ms;
+}
+.inv-empty-cta:hover {
+  background: #15803D;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 32px rgba(22,163,74,0.55);
+}
+
 .inv-action-primary {
   background: var(--accent, #16A34A);
   color: #fff;
