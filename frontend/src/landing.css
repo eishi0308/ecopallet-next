@@ -5,10 +5,9 @@
 .landing-root {
   position: fixed;
   inset: 0;
-  top: 64px; /* below fixed navbar */
+  top: 64px;
 }
 
-/* ── Background: pure CSS gradient, no image ── */
 .landing-bg {
   width: 100%;
   height: 100%;
@@ -20,7 +19,6 @@
   overflow: hidden;
 }
 
-/* Radial green glow — top right */
 .landing-bg::before {
   content: '';
   position: absolute;
@@ -32,7 +30,6 @@
   pointer-events: none;
 }
 
-/* Subtle second glow — bottom left */
 .landing-bg::after {
   content: '';
   position: absolute;
@@ -54,10 +51,9 @@
   text-align: center;
   padding: 0 24px;
   max-width: 680px;
-  gap: 0;
 }
 
-/* Brand name */
+/* Brand */
 .landing-brand {
   font-family: 'Inter', -apple-system, sans-serif;
   font-size: 15px;
@@ -86,48 +82,150 @@
   letter-spacing: -1px;
   margin: 0 0 6px;
 }
-
-.landing-h1-white {
-  color: #ffffff;
-}
-
-.landing-h1-green {
-  color: #86efac;
-}
+.landing-h1-white { color: #ffffff; }
+.landing-h1-green  { color: #86efac; }
 
 /* Subtitle */
 .landing-sub {
   font-family: 'Inter', -apple-system, sans-serif;
-  font-size: clamp(13px, 1.6vw, 16px);
-  color: rgba(255, 255, 255, 0.58);
+  font-size: clamp(14px, 1.7vw, 17px);
+  color: rgba(255,255,255,0.58);
   line-height: 1.6;
-  margin: 0 0 28px;
-  max-width: 440px;
+  margin: 0 0 40px;
 }
 
-/* Feature chips */
-.landing-chips {
+/* ══════════════════════════════════════════
+   STEP JOURNEY
+══════════════════════════════════════════ */
+.landing-steps {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 48px;
   flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 44px;
 }
 
-.landing-chip {
+/* Arrow connector */
+.landing-step-arrow {
+  font-size: 18px;
+  color: rgba(255,255,255,0.18);
+  line-height: 1;
+  margin-bottom: 22px;
+}
+.landing-step-arrow--lit {
+  color: rgba(134,239,172,0.55);
+}
+
+/* Single step */
+.landing-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Active step — large & bright */
+.landing-step--active {
+  transform: scale(1.08);
+}
+
+/* Dim steps */
+.landing-step--dim .landing-step-icon-wrap {
+  opacity: 0.32;
+}
+.landing-step--dim .landing-step-num,
+.landing-step--dim .landing-step-label {
+  opacity: 0.32;
+}
+
+/* Pulse ring around active step */
+.landing-step-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -58%);
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid rgba(22,163,74,0.55);
+  animation: stepPulse 2.2s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes stepPulse {
+  0%   { transform: translate(-50%, -58%) scale(0.85); opacity: 0.8; }
+  70%  { transform: translate(-50%, -58%) scale(1.35); opacity: 0; }
+  100% { transform: translate(-50%, -58%) scale(1.35); opacity: 0; }
+}
+
+/* Icon wrapper */
+.landing-step-icon-wrap {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  background: rgba(22,163,74,0.18);
+  border: 1.5px solid rgba(22,163,74,0.4);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.landing-step--active .landing-step-icon-wrap {
+  background: rgba(22,163,74,0.28);
+  border-color: rgba(22,163,74,0.7);
+  box-shadow: 0 0 20px rgba(22,163,74,0.35);
+}
+
+/* Receipt scan line — sweeps across icon */
+.landing-scan-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #86efac, transparent);
+  animation: scanSweep 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes scanSweep {
+  0%   { top: 10%; opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { top: 90%; opacity: 0; }
+}
+
+.landing-step-icon {
+  font-size: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Step number */
+.landing-step-num {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #86efac;
+}
+.landing-step--dim .landing-step-num {
+  color: rgba(255,255,255,0.5);
+}
+
+/* Step label */
+.landing-step-label {
   font-family: 'Inter', -apple-system, sans-serif;
   font-size: 12px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8) !important;
-  background: rgba(255, 255, 255, 0.07) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  backdrop-filter: blur(8px);
-  padding: 7px 14px;
-  border-radius: 9999px;
-  letter-spacing: 0.02em;
+  color: #fff;
+  white-space: nowrap;
 }
 
-/* CTA button */
+/* ══════════════════════════════════════════
+   CTA
+══════════════════════════════════════════ */
 .landing-cta {
   display: inline-flex;
   align-items: center;
@@ -143,32 +241,23 @@
   cursor: pointer;
   text-decoration: none;
   letter-spacing: 0.2px;
-  box-shadow: 0 4px 24px rgba(22, 163, 74, 0.45), 0 0 0 1px rgba(22,163,74,0.3);
+  box-shadow: 0 4px 24px rgba(22,163,74,0.45), 0 0 0 1px rgba(22,163,74,0.3);
   transition: background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
 }
-
 .landing-cta:hover {
   background: #15803D;
   transform: translateY(-3px);
-  box-shadow: 0 10px 32px rgba(22, 163, 74, 0.55), 0 0 0 1px rgba(22,163,74,0.4);
+  box-shadow: 0 10px 32px rgba(22,163,74,0.55), 0 0 0 1px rgba(22,163,74,0.4);
   color: #fff;
   text-decoration: none;
 }
-
-.landing-cta:active {
-  transform: translateY(-1px);
-}
+.landing-cta:active { transform: translateY(-1px); }
 
 /* ── Responsive ── */
 @media (max-width: 600px) {
   .landing-h1-white,
-  .landing-h1-green {
-    letter-spacing: -1px;
-  }
-  .landing-chips {
-    gap: 8px;
-  }
-  .landing-cta {
-    padding: 16px 36px;
-  }
+  .landing-h1-green { letter-spacing: -1px; }
+  .landing-step-arrow { display: none; }
+  .landing-steps { gap: 20px; }
+  .landing-cta { padding: 16px 32px; font-size: 14px; }
 }

@@ -1,10 +1,10 @@
 import React from "react";
 import "./landing.css";
 
-const features = [
-  { icon: "📷", label: "Receipt Scanning" },
-  { icon: "📊", label: "Spending Analytics" },
-  { icon: "🍽", label: "Recipe Suggestions" },
+const steps = [
+  { num: "01", icon: "🧾", label: "Scan Receipt", active: true },
+  { num: "02", icon: "⏰", label: "Track Expiry",  active: false },
+  { num: "03", icon: "🍽",  label: "Cook & Save",  active: false },
 ];
 
 export const Landing = () => {
@@ -15,7 +15,7 @@ export const Landing = () => {
         <div className="landing-content">
 
           {/* Brand */}
-          <div className="landing-brand"> Welcome to Fridgely</div>
+          <div className="landing-brand">Welcome to Fridgely</div>
 
           {/* Headline */}
           <div className="landing-headline">
@@ -25,21 +25,34 @@ export const Landing = () => {
 
           {/* Subtitle */}
           <p className="landing-sub">
-            Smart pantry tracking that turns your fridge into zero waste.
+            It starts with one scan.
           </p>
 
-          {/* Feature chips — Bootstrap badges */}
-          <div className="landing-chips">
-            {features.map((f) => (
-              <span key={f.label} className="badge landing-chip">
-                {f.icon} {f.label}
-              </span>
+          {/* Step journey */}
+          <div className="landing-steps">
+            {steps.map((s, i) => (
+              <React.Fragment key={s.label}>
+                <div className={`landing-step ${s.active ? "landing-step--active" : "landing-step--dim"}`}>
+                  {s.active && <span className="landing-step-pulse" />}
+                  <div className="landing-step-icon-wrap">
+                    {s.active && (
+                      <span className="landing-scan-line" />
+                    )}
+                    <span className="landing-step-icon">{s.icon}</span>
+                  </div>
+                  <span className="landing-step-num">{s.num}</span>
+                  <span className="landing-step-label">{s.label}</span>
+                </div>
+                {i < steps.length - 1 && (
+                  <div className={`landing-step-arrow ${i === 0 ? "landing-step-arrow--lit" : ""}`}>→</div>
+                )}
+              </React.Fragment>
             ))}
           </div>
 
           {/* CTA */}
           <a href="/inventory" className="landing-cta">
-            Get Started →
+            Scan Your First Receipt →
           </a>
 
         </div>
