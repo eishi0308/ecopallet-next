@@ -539,7 +539,7 @@ export function Maininventory() {
                 background: 'linear-gradient(135deg, #F97316, #EC4899)',
                 color: '#fff',
                 border: 'none',
-                borderRadius: 12,
+                borderRadius: 9999,
                 padding: '11px 20px',
                 fontSize: 13,
                 fontWeight: 700,
