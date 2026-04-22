@@ -553,6 +553,26 @@ export function Maininventory() {
             >
               🍳 What Can I Cook?
             </button>
+            <button
+              onClick={() => navigate('/tips')}
+              style={{
+                background: 'linear-gradient(135deg, #06B6D4, #6366F1)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 9999,
+                padding: '11px 20px',
+                fontSize: 13,
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: '0 4px 20px rgba(99,102,241,0.45)',
+                letterSpacing: '0.01em',
+                transition: 'transform 150ms, box-shadow 150ms',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(6,182,212,0.5)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.45)'; }}
+            >
+              🧊 How to Keep Longer?
+            </button>
           </div>
 
           {/* ── Empty State ── */}
