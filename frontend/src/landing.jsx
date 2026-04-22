@@ -2,9 +2,9 @@ import React from "react";
 import "./landing.css";
 
 const steps = [
-  { num: "01", icon: "🧾", label: "Scan Receipt", active: true },
-  { num: "02", icon: "⏰", label: "Track Expiry",  active: false },
-  { num: "03", icon: "🍽",  label: "Cook & Save",  active: false },
+  { num: "01", icon: "🧾", label: "Scan Receipt", active: true,  scan: true },
+  { num: "02", icon: "⏰", label: "Track Expiry",  active: true,  scan: false },
+  { num: "03", icon: "🍽",  label: "Cook & Save",  active: true,  scan: false },
 ];
 
 export const Landing = () => {
@@ -33,9 +33,9 @@ export const Landing = () => {
             {steps.map((s, i) => (
               <React.Fragment key={s.label}>
                 <div className={`landing-step ${s.active ? "landing-step--active" : "landing-step--dim"}`}>
-                  {s.active && <span className="landing-step-pulse" />}
+                  {s.scan && <span className="landing-step-pulse" />}
                   <div className="landing-step-icon-wrap">
-                    {s.active && (
+                    {s.scan && (
                       <span className="landing-scan-line" />
                     )}
                     <span className="landing-step-icon">{s.icon}</span>
@@ -44,7 +44,7 @@ export const Landing = () => {
                   <span className="landing-step-label">{s.label}</span>
                 </div>
                 {i < steps.length - 1 && (
-                  <div className={`landing-step-arrow ${i === 0 ? "landing-step-arrow--lit" : ""}`}>→</div>
+                  <div className="landing-step-arrow landing-step-arrow--lit">→</div>
                 )}
               </React.Fragment>
             ))}
