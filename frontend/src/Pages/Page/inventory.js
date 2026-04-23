@@ -81,6 +81,7 @@ export function Maininventory() {
   const [hasOneItemInInventory, setHasOneItemInInventory] = useState(inventory.length === 1);
   const [showCongratsPopup, setShowCongratsPopup] = useState(true);
   const [showCongratsTimer, setShowCongratsTimer] = useState(true);
+  const [scanBtnEntrance, setScanBtnEntrance] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -105,6 +106,24 @@ export function Maininventory() {
     const timeout = setTimeout(() => setShowCongratsTimer(false), 3000);
     return () => clearTimeout(timeout);
   }, []);
+
+  useEffect(() => {
+    const hasExpired = inventory.some(i => calculateStatus(i.expiryDate).color === 'red');
+    if (hasExpired) {
+      setScanBtnEntrance(false);
+      return;
+    }
+    const timeout = setTimeout(() => setScanBtnEntrance(false), 2400);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
+    if (!showExpiredModal && !scanBtnEntrance) {
+      setScanBtnEntrance(true);
+      const timeout = setTimeout(() => setScanBtnEntrance(false), 2400);
+      return () => clearTimeout(timeout);
+    }
+  }, [showExpiredModal]);
 
   useEffect(() => { if (!showCongratsTimer) setShowCongratsPopup(false); }, [showCongratsTimer]);
 
@@ -512,7 +531,7 @@ export function Maininventory() {
             {/* Left: inventory actions */}
             <div className="inv-toolbar-group">
               <button
-                className={`inv-action-btn inv-scan-cta${inventory.length === 0 ? ' inv-scan-cta--pulse' : ''}`}
+                className={`inv-action-btn inv-scan-cta${inventory.length === 0 ? ' inv-scan-cta--pulse' : ''}${scanBtnEntrance ? ' inv-scan-cta--entrance' : ''}`}
                 onClick={() => { closeAllPopups(); setShowPdfReceiptPopup(true); }}
                 disabled={editingItem !== null}
               >
