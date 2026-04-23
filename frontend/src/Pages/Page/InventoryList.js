@@ -262,8 +262,7 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
                   <CategoryBadge category={item.category} />
                 </div>
                 <span className={`status-badge status-${getStatusBadgeClass(status.color)}`}>
-                  <span className="status-badge-icon">{status.icon}</span>
-                  <span className="status-badge-text">{status.text}</span>
+                  {status.text}
                 </span>
               </div>
               <div className="inv-card-meta">
@@ -374,8 +373,7 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
                 <td>
                   <div className="cell-inner">
                     <span className={`status-badge status-${getStatusBadgeClass(status.color)}`}>
-                      <span className="status-badge-icon">{status.icon}</span>
-                      <span className="status-badge-text">{status.text}</span>
+                      {status.text}
                     </span>
                   </div>
                 </td>

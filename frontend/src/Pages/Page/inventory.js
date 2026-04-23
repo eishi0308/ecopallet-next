@@ -31,10 +31,10 @@ export const calculateStatus = (expiryDate) => {
   currentDate.setHours(0, 0, 0, 0);
   expiry.setHours(0, 0, 0, 0);
   const days = Math.ceil((expiry - currentDate) / (1000 * 60 * 60 * 24));
-  if (days < 0)   return { icon: '✕', text: `${Math.abs(days)}d ago`, message: `✕ ${Math.abs(days)}d ago`, color: 'red' };
-  if (days === 0) return { icon: '⚠', text: 'Today',                  message: '⚠ Today',                  color: 'red' };
-  if (days <= 5)  return { icon: '⚡', text: `${days}d`,              message: `⚡ ${days}d`,              color: '#DAA520' };
-  return           { icon: '✓', text: `${days}d`,                     message: `✓ ${days}d`,              color: 'green' };
+  if (days < 0)   return { text: '❌ Expired',       message: '❌ Expired',       color: 'red' };
+  if (days === 0) return { text: '❌ Today',         message: '❌ Today',         color: 'red' };
+  if (days <= 3)  return { text: `⚡ ${days}d left`, message: `⚡ ${days}d left`, color: '#DAA520' };
+  return           { text: `✅ ${days}d left`,       message: `✅ ${days}d left`, color: 'green' };
 };
 
 
@@ -491,79 +491,89 @@ export function Maininventory() {
           <div className="inv-stats-row">
             <div className="inv-stat-card">
               <span className="inv-stat-num">{inventory.length}</span>
-              <span className="inv-stat-label">Total items</span>
+              <span className="inv-stat-label">🛒 Total items</span>
             </div>
             <div className="inv-stat-card inv-stat-fresh">
               <span className="inv-stat-num">{freshCount}</span>
-              <span className="inv-stat-label">Fresh</span>
+              <span className="inv-stat-label">✅ Fresh</span>
             </div>
             <div className="inv-stat-card inv-stat-warning">
               <span className="inv-stat-num">{expiringCount}</span>
-              <span className="inv-stat-label">Expiring soon</span>
+              <span className="inv-stat-label">⚡ Expiring soon</span>
             </div>
             <div className="inv-stat-card inv-stat-danger">
               <span className="inv-stat-num">{expiredCount}</span>
-              <span className="inv-stat-label">Expired</span>
+              <span className="inv-stat-label">❌ Expired</span>
             </div>
           </div>
 
           {/* ── Toolbar ── */}
           <div className="inv-toolbar">
-            <button
-              className={`inv-action-btn inv-scan-cta${inventory.length === 0 ? ' inv-scan-cta--pulse' : ''}`}
-              onClick={() => { closeAllPopups(); setShowPdfReceiptPopup(true); }}
-              disabled={editingItem !== null}
-            >
-              <span className="inv-scan-cta-icon">📄</span>
-              Scan Receipt
-              {inventory.length === 0 && <span className="inv-scan-cta-ring" />}
-            </button>
-            <button className="inv-action-btn" onClick={() => togglePopup('add')} disabled={editingItem !== null}>
-              + Add Item
-            </button>
-            <button className="inv-action-btn" onClick={() => togglePopup('produce')} disabled={editingItem !== null}>
-              🌿 Scan Produce
-            </button>
-            <button
-              onClick={() => navigate('/recipes')}
-              style={{
-                background: 'linear-gradient(135deg, #F97316, #EC4899)',
-                color: '#fff',
-                border: 'none',
-                borderRadius: 9999,
-                padding: '11px 20px',
-                fontSize: 13,
-                fontWeight: 700,
-                cursor: 'pointer',
-                boxShadow: '0 4px 20px rgba(249,115,22,0.45)',
-                letterSpacing: '0.01em',
-                transition: 'transform 150ms, box-shadow 150ms',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(236,72,153,0.45)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 20px rgba(249,115,22,0.45)'; }}
-            >
-              🍳 What Can I Cook?
-            </button>
-            <button
-              onClick={() => navigate('/tips')}
-              style={{
-                background: 'linear-gradient(135deg, #06B6D4, #6366F1)',
-                color: '#fff',
-                border: 'none',
-                borderRadius: 9999,
-                padding: '11px 20px',
-                fontSize: 13,
-                fontWeight: 700,
-                cursor: 'pointer',
-                boxShadow: '0 4px 20px rgba(99,102,241,0.45)',
-                letterSpacing: '0.01em',
-                transition: 'transform 150ms, box-shadow 150ms',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(6,182,212,0.5)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.45)'; }}
-            >
-              🧊 How to Keep Longer?
-            </button>
+            {/* Left: inventory actions */}
+            <div className="inv-toolbar-group">
+              <button
+                className={`inv-action-btn inv-scan-cta${inventory.length === 0 ? ' inv-scan-cta--pulse' : ''}`}
+                onClick={() => { closeAllPopups(); setShowPdfReceiptPopup(true); }}
+                disabled={editingItem !== null}
+              >
+                <span className="inv-scan-cta-icon">📄</span>
+                Scan Receipt
+                {inventory.length === 0 && <span className="inv-scan-cta-ring" />}
+              </button>
+              <button className="inv-action-btn" onClick={() => togglePopup('add')} disabled={editingItem !== null}>
+                + Add Item
+              </button>
+              <button className="inv-action-btn" onClick={() => togglePopup('produce')} disabled={editingItem !== null}>
+                🌿 Scan Produce
+              </button>
+            </div>
+
+            {/* Divider */}
+            <div className="inv-toolbar-divider" />
+
+            {/* Right: discovery CTAs */}
+            <div className="inv-toolbar-group inv-toolbar-group--right">
+              <button
+                onClick={() => navigate('/recipes')}
+                style={{
+                  background: 'linear-gradient(135deg, #F97316, #EC4899)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 9999,
+                  padding: '11px 20px',
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 20px rgba(249,115,22,0.45)',
+                  letterSpacing: '0.01em',
+                  transition: 'transform 150ms, box-shadow 150ms',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(236,72,153,0.45)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 20px rgba(249,115,22,0.45)'; }}
+              >
+                🍳 What Can I Cook?
+              </button>
+              <button
+                onClick={() => navigate('/tips')}
+                style={{
+                  background: 'linear-gradient(135deg, #06B6D4, #6366F1)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 9999,
+                  padding: '11px 20px',
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 20px rgba(99,102,241,0.45)',
+                  letterSpacing: '0.01em',
+                  transition: 'transform 150ms, box-shadow 150ms',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(6,182,212,0.5)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.45)'; }}
+              >
+                🧊 How to Keep Longer?
+              </button>
+            </div>
           </div>
 
           {/* ── Empty State ── */}
