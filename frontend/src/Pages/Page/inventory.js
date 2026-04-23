@@ -79,10 +79,8 @@ export function Maininventory() {
   const [imgSrc2, setImgSrc2] = useState('');
   const [extractedText2, setExtractedText2] = useState('');
   const [hasOneItemInInventory, setHasOneItemInInventory] = useState(inventory.length === 1);
-  const [hasBlinked, setHasBlinked] = useState(false);
   const [showCongratsPopup, setShowCongratsPopup] = useState(true);
   const [showCongratsTimer, setShowCongratsTimer] = useState(true);
-  const [blink, setBlink] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -466,13 +464,6 @@ export function Maininventory() {
     handleConfirmPdfItems(filtered);
   };
 
-  useEffect(() => {
-    if (!hasBlinked) {
-      const blinkInterval = setInterval(() => setBlink(prev => !prev), 1000);
-      setTimeout(() => { clearInterval(blinkInterval); setHasBlinked(true); }, 1000);
-      return () => clearInterval(blinkInterval);
-    }
-  }, [hasBlinked]);
 
   // Computed stats
   const freshCount    = inventory.filter(i => calculateStatus(i.expiryDate).color === 'green').length;

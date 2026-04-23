@@ -196,9 +196,6 @@ export const Tips = () => {
         if (results.length === 1) {
           setSelectedResult(results[0]);
         }
-        // if (searchResultsRef.current) {
-        //   searchResultsRef.current.scrollIntoView({ behavior: 'smooth' });
-        // }
         return;
       }
     }

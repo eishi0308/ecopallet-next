@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 
 export const SearchBar = ({ onSearch, onInputChange, selectedItems, onRemoveSelected, onAddToSearch }) => {
   const [input, setInput] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-
   const handleInputChange = (value) => {
     setInput(value);
     onInputChange(value);
@@ -18,7 +16,6 @@ export const SearchBar = ({ onSearch, onInputChange, selectedItems, onRemoveSele
         onAddToSearch(input.trim());
         // Clear the input field and error message
         setInput('');
-        setErrorMessage('');
       }
     }
   };
@@ -48,7 +45,6 @@ export const SearchBar = ({ onSearch, onInputChange, selectedItems, onRemoveSele
             onChange={(e) => handleInputChange(e.target.value)}
             onKeyPress={handleKeyPress}
           />
-          {errorMessage && <div className="error-message">{errorMessage}</div>}
         </div>
         <button className="search-button" onClick={onSearch}>Generate Recipes</button>
       </div>

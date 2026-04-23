@@ -51,7 +51,6 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
   const [originalValues, setOriginalValues] = useState({});
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
-  const [imgSrc, setImgSrc] = useState('');
   const [file2, setFile2] = useState(null);
   const [imgSrc2, setImgSrc2] = useState('');
   const [extractedText2, setExtractedText2] = useState('');
@@ -462,7 +461,6 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
               <input type="file" name="file" onChange={handleFileChange} />
               <input type="submit" value="Upload" />
             </form>
-            {imgSrc && <img src={imgSrc} alt="Uploaded" />}
             <img src={samimg3} alt="Sample" width="25" height="25" />
             <a href={samimg3} download> Download Sample Image</a>
           </div>
