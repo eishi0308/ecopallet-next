@@ -1963,10 +1963,15 @@ header { display: none; }
   .inv-page-header {
     flex-direction: column;
     align-items: flex-start;
-    padding: 28px 24px;
+    padding: 16px 16px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    border-radius: 14px;
+    gap: 8px;
   }
-  .inv-header-text { font-size: 1.75rem; }
-  .inv-header-sub { font-size: 13px; }
+  .inv-header-text { font-size: 1.2rem; }
+  .inv-header-sub { font-size: 11px; margin-top: 2px; }
+  .inv-header-spending { display: none; }
 
   /* Stats — 2×2 grid on mobile */
   .inv-stats-row {
