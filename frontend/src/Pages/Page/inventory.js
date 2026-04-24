@@ -984,9 +984,9 @@ export function Maininventory() {
         {/* ── Pagination ── */}
         {totalPages > 1 && (
           <div className="inv-pagination">
-            <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>← Previous</button>
+            <button className="inv-pagination-btn" onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>← Previous</button>
             <span className="inv-pagination-info">Page {currentPage} of {totalPages}</span>
-            <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>Next →</button>
+            <button className="inv-pagination-btn" onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>Next →</button>
           </div>
         )}
 

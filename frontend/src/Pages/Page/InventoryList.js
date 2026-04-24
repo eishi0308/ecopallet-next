@@ -465,11 +465,18 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
       )}
 
       {showDeleteConfirmation && (
-        <div className="delete-confirmation-popup">
-          <p>Are you sure you want to delete this item?</p>
-          <button onClick={handleDelete}>Yes, delete</button>
-          <button onClick={cancelDelete}>Cancel</button>
-        </div>
+        <>
+          <div className="modal-overlay" onClick={cancelDelete} />
+          <div className="delete-confirmation-popup">
+            <div className="del-confirm-icon">🗑️</div>
+            <h2 className="del-confirm-title">Delete this item?</h2>
+            <p className="del-confirm-sub">This action cannot be undone.</p>
+            <div className="del-confirm-actions">
+              <button className="del-confirm-btn-delete" onClick={handleDelete}>Yes, delete</button>
+              <button className="del-confirm-btn-cancel" onClick={cancelDelete}>Cancel</button>
+            </div>
+          </div>
+        </>
       )}
 
       {showBulkDeleteConfirm && (

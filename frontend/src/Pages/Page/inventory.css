@@ -415,10 +415,13 @@ header { display: none; }
 }
 
 
-/* ── FIXED ROW HEIGHT — inner wrapper enforces height so table never reflows ── */
+/* ── FIXED ROW HEIGHT — locked so row never reflows on edit vs display ── */
 .inventory-table-container tbody tr {
-  min-height: 68px;
-  height: auto;
+  height: 68px;
+}
+.inventory-table-container tbody td {
+  overflow: hidden;
+  max-height: 68px;
 }
 /* cell-inner is a fixed-height div inside every td — this is the only reliable way
    to prevent table row height from changing when cell content switches (edit vs display) */
@@ -461,9 +464,8 @@ header { display: none; }
 }
 
 .inventory-table-container td:nth-child(2) .cell-inner {
-  height: auto;
-  min-height: 42px;
-  overflow: visible;
+  height: 52px;
+  overflow: hidden;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
@@ -871,7 +873,8 @@ header { display: none; }
   gap: 12px;
   padding: 16px 0 8px;
 }
-.inv-pagination button {
+.inv-pagination button,
+.inv-pagination-btn {
   font-family: 'Inter', -apple-system, sans-serif;
   font-size: 13px;
   font-weight: 600;
@@ -884,12 +887,15 @@ header { display: none; }
   transition: all 150ms ease;
   box-shadow: var(--shadow-sm);
 }
-.inv-pagination button:hover:not(:disabled) {
+.inv-pagination button:hover:not(:disabled),
+.inv-pagination-btn:hover:not(:disabled) {
   background: var(--surface-2);
   color: var(--text-1);
   border-color: var(--border-strong);
+  transform: translateY(-1px);
 }
-.inv-pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+.inv-pagination button:disabled,
+.inv-pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .inv-pagination-info {
   font-size: 13px;
   font-weight: 500;
@@ -1092,50 +1098,82 @@ header { display: none; }
   margin-top: 8px;
 }
 
-/* ── Delete confirmation ── */
+/* ── Delete confirmation modal ── */
 .delete-confirmation-popup {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--surface, #fff);
-  border-radius: var(--radius-lg, 16px);
-  box-shadow: 0 20px 48px rgba(0,0,0,0.14);
-  padding: 28px 32px;
+  background: #fff;
+  border-radius: 28px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08);
+  padding: 40px 32px 32px;
   z-index: 1060;
-  max-width: 320px;
+  max-width: 360px;
   width: calc(100% - 32px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
   font-family: 'Inter', -apple-system, sans-serif;
-  animation: popupIn 200ms ease;
+  animation: popupIn 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.delete-confirmation-popup p {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text-1, #0F172A);
+.del-confirm-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #FEE2E2;
+  border: 2px solid #FECACA;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
   margin-bottom: 20px;
-  line-height: 1.5;
+  flex-shrink: 0;
 }
-.delete-confirmation-popup button {
-  font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 9px 20px;
-  border-radius: var(--radius-full, 9999px);
+.del-confirm-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #111;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+}
+.del-confirm-sub {
+  font-size: 14px;
+  color: #888;
+  margin: 0 0 24px;
+  line-height: 1.6;
+}
+.del-confirm-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.del-confirm-btn-delete {
+  width: 100%;
+  padding: 13px 0;
+  border-radius: 14px;
   border: none;
-  cursor: pointer;
-  margin: 0 5px;
-  transition: all 150ms ease;
-  background: var(--danger, #EF4444);
+  background: #DC2626;
   color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Inter', -apple-system, sans-serif;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
 }
-.delete-confirmation-popup button:last-child {
-  background: var(--surface-2, #F1F5F9);
-  color: var(--text-2, #475569);
-  border: 1px solid var(--border, #E2E8F0);
+.del-confirm-btn-delete:hover { background: #B91C1C; transform: translateY(-1px); }
+.del-confirm-btn-delete:active { transform: translateY(0); }
+.del-confirm-btn-cancel {
+  width: 100%;
+  padding: 13px 0;
+  border-radius: 14px;
+  border: 1px solid #E2E8F0;
+  background: #F8FAFC;
+  color: #475569;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, sans-serif;
+  cursor: pointer;
+  transition: background 0.15s;
 }
-.delete-confirmation-popup button:first-child:hover { background: #DC2626; }
-.delete-confirmation-popup button:last-child:hover { background: var(--border); }
+.del-confirm-btn-cancel:hover { background: #E2E8F0; }
 
 /* ── Congrats toast ── */
 .congrats-popup {
@@ -1361,33 +1399,6 @@ header { display: none; }
   letter-spacing: 0.07em;
 }
 
-/* Delete confirmation — icon + richer styling */
-.delete-confirmation-popup {
-  border-radius: 20px;
-  box-shadow: 0 32px 64px rgba(0,0,0,0.2), 0 0 0 1px rgba(239,68,68,0.08);
-  padding: 32px;
-  text-align: center;
-}
-.delete-confirmation-popup p {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-1, #0F172A);
-}
-.delete-confirmation-popup p::before {
-  content: '⚠️';
-  display: block;
-  font-size: 2rem;
-  margin-bottom: 12px;
-}
-.delete-confirmation-popup button {
-  padding: 11px 24px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 700;
-}
-.delete-confirmation-popup button:first-child {
-  box-shadow: 0 4px 14px rgba(239,68,68,0.35);
-}
 
 /* Congrats toast — richer */
 .congrats-popup {

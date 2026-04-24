@@ -103,6 +103,7 @@ export const Navigation = () => {
                   <i className="bi bi-lightbulb me-2" />Tips
                 </a>
               </li>
+              {/* Fresh Produce hidden — feature temporarily disabled
               <li className="nav-item mt-2 mt-lg-0 ms-lg-2">
                 <button
                   className="nav-produce-btn"
@@ -111,14 +112,15 @@ export const Navigation = () => {
                   🌿 Fresh Produce
                 </button>
               </li>
+              */}
             </ul>
           </div>
 
         </div>
       </nav>
 
-      {/* ── Scan Fresh Produce Popup ── */}
-      {showScanProducePopup && (
+      {/* ── Scan Fresh Produce Popup — hidden, feature temporarily disabled ── */}
+      {false && showScanProducePopup && (
         <div className="nav-popup-overlay" onClick={() => setShowScanProducePopup(false)}>
           <div className="nav-popup" onClick={e => e.stopPropagation()}>
             <h2>🌿 Fresh Produce Predictor</h2>
@@ -132,7 +134,6 @@ export const Navigation = () => {
               <h3>Or choose a file</h3>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <input type="file" name="file1" onChange={handleFileChange} />
-                <a href={samimg2} download style={{ fontSize: 12, color: '#86efac' }}>Sample ↓</a>
               </div>
               <button type="submit" className="nav-popup-btn">Upload &amp; Predict</button>
             </form>
@@ -142,8 +143,8 @@ export const Navigation = () => {
         </div>
       )}
 
-      {/* ── Result Popup ── */}
-      {showUploadInfoPopup && (
+      {/* ── Result Popup — hidden, feature temporarily disabled ── */}
+      {false && showUploadInfoPopup && (
         <div className="nav-popup-overlay" onClick={() => setShowUploadInfoPopup(false)}>
           <div className="nav-popup" onClick={e => e.stopPropagation()}>
             <h2>Estimated Shelf Life</h2>

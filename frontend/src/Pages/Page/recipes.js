@@ -19,6 +19,7 @@ export const Recipes = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [displayedInventory, setDisplayedInventory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [outOfStockToast, setOutOfStockToast] = useState(false);
   const recipesPerPage = 4;
 
   const handleNextPage = () => setCurrentPage(prev => prev + 1);
@@ -110,7 +111,8 @@ export const Recipes = () => {
     if (selectedItem) {
       const updatedQuantity = selectedItem.amount - 1;
       if (updatedQuantity < 0) {
-        alert("Oops! Sorry, you ran out of this item.");
+        setOutOfStockToast(true);
+        setTimeout(() => setOutOfStockToast(false), 3000);
       } else {
         const updatedItem = { ...selectedItem, amount: updatedQuantity };
         setDisplayedInventory(prev => {
@@ -131,6 +133,15 @@ export const Recipes = () => {
   const handleRemoveSelected = (itemName) => {
     setSelectedItems(prev => prev.filter(item => item !== itemName));
     setInput(prev => prev.replace(itemName, '').trim());
+    setDisplayedInventory(prev => {
+      const index = prev.findIndex(item => item.name === itemName);
+      if (index !== -1) {
+        const updated = [...prev];
+        updated[index] = { ...updated[index], amount: updated[index].amount + 1 };
+        return updated;
+      }
+      return prev;
+    });
   };
 
   const scrollToInventory = () => {
@@ -281,7 +292,7 @@ export const Recipes = () => {
       </div>
 
       {/* ── Generated Results ── */}
-      <div className="App">
+      <div className="recipes-results-wrapper">
         <div id="recipes-container" className="recipes-container">
           {recipes.map((recipe, index) => (
             recipe.image && recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0 && (
@@ -290,6 +301,19 @@ export const Recipes = () => {
           ))}
         </div>
       </div>
+
+      {/* ── Out-of-stock popup ── */}
+      {outOfStockToast && (
+        <>
+          <div className="oos-overlay" onClick={() => setOutOfStockToast(false)} />
+          <div className="oos-toast">
+            <span className="oos-toast-icon">🪣</span>
+            <p className="oos-toast-title">All out!</p>
+            <p className="oos-toast-sub">You've used up all of this ingredient. Try a different one.</p>
+            <button className="oos-toast-close" onClick={() => setOutOfStockToast(false)}>Got it</button>
+          </div>
+        </>
+      )}
 
     </div>
   );
