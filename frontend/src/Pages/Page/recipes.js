@@ -243,8 +243,7 @@ export const Recipes = () => {
                     <td>{item.amount}</td>
                     <td>
                       <span className={`status-badge status-${item.status.color === 'red' ? 'danger' : item.status.color === '#DAA520' ? 'warning' : 'safe'}`}>
-                        <span className="status-badge-icon">{item.status.icon}</span>
-                        <span className="status-badge-text">{item.status.text}</span>
+                        {item.status.text}
                       </span>
                     </td>
                     <td>

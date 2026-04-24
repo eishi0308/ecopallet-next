@@ -1200,11 +1200,81 @@
   .recipe-page { padding: 20px 16px 40px; }
   .srecipes-container { grid-template-columns: repeat(2, 1fr); }
   .suggestion-header { flex-direction: column; gap: 12px; }
-  .inventory-search-container { flex-direction: column; }
-  .inventory-table-wrapper { width: 100%; }
-  .search-arrow-divider { display: none; }
   .bridge-cta { flex-direction: column; gap: 10px; }
   .bridge-line { display: none; }
+
+  /* ── Build Your Own — mobile ── */
+  .inventory-container { padding: 20px 16px; }
+  .inventory-container-header { margin-bottom: 18px; padding-bottom: 16px; }
+  .inventory-section-title { font-size: 1.2rem; }
+  .inventory-section-sub { font-size: 13px; }
+
+  .inventory-search-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .search-arrow-divider { display: none; }
+
+  /* Pantry chip grid */
+  .inventory-table-wrapper {
+    width: 100%;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .inventory-table thead { display: none; }
+  .inventory-table,
+  .inventory-table tbody {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 14px;
+    background: var(--surface, #fff);
+  }
+  .inventory-table tr {
+    display: inline-flex;
+    align-items: center;
+    background: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .inventory-table td {
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+  /* Hide qty and status — name + add only */
+  .inventory-table td:nth-child(2),
+  .inventory-table td:nth-child(3) { display: none; }
+  .inventory-table td:nth-child(1) {
+    padding: 8px 6px 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #15803D;
+  }
+  .inventory-table td:nth-child(4) { padding: 4px 4px 4px 0; }
+  .add-to-search-button {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px !important;
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* SearchBar full-width — target the outer wrapper div too */
+  .inventory-search-container > div:last-child { width: 100%; }
+  .search-container { border-radius: 14px; width: 100%; }
+  .search-input { width: calc(100% - 32px); }
+  .search-button {
+    border-radius: 0 0 13px 13px;
+    font-size: 15px;
+    padding: 16px;
+  }
 }
 @media (max-width: 480px) {
   .srecipes-container { grid-template-columns: repeat(2, 1fr); gap: 10px; }
