@@ -1819,9 +1819,8 @@ header { display: none; }
 .inv-card--warning { border-left-color: #F59E0B; background: rgba(245,158,11,0.18); }
 .inv-card--safe    { border-left-color: #16A34A; background: rgba(22,163,74,0.15); }
 .inv-card--selected {
-  border-left-color: #16A34A !important;
-  background: rgba(22,163,74,0.06) !important;
-  box-shadow: 0 0 0 1.5px rgba(22,163,74,0.25);
+  border-left-width: 5px !important;
+  opacity: 0.85;
 }
 .inv-card--editing {
   border-left-color: #3B82F6 !important;
