@@ -237,20 +237,33 @@ export const Recipes = () => {
                 </tr>
               </thead>
               <tbody className="inventory-body">
-                {displayedInventory.map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.name}</td>
-                    <td>{item.amount}</td>
-                    <td>
-                      <span className={`status-badge status-${item.status.color === 'red' ? 'danger' : item.status.color === '#DAA520' ? 'warning' : 'safe'}`}>
-                        {item.status.text}
-                      </span>
-                    </td>
-                    <td>
-                      <button className="add-to-search-button" onClick={() => handleAddToSearch(item.name)}>+</button>
+                {displayedInventory.length === 0 ? (
+                  <tr>
+                    <td colSpan="4" className="inventory-empty-state">
+                      <div className="inventory-empty-inner">
+                        <span className="inventory-empty-icon">🧺</span>
+                        <p className="inventory-empty-title">Your pantry is empty</p>
+                        <p className="inventory-empty-sub">Scan a receipt to add items to your pantry</p>
+                        <a href="/inventory" className="inventory-empty-link">Go to Inventory →</a>
+                      </div>
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  displayedInventory.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.name}</td>
+                      <td>{item.amount}</td>
+                      <td>
+                        <span className={`status-badge status-${item.status.color === 'red' ? 'danger' : item.status.color === '#DAA520' ? 'warning' : 'safe'}`}>
+                          {item.status.text}
+                        </span>
+                      </td>
+                      <td>
+                        <button className="add-to-search-button" onClick={() => handleAddToSearch(item.name)}>+</button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

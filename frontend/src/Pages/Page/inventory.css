@@ -917,15 +917,10 @@ header { display: none; }
   color: var(--text-2, #475569);
   margin: 0;
 }
-.empty-cart-image {
-  background-image: url('../images/cart.jpeg');
-  width: 100px;
-  height: 100px;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-  margin: 32px auto 16px;
-  opacity: 0.45;
+.empty-inventory-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+  display: block;
 }
 
 /* ══════════════════════════════════════════

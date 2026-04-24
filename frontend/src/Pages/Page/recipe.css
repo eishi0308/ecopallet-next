@@ -596,6 +596,41 @@
 }
 .inventory-table tr:last-child td { border-bottom: none; }
 .inventory-table tbody tr { transition: background 140ms ease; }
+
+/* Empty pantry state */
+.inventory-empty-state { text-align: center; padding: 0; }
+.inventory-empty-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 24px;
+  gap: 8px;
+}
+.inventory-empty-icon { font-size: 40px; margin-bottom: 4px; }
+.inventory-empty-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-1, #0F172A);
+  margin: 0;
+}
+.inventory-empty-sub {
+  font-size: 13px;
+  color: var(--text-3, #94A3B8);
+  margin: 0;
+}
+.inventory-empty-link {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #16A34A;
+  text-decoration: none;
+  padding: 8px 18px;
+  border: 1px solid #BBF7D0;
+  border-radius: 999px;
+  background: #F0FDF4;
+  transition: background 150ms;
+}
+.inventory-empty-link:hover { background: #DCFCE7; }
 .inventory-table tbody tr:hover td {
   background: var(--accent-light, #F0FDF4);
   color: var(--accent-dark, #15803D);

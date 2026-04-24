@@ -441,13 +441,11 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
       </table>
 
       {inventory.length === 0 && (
-        <>
-          <div className="empty-cart-image" />
-          <div className="empty-inventory-message">
-            <h2>Your pantry is empty</h2>
-            <p>Click "Scan Receipt" or "Add Item" above to get started.</p>
-          </div>
-        </>
+        <div className="empty-inventory-message">
+          <span className="empty-inventory-icon">🧺</span>
+          <h2>Your pantry is empty</h2>
+          <p>Click "Scan Receipt" or "Add Item" above to get started.</p>
+        </div>
       )}
 
       {showScanExpiryPopup && (
