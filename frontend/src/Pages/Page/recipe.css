@@ -1355,11 +1355,13 @@
   .inventory-table tr {
     display: inline-flex;
     align-items: center;
-    background: #F0FDF4;
-    border: 1px solid #BBF7D0;
     border-radius: 999px;
     overflow: hidden;
   }
+  /* Status-matched chip colours */
+  .inventory-table tr.inv-row-safe    { background: #F0FDF4; border: 1px solid #BBF7D0; }
+  .inventory-table tr.inv-row-warning { background: #FEF3C7; border: 1px solid #FCD34D; }
+  .inventory-table tr.inv-row-danger  { background: #FEE2E2; border: 1px solid #FCA5A5; }
   .inventory-table td {
     padding: 0;
     border: none;
@@ -1372,9 +1374,26 @@
     padding: 8px 6px 8px 14px;
     font-size: 13px;
     font-weight: 600;
-    color: #15803D;
   }
+  .inventory-table tr.inv-row-safe    td:nth-child(1) { color: #15803D; }
+  .inventory-table tr.inv-row-warning td:nth-child(1) { color: #B45309; }
+  .inventory-table tr.inv-row-danger  td:nth-child(1) { color: #DC2626; }
   .inventory-table td:nth-child(4) { padding: 4px 4px 4px 0; }
+  /* + button matches chip status colour */
+  .inventory-table tr.inv-row-safe    .add-to-search-button { background: rgba(22,163,74,0.15);  color: #15803D; border-color: rgba(22,163,74,0.4); }
+  .inventory-table tr.inv-row-warning .add-to-search-button { background: rgba(245,158,11,0.15); color: #B45309; border-color: rgba(245,158,11,0.4); }
+  .inventory-table tr.inv-row-danger  .add-to-search-button { background: rgba(239,68,68,0.15);  color: #DC2626; border-color: rgba(239,68,68,0.4); }
+  /* + button hover — status-matched solid fill */
+  .inventory-table tr.inv-row-safe    .add-to-search-button:hover { background: #16A34A; color: #fff; border-color: #16A34A; transform: scale(1.12); }
+  .inventory-table tr.inv-row-warning .add-to-search-button:hover { background: #D97706; color: #fff; border-color: #D97706; transform: scale(1.12); }
+  .inventory-table tr.inv-row-danger  .add-to-search-button:hover { background: #DC2626; color: #fff; border-color: #DC2626; transform: scale(1.12); }
+  /* chip row hover — override global green td:hover rule */
+  .inventory-table tr.inv-row-safe:hover    { background: #DCFCE7; }
+  .inventory-table tr.inv-row-warning:hover { background: #FEF08A; }
+  .inventory-table tr.inv-row-danger:hover  { background: #FECACA; }
+  .inventory-table tr.inv-row-safe:hover    td { background: transparent; color: #15803D; }
+  .inventory-table tr.inv-row-warning:hover td { background: transparent; color: #B45309; }
+  .inventory-table tr.inv-row-danger:hover  td { background: transparent; color: #DC2626; }
   .add-to-search-button {
     width: 28px;
     height: 28px;

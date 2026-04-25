@@ -261,7 +261,7 @@ export const Recipes = () => {
                   </tr>
                 ) : (
                   displayedInventory.map((item) => (
-                    <tr key={item.id}>
+                    <tr key={item.id} className={`inv-row-${item.status.color === 'red' ? 'danger' : item.status.color === '#DAA520' ? 'warning' : 'safe'}`}>
                       <td>{item.name}</td>
                       <td>{item.amount}</td>
                       <td>
