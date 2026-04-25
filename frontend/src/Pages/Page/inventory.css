@@ -1955,8 +1955,8 @@ header { display: none; }
   .inventory-table-container table td:nth-child(n) { width: auto; }
 }
 @media (max-width: 640px) {
-  .App { padding: 16px 12px 32px; }
-  #dashboard-section { padding: 0 12px; }
+  .App { padding: 16px 20px 32px !important; }
+  #dashboard-section { padding: 0 20px; }
   .dash { margin-top: 24px; padding-bottom: 32px; }
 
   /* Hero — compact on mobile */

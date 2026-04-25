@@ -797,6 +797,6 @@
   .category-tips-container { grid-template-columns: repeat(2, 1fr); }
   .tips-hero { padding: 16px 16px; border-radius: 14px; }
   .tips-hero-title { font-size: 1.2rem; }
-  .tips-hero-sub { display: none; }
+  .tips-hero-sub { font-size: 12px; }
   .tips-panel { padding: 20px; }
 }

@@ -1316,7 +1316,7 @@
   .recipe-hero { padding: 16px 16px; margin-bottom: 12px; border-radius: 14px; }
   .recipe-hero-eyebrow { font-size: 10px; margin-bottom: 6px; }
   .recipe-hero-title { font-size: 1.2rem; margin-bottom: 6px; }
-  .recipe-hero-sub { display: none; }
+  .recipe-hero-sub { font-size: 12px; margin-bottom: 12px; }
   .recipe-hero-tags { gap: 6px; }
   .recipe-hero-tag { font-size: 11px; padding: 3px 9px; }
   .srecipes-container { grid-template-columns: repeat(2, 1fr); }
