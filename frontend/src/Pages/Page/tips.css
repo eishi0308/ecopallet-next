@@ -794,7 +794,9 @@
 }
 @media (max-width: 600px) {
   .tips-whole-page { padding: 16px 12px 48px; gap: 16px; }
-  .category-tips-container { grid-template-columns: repeat(2, 1fr); }
+  .category-tips-container { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .category-tip-item { aspect-ratio: 1/1; border-radius: 12px; }
+  .category-tip-label { font-size: 10px; }
   .tips-hero { padding: 16px 16px; border-radius: 14px; }
   .tips-hero-title { font-size: 1.2rem; }
   .tips-hero-sub { font-size: 12px; }
