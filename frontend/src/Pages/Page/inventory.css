@@ -1981,15 +1981,18 @@ header { display: none; }
   }
   .inv-stats-row .inv-stat-card { min-width: unset; }
 
-  /* Toolbar — stack groups vertically on mobile */
+  /* Toolbar — structured mobile layout */
   .inv-toolbar { flex-direction: column; align-items: stretch; gap: 10px; }
-  .inv-toolbar-divider { width: 100%; height: 1px; }
-  .inv-toolbar-group { flex-wrap: wrap; }
-  .inv-toolbar-group--right { margin-left: 0; justify-content: flex-start; }
-  .inv-toolbar-group--right button { font-size: 12px !important; padding: 8px 14px !important; box-shadow: none !important; }
+  .inv-toolbar-divider { width: 100%; height: 1px; margin: 2px 0; }
 
-  .inv-action-btn { font-size: 12px; padding: 8px 14px; }
-  .inv-scan-cta { font-size: 14px !important; padding: 12px 24px !important; }
+  /* Left group: flex-wrap so Scan Receipt takes row 1, Add Item + Scan Produce share row 2 */
+  .inv-toolbar-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .inv-scan-cta { width: 100%; justify-content: center; font-size: 14px !important; padding: 0 20px !important; height: 44px; }
+  .inv-toolbar-group .inv-action-btn:not(.inv-scan-cta) { flex: 1; justify-content: center; font-size: 12px; padding: 0 10px; height: 44px; }
+
+  /* Insight group: both buttons side by side, same height */
+  .inv-toolbar-group--right { flex-direction: row; margin-left: 0; gap: 8px; }
+  .inv-toolbar-group--right button { flex: 1; justify-content: center; font-size: 12px !important; padding: 0 8px !important; height: 44px; box-shadow: none !important; }
   .dash-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .dash-header { flex-direction: column; }
 
