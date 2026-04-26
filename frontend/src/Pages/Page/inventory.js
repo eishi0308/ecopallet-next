@@ -552,44 +552,10 @@ export function Maininventory() {
 
             {/* Right: discovery CTAs */}
             <div className="inv-toolbar-group inv-toolbar-group--right">
-              <button
-                onClick={() => navigate('/recipes')}
-                style={{
-                  background: 'linear-gradient(135deg, #F97316, #EC4899)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: 9999,
-                  padding: '11px 20px',
-                  fontSize: 13,
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 20px rgba(249,115,22,0.45)',
-                  letterSpacing: '0.01em',
-                  transition: 'transform 150ms, box-shadow 150ms',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(236,72,153,0.45)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 20px rgba(249,115,22,0.45)'; }}
-              >
+              <button className="inv-insight-btn" onClick={() => navigate('/recipes')}>
                 🍳 What Can I Cook?
               </button>
-              <button
-                onClick={() => navigate('/tips')}
-                style={{
-                  background: 'linear-gradient(135deg, #06B6D4, #6366F1)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: 9999,
-                  padding: '11px 20px',
-                  fontSize: 13,
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 20px rgba(99,102,241,0.45)',
-                  letterSpacing: '0.01em',
-                  transition: 'transform 150ms, box-shadow 150ms',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(6,182,212,0.5)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.45)'; }}
-              >
+              <button className="inv-insight-btn" onClick={() => navigate('/tips')}>
                 🧊 How to Keep Longer?
               </button>
             </div>

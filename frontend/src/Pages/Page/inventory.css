@@ -167,26 +167,34 @@ header { display: none; }
 ══════════════════════════════════════════ */
 .inv-toolbar {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 20px;
-  flex-wrap: wrap;
-  padding: 14px 16px;
-  background: var(--surface, #fff);
-  border-radius: 20px;
-  border: 1px solid var(--border, #E2E8F0);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 12px 16px;
+  background: linear-gradient(to bottom, #ffffff, #FAFBFC);
+  border-radius: 24px;
+  border: 1px solid rgba(0,0,0,0.07);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 6px 20px rgba(0,0,0,0.05);
 }
 
 .inv-toolbar-group {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
 }
+
+/* Hide Scan Produce on desktop — kept in mobile layout */
+.inv-toolbar-group > button:nth-child(3) { display: none; }
+
+/* Scan Receipt — dominant wide CTA */
+.inv-scan-cta { min-width: 240px; justify-content: center; }
 
 .inv-toolbar-group--right {
   margin-left: auto;
+  flex-direction: row;
+  gap: 8px;
 }
 
 .inv-toolbar-divider {
@@ -194,6 +202,7 @@ header { display: none; }
   height: 28px;
   background: var(--border, #E2E8F0);
   flex-shrink: 0;
+  display: none;
 }
 
 .inv-action-btn {
@@ -201,45 +210,103 @@ header { display: none; }
   align-items: center;
   gap: 6px;
   font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 10px 18px;
-  background: var(--surface, #fff);
-  color: var(--text-1, #0F172A);
-  border: 1px solid var(--border, #E2E8F0);
-  border-radius: var(--radius-full, 9999px);
+  font-size: 15px;
+  font-weight: 700;
+  height: 48px;
+  padding: 0 24px;
+  background: linear-gradient(#fff, #fff) padding-box,
+              linear-gradient(135deg, #3B82F6, #06B6D4) border-box;
+  color: #1D4ED8;
+  border: 2.5px solid transparent;
+  border-radius: 9999px;
   cursor: pointer;
-  transition: all 150ms ease;
-  box-shadow: var(--shadow-sm);
+  transition: all 160ms ease;
+  box-shadow: 0 1px 4px rgba(59,130,246,0.12);
   white-space: nowrap;
+  letter-spacing: 0.01em;
 }
 .inv-action-btn:hover:not(:disabled) {
-  background: var(--surface-2, #F1F5F9);
-  border-color: var(--border-strong, #CBD5E1);
+  background: linear-gradient(#F0F9FF, #F0F9FF) padding-box,
+              linear-gradient(135deg, #3B82F6, #06B6D4) border-box;
+  box-shadow: 0 3px 12px rgba(59,130,246,0.22);
   transform: translateY(-1px);
 }
-.inv-action-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.inv-action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Insight buttons (Cook / Keep) ── */
+.inv-insight-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  height: 48px;
+  padding: 0 22px;
+  border-radius: 9999px;
+  cursor: pointer;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  transition: all 160ms ease;
+}
+/* Cook — warm gradient border */
+.inv-toolbar-group--right .inv-insight-btn:first-child {
+  background: linear-gradient(#fff, #fff) padding-box,
+              linear-gradient(135deg, #F97316, #EC4899) border-box;
+  border: 2.5px solid transparent;
+  color: #C2410C;
+  box-shadow: 0 1px 4px rgba(249,115,22,0.12);
+}
+.inv-toolbar-group--right .inv-insight-btn:first-child:hover {
+  background: linear-gradient(#FFF7ED, #FFF7ED) padding-box,
+              linear-gradient(135deg, #F97316, #EC4899) border-box;
+  box-shadow: 0 3px 12px rgba(249,115,22,0.22);
+  transform: translateY(-1px);
+}
+/* Keep — cool gradient border */
+.inv-toolbar-group--right .inv-insight-btn:last-child {
+  background: linear-gradient(#fff, #fff) padding-box,
+              linear-gradient(135deg, #06B6D4, #6366F1) border-box;
+  border: 2.5px solid transparent;
+  color: #4338CA;
+  box-shadow: 0 1px 4px rgba(99,102,241,0.12);
+}
+.inv-toolbar-group--right .inv-insight-btn:last-child:hover {
+  background: linear-gradient(#EEF2FF, #EEF2FF) padding-box,
+              linear-gradient(135deg, #06B6D4, #6366F1) border-box;
+  box-shadow: 0 3px 12px rgba(99,102,241,0.22);
+  transform: translateY(-1px);
+}
 
 /* ── Elevated Scan CTA button ── */
 .inv-scan-cta {
-  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  background: #16A34A;
-  color: #fff;
-  border-color: #16A34A;
-  font-size: 15px;
-  font-weight: 700;
-  padding: 13px 28px;
-  box-shadow: 0 4px 18px rgba(22,163,74,0.45);
-  border-radius: var(--radius-full, 9999px) !important;
-  overflow: visible;
+  background: linear-gradient(#16A34A, #16A34A) padding-box,
+              linear-gradient(120deg, #86EFAC, #4ADE80, #22D3EE, #4ADE80, #86EFAC) border-box !important;
+  color: #fff !important;
+  border: 3px solid transparent !important;
+  font-size: 16px;
+  font-weight: 800;
+  height: 48px;
+  padding: 0 72px;
+  letter-spacing: 0.02em;
+  border-radius: 9999px !important;
+  box-shadow:
+    0 0 0 5px rgba(74, 222, 128, 0.18),
+    0 0 14px rgba(34, 211, 238, 0.25),
+    0 4px 18px rgba(22, 163, 74, 0.4),
+    inset 0 1px 0 rgba(255,255,255,0.2) !important;
 }
 .inv-scan-cta:hover:not(:disabled) {
-  background: #15803D;
-  border-color: #15803D;
-  box-shadow: 0 8px 28px rgba(22,163,74,0.55);
+  background: linear-gradient(#15803D, #15803D) padding-box,
+              linear-gradient(120deg, #4ADE80, #22D3EE, #4ADE80) border-box !important;
+  box-shadow:
+    0 0 0 6px rgba(34, 211, 238, 0.2),
+    0 0 20px rgba(34, 211, 238, 0.3),
+    0 8px 28px rgba(22, 163, 74, 0.5),
+    inset 0 1px 0 rgba(255,255,255,0.2) !important;
   transform: translateY(-2px);
 }
 .inv-scan-cta-icon { font-size: 16px; }
@@ -1985,14 +2052,15 @@ header { display: none; }
   .inv-toolbar { flex-direction: column; align-items: stretch; gap: 10px; }
   .inv-toolbar-divider { width: 100%; height: 1px; margin: 2px 0; }
 
-  /* Left group: flex-wrap so Scan Receipt takes row 1, Add Item + Scan Produce share row 2 */
-  .inv-toolbar-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  /* Left group: row + wrap — Scan Receipt full width, Add Item + Scan Produce side by side */
+  .inv-toolbar-group { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+  .inv-toolbar-group > button:nth-child(3) { display: flex; } /* Show Scan Produce on mobile */
   .inv-scan-cta { width: 100%; justify-content: center; font-size: 14px !important; padding: 0 20px !important; height: 44px; }
   .inv-toolbar-group .inv-action-btn:not(.inv-scan-cta) { flex: 1; justify-content: center; font-size: 12px; padding: 0 10px; height: 44px; }
 
   /* Insight group: both buttons side by side, same height */
   .inv-toolbar-group--right { flex-direction: row; margin-left: 0; gap: 8px; }
-  .inv-toolbar-group--right button { flex: 1; justify-content: center; font-size: 12px !important; padding: 0 8px !important; height: 44px; box-shadow: none !important; }
+  .inv-insight-btn { flex: 1; justify-content: center; font-size: 12px; padding: 0 8px; height: 44px; }
   .dash-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .dash-header { flex-direction: column; }
 
