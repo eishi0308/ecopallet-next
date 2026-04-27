@@ -488,6 +488,7 @@ export function Maininventory() {
   const freshCount    = inventory.filter(i => calculateStatus(i.expiryDate).color === 'green').length;
   const expiringCount = inventory.filter(i => calculateStatus(i.expiryDate).color === '#DAA520').length;
   const expiredCount  = inventory.filter(i => calculateStatus(i.expiryDate).color === 'red').length;
+  const [activeTab, setActiveTab] = useState('pantry');
 
   return (
     <div>
@@ -503,8 +504,25 @@ export function Maininventory() {
               <h1 className="inv-header-text">My Pantry</h1>
               <p className="inv-header-sub">Track what you have, reduce what you waste</p>
             </div>
-            <button className="inv-spending-btn" onClick={scrollToDashboard}>📊 View Spending</button>
           </div>
+
+          {/* ── Tab Switcher ── */}
+          <div className="inv-tabs">
+            <button
+              className={`inv-tab${activeTab === 'pantry' ? ' inv-tab--active' : ''}`}
+              onClick={() => setActiveTab('pantry')}
+            >
+              📦 Pantry
+            </button>
+            <button
+              className={`inv-tab${activeTab === 'analytics' ? ' inv-tab--active' : ''}`}
+              onClick={() => setActiveTab('analytics')}
+            >
+              📊 Analytics
+            </button>
+          </div>
+
+          {activeTab === 'pantry' && <>
 
           {/* ── Stats Row ── */}
           <div className="inv-stats-row">
@@ -945,27 +963,28 @@ export function Maininventory() {
             </div>
           )}
 
-        </div>
+          {/* ── Pagination ── */}
+          {totalPages > 1 && (
+            <div className="inv-pagination">
+              <button className="inv-pagination-btn" onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>← Previous</button>
+              <span className="inv-pagination-info">Page {currentPage} of {totalPages}</span>
+              <button className="inv-pagination-btn" onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>Next →</button>
+            </div>
+          )}
 
-        {/* ── Pagination ── */}
-        {totalPages > 1 && (
-          <div className="inv-pagination">
-            <button className="inv-pagination-btn" onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>← Previous</button>
-            <span className="inv-pagination-info">Page {currentPage} of {totalPages}</span>
-            <button className="inv-pagination-btn" onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>Next →</button>
-          </div>
-        )}
+          {/* ── Congrats toast ── */}
+          {showCongratsPopup && (
+            <div className="congrats-popup">
+              <p>Congratulations on starting your inventory! Check out some recipes now.</p>
+            </div>
+          )}
 
-        {/* ── Congrats toast ── */}
-        {showCongratsPopup && (
-          <div className="congrats-popup">
-            <p>Congratulations on starting your inventory! Check out some recipes now.</p>
-          </div>
-        )}
+          </>}
 
-        {/* ── Dashboard ── */}
-        <div id="dashboard-section">
-          <Dashboard inventory={inventory} deletionHistory={deletionHistory} />
+          {activeTab === 'analytics' && (
+            <Dashboard inventory={inventory} deletionHistory={deletionHistory} />
+          )}
+
         </div>
       </div>
 
