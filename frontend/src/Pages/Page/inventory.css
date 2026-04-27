@@ -2104,12 +2104,12 @@ header { display: none; }
   /* Left group: Scan Receipt full width, Add Item full width below */
   .inv-toolbar-group { flex-direction: column; gap: 8px; }
   .inv-toolbar-group > button:nth-child(3) { display: none; } /* Hide Scan Produce on mobile */
-  .inv-scan-cta { width: 100%; justify-content: center; font-size: 15px !important; padding: 0 20px !important; height: 48px; }
-  .inv-toolbar-group .inv-action-btn:not(.inv-scan-cta) { width: 100%; justify-content: center; font-size: 14px; padding: 0 16px; height: 44px; }
+  .inv-scan-cta { width: 100%; justify-content: center; font-size: 16px !important; font-weight: 800 !important; padding: 0 20px !important; height: 48px; }
+  .inv-toolbar-group .inv-action-btn:not(.inv-scan-cta) { width: 100%; justify-content: center; font-size: 15px; font-weight: 800; padding: 0 16px; height: 44px; }
 
   /* Insight group: both buttons side by side, same height */
   .inv-toolbar-group--right { flex-direction: row; margin-left: 0; gap: 8px; }
-  .inv-insight-btn { flex: 1; justify-content: center; font-size: 12px; padding: 0 8px; height: 44px; }
+  .inv-insight-btn { flex: 1; justify-content: center; font-size: 13px; font-weight: 800; padding: 0 8px; height: 44px; }
   .dash-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .dash-header { flex-direction: column; }
 
