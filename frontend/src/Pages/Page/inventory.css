@@ -202,10 +202,10 @@ header { display: none; }
 }
 
 .inv-tab--active {
-  background: linear-gradient(135deg, #4ADE80, #22C55E, #16A34A);
+  background: linear-gradient(135deg, #15803D, #166534);
   color: #ffffff;
   font-weight: 700;
-  box-shadow: 0 2px 10px rgba(22,163,74,0.4), 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(21,128,61,0.3), 0 1px 3px rgba(0,0,0,0.08);
 }
 
 /* ══════════════════════════════════════════
