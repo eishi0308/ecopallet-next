@@ -235,7 +235,7 @@ header { display: none; }
 .inv-toolbar-group > button:nth-child(3) { display: none; }
 
 /* Scan Receipt — dominant wide CTA */
-.inv-scan-cta { min-width: 240px; justify-content: center; }
+.inv-scan-cta { min-width: 280px; justify-content: center; height: 58px; font-size: 17px !important; }
 
 .inv-toolbar-group--right {
   margin-left: auto;
