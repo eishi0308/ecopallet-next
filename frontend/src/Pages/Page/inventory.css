@@ -2072,6 +2072,9 @@ header { display: none; }
   #dashboard-section { padding: 0 20px; }
   .dash { margin-top: 24px; padding-bottom: 32px; }
 
+  /* Tabs — full width on mobile */
+  .inv-tabs { width: 100%; }
+
   /* Hero — compact on mobile */
   .inv-page-header {
     flex-direction: column;
