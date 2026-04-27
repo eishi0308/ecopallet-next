@@ -2098,14 +2098,14 @@ header { display: none; }
   .inv-stats-row .inv-stat-card { min-width: unset; }
 
   /* Toolbar — structured mobile layout */
-  .inv-toolbar { flex-direction: column; align-items: stretch; gap: 10px; }
-  .inv-toolbar-divider { width: 100%; height: 1px; margin: 2px 0; }
+  .inv-toolbar { flex-direction: column; align-items: stretch; gap: 8px; }
+  .inv-toolbar-divider { display: block; width: 100%; height: 1px; margin: 2px 0; }
 
-  /* Left group: row + wrap — Scan Receipt full width, Add Item + Scan Produce side by side */
-  .inv-toolbar-group { flex-direction: row; flex-wrap: wrap; gap: 8px; }
-  .inv-toolbar-group > button:nth-child(3) { display: flex; } /* Show Scan Produce on mobile */
-  .inv-scan-cta { width: 100%; justify-content: center; font-size: 14px !important; padding: 0 20px !important; height: 44px; }
-  .inv-toolbar-group .inv-action-btn:not(.inv-scan-cta) { flex: 1; justify-content: center; font-size: 12px; padding: 0 10px; height: 44px; }
+  /* Left group: Scan Receipt full width, Add Item full width below */
+  .inv-toolbar-group { flex-direction: column; gap: 8px; }
+  .inv-toolbar-group > button:nth-child(3) { display: none; } /* Hide Scan Produce on mobile */
+  .inv-scan-cta { width: 100%; justify-content: center; font-size: 15px !important; padding: 0 20px !important; height: 48px; }
+  .inv-toolbar-group .inv-action-btn:not(.inv-scan-cta) { width: 100%; justify-content: center; font-size: 14px; padding: 0 16px; height: 44px; }
 
   /* Insight group: both buttons side by side, same height */
   .inv-toolbar-group--right { flex-direction: row; margin-left: 0; gap: 8px; }
