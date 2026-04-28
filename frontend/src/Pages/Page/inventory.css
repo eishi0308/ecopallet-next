@@ -2109,7 +2109,7 @@ header { display: none; }
 
   /* Insight group: both buttons side by side, same height */
   .inv-toolbar-group--right { flex-direction: row; margin-left: 0; gap: 8px; }
-  .inv-insight-btn { flex: 1; justify-content: center; font-size: 13px; font-weight: 800; padding: 0 8px; height: 44px; }
+  .inv-insight-btn { flex: 1; justify-content: center; font-size: 15px; font-weight: 800; padding: 0 8px; height: 48px; }
   .dash-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .dash-header { flex-direction: column; }
 
@@ -2121,32 +2121,64 @@ header { display: none; }
     gap: 10px;
     padding: 4px 12px 12px;
   }
-  /* Fixed card height — flex column, actions pinned to bottom */
+  /* ── Card: locked height, flex column, actions always at bottom via auto margin ── */
   .inv-card {
-    height: 220px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    height: 248px !important;
+    max-height: 248px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 14px 14px 14px !important;
+    box-sizing: border-box !important;
   }
-  .inv-card-actions { margin-top: auto; flex-shrink: 0; }
-  /* Truncate long names to 1 line */
-  .inv-card-name {
-    white-space: nowrap; overflow: hidden;
-    text-overflow: ellipsis; display: block;
+  .inv-card-actions {
+    margin-top: auto !important;
+    flex-shrink: 0 !important;
+    padding-top: 8px !important;
   }
-  /* Force input heights — overrides iOS Safari's large default touch-target sizing */
-  .inv-card .edit-cell-input,
-  .inv-card .date-picker.edit-date-picker {
+
+  /* ── Lock text spans and inputs to IDENTICAL heights so card never reflowss ── */
+  .inv-card .inv-card-name,
+  .inv-card .inv-card-name-block .edit-cell-input {
     height: 22px !important;
-    line-height: 22px;
-    -webkit-appearance: none;
-    appearance: none;
+    min-height: 22px !important;
+    max-height: 22px !important;
+    line-height: 22px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    display: block !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
     padding: 0 !important;
+    box-sizing: content-box !important;
   }
-  .inv-card .react-datepicker-wrapper,
-  .inv-card .react-datepicker__input-container {
-    height: 22px !important;
-    overflow: hidden;
+  .inv-card .inv-card-field-label { font-size: 12px; }
+  .inv-card .inv-card-field-value,
+  .inv-card .inv-card-field .edit-cell-input,
+  .inv-card .inv-card-field .date-picker.edit-date-picker {
+    height: 20px !important;
+    min-height: 20px !important;
+    max-height: 20px !important;
+    line-height: 20px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    display: block !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    box-sizing: content-box !important;
+  }
+  .inv-card .inv-card-field .react-datepicker-wrapper,
+  .inv-card .inv-card-field .react-datepicker__input-container {
+    height: 20px !important;
+    max-height: 20px !important;
+    display: block !important;
+    overflow: hidden !important;
   }
   .inv-mobile-sort-bar {
     display: flex;
