@@ -2121,6 +2121,33 @@ header { display: none; }
     gap: 10px;
     padding: 4px 12px 12px;
   }
+  /* Fixed card height — flex column, actions pinned to bottom */
+  .inv-card {
+    height: 220px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .inv-card-actions { margin-top: auto; flex-shrink: 0; }
+  /* Truncate long names to 1 line */
+  .inv-card-name {
+    white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis; display: block;
+  }
+  /* Force input heights — overrides iOS Safari's large default touch-target sizing */
+  .inv-card .edit-cell-input,
+  .inv-card .date-picker.edit-date-picker {
+    height: 22px !important;
+    line-height: 22px;
+    -webkit-appearance: none;
+    appearance: none;
+    padding: 0 !important;
+  }
+  .inv-card .react-datepicker-wrapper,
+  .inv-card .react-datepicker__input-container {
+    height: 22px !important;
+    overflow: hidden;
+  }
   .inv-mobile-sort-bar {
     display: flex;
     padding: 12px 12px 0;
