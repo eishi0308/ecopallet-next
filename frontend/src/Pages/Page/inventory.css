@@ -2137,8 +2137,19 @@ header { display: none; }
     padding-top: 8px !important;
   }
 
-  /* ── Lock text spans and inputs to IDENTICAL heights so card never reflowss ── */
-  .inv-card .inv-card-name,
+  /* ── Name span: wrap fully, no truncation ── */
+  .inv-card .inv-card-name {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    display: block !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    word-break: break-word !important;
+    line-height: 1.4 !important;
+    padding: 0 !important;
+  }
+  /* ── Name input in edit mode: single line, fixed height ── */
   .inv-card .inv-card-name-block .edit-cell-input {
     height: 22px !important;
     min-height: 22px !important;
@@ -2151,7 +2162,6 @@ header { display: none; }
     appearance: none !important;
     white-space: nowrap !important;
     overflow: hidden !important;
-    text-overflow: ellipsis !important;
     padding: 0 !important;
     box-sizing: content-box !important;
   }
