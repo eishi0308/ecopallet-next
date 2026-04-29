@@ -66,8 +66,9 @@ const Dashboard = ({ inventory, deletionHistory }) => {
     [inventory, deletionHistory]
   );
 
-  const hasValues = m.wastedCost > 0 || m.aboutToExpireCost > 0 || m.savedCost > 0;
-  const maxQty    = m.top5.length > 0 ? m.top5[0].qty : 1;
+  const hasValues    = m.wastedCost > 0 || m.aboutToExpireCost > 0 || m.savedCost > 0;
+  const hasRatioData = m.wastedCost > 0 || m.savedCost > 0;
+  const maxQty       = m.top5.length > 0 ? m.top5[0].qty : 1;
 
   const chartData = {
     labels: ['Wasted', 'About to Expire', 'Saved'],
@@ -105,6 +106,56 @@ const Dashboard = ({ inventory, deletionHistory }) => {
   return (
     <div className="dash">
 
+      {/* ── Hero: Gone to Waste ── */}
+      {hasValues && (
+        <>
+          <div className="dash-waste-hero">
+            <div className="dash-waste-hero-left">
+              <span className="dash-waste-hero-eyebrow">🗑 Gone to waste</span>
+              <div className="dash-waste-hero-amount">${m.wastedCost.toFixed(2)}</div>
+              <p className="dash-waste-hero-sub">food that expired before you ate it</p>
+            </div>
+            {m.wasteRate > 0 && (
+              <div className="dash-waste-hero-badge">
+                <span className="dash-waste-pct">{m.wasteRate}%</span>
+                <span className="dash-waste-pct-label">of total spend</span>
+              </div>
+            )}
+          </div>
+
+          <div className="dash-two-col">
+            <div className="dash-metric-card dash-metric--saved">
+              <span className="dash-metric-eyebrow">✅ Saved</span>
+              <div className="dash-metric-amount">${m.savedCost.toFixed(2)}</div>
+              <p className="dash-metric-sub">
+                {m.savedCount} item{m.savedCount !== 1 ? 's' : ''} consumed in time
+              </p>
+            </div>
+            <div className="dash-metric-card dash-metric--risk">
+              <span className="dash-metric-eyebrow">⚠️ Still at risk</span>
+              <div className="dash-metric-amount">${m.aboutToExpireCost.toFixed(2)}</div>
+              <p className="dash-metric-sub">
+                {m.aboutToExpireCount} item{m.aboutToExpireCount !== 1 ? 's' : ''} not yet expired
+              </p>
+            </div>
+          </div>
+
+          {hasRatioData && (
+            <div className="dash-ratio-wrap">
+              <div className="dash-ratio-bar">
+                <div className="dash-ratio-fill--wasted" style={{ width: `${m.wasteRate}%` }} />
+                <div className="dash-ratio-fill--saved"  style={{ width: `${m.saveRate}%`  }} />
+              </div>
+              <div className="dash-ratio-labels">
+                <span style={{ color: '#EF4444' }}>{m.wasteRate}% wasted</span>
+                <span style={{ color: '#16A34A' }}>{m.saveRate}% saved</span>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* ── Original header + stat cards ── */}
       <div className="dash-header">
         <div className="dash-header-left">
           <span className="dash-eyebrow">📊 Live Spending Analytics</span>
@@ -128,6 +179,7 @@ const Dashboard = ({ inventory, deletionHistory }) => {
         <StatCard label="Saved"           emoji="✅"  value={m.savedCost}         sub={`${m.savedCount} item${m.savedCount !== 1 ? 's' : ''} consumed`}          mod="success" />
       </div>
 
+      {/* ── Chart + Top5 ── */}
       <div className="dash-main">
 
         <div className="dash-panel dash-chart-panel">
