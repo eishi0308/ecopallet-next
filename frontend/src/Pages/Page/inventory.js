@@ -98,6 +98,7 @@ export function Maininventory() {
   const [showExpiredModal, setShowExpiredModal] = useState(false);
   const [expiredItemsList, setExpiredItemsList] = useState([]);
   const [toastMsg, setToastMsg] = useState('');
+  const [toastType, setToastType] = useState('default');
 
   const handleEditingItemChange = (itemId) => setEditingItem(itemId);
 
@@ -180,8 +181,9 @@ export function Maininventory() {
     }
   }, [inventory, confirmationShown]);
 
-  const showToast = (msg) => {
+  const showToast = (msg, type = 'default') => {
     setToastMsg(msg);
+    setToastType(type);
     setTimeout(() => setToastMsg(''), 3000);
   };
 
@@ -202,12 +204,12 @@ export function Maininventory() {
     setInventory(updated);
     localStorage.setItem('inventory', JSON.stringify(updated));
     setShowExpiredModal(false);
-    showToast(`${expiredItemsList.length} expired item${expiredItemsList.length > 1 ? 's' : ''} removed.`);
+    showToast(`${expiredItemsList.length} expired item${expiredItemsList.length > 1 ? 's' : ''} removed.`, 'danger');
   };
 
   const handleKeepExpired = () => {
     setShowExpiredModal(false);
-    showToast('Expired items kept. You can remove them manually anytime.');
+    showToast('Expired items kept. You can remove them manually anytime.', 'warning');
   };
 
   const handleDeleteItem = (id) => {
@@ -254,7 +256,7 @@ export function Maininventory() {
     const updated = inventory.filter(i => !idsSet.has(i.id));
     setInventory(updated);
     localStorage.setItem('inventory', JSON.stringify(updated));
-    showToast(`${ids.length} item${ids.length !== 1 ? 's' : ''} deleted.`);
+    showToast(`${ids.length} item${ids.length !== 1 ? 's' : ''} deleted.`, 'danger');
   };
 
   const isPopupActive = showAddPopup || showScanProducePopup || showScanPackagePopup || showPdfReceiptPopup;
@@ -461,7 +463,7 @@ export function Maininventory() {
     setPdfItems([]);
     setPdfFile(null);
     const isFirstScan = inventory.length === 0;
-    showToast(isFirstScan ? '🎉 Your pantry is alive. Great first scan!' : `${newItems.length} item${newItems.length > 1 ? 's' : ''} added from receipt.`);
+    showToast(isFirstScan ? '🎉 Your pantry is alive. Great first scan!' : `${newItems.length} item${newItems.length > 1 ? 's' : ''} added from receipt.`, 'success');
   };
 
   const handleAddToPantryClick = () => {
@@ -1023,7 +1025,12 @@ export function Maininventory() {
 
       {/* ── Toast notification ── */}
       {toastMsg && (
-        <div className="inv-toast">{toastMsg}</div>
+        <div className={`inv-toast inv-toast--${toastType}`}>
+          <span className="inv-toast-icon">
+            {toastType === 'success' ? '✅' : toastType === 'warning' ? '⚠️' : toastType === 'danger' ? '🗑' : 'ℹ️'}
+          </span>
+          <p className="inv-toast-msg">{toastMsg}</p>
+        </div>
       )}
     </div>
   );
