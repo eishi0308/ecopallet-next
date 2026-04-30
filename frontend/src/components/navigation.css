@@ -4,11 +4,12 @@
 
 /* ── Navbar shell ── */
 .fridgely-nav {
-  background: rgba(3, 22, 10, 0.95);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(22, 163, 74, 0.3);
-  height: 64px;
+  background: rgba(3, 22, 10, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(22, 163, 74, 0.25);
+  box-shadow: 0 1px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(22,163,74,0.08);
+  height: 80px;
   z-index: 1030;
 }
 
@@ -16,31 +17,33 @@
 .fridgely-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 800;
   color: #86efac !important;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.5px;
   text-decoration: none;
+  text-shadow: 0 0 24px rgba(134,239,172,0.4);
 }
 
 .nav-logo {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid rgba(22, 163, 74, 0.5);
+  border: 2px solid rgba(22, 163, 74, 0.6);
+  box-shadow: 0 0 16px rgba(22,163,74,0.35), 0 0 0 4px rgba(22,163,74,0.08);
 }
 
-/* ── Desktop nav links ── */
+/* ── Desktop nav links — pill style ── */
 .fridgely-link {
   font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.92) !important;
-  padding: 9px 20px !important;
-  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.75) !important;
+  padding: 10px 24px !important;
+  border-radius: 9999px;
   border: 1px solid transparent;
   position: relative;
   text-decoration: none;
@@ -52,39 +55,22 @@
 
 .fridgely-link i {
   font-size: 15px;
-  opacity: 0.8;
+  opacity: 0.7;
   transition: opacity 200ms ease, transform 200ms ease;
 }
 
-/* Animated green underline on hover */
-.fridgely-link::after {
-  content: '';
-  position: absolute;
-  bottom: 5px;
-  left: 20px;
-  right: 20px;
-  height: 2px;
-  background: #86efac;
-  border-radius: 2px;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1);
-}
+.fridgely-link::after { display: none; }
 
 .fridgely-link:hover {
   color: #86efac !important;
-  background: rgba(22, 163, 74, 0.12);
-  border-color: rgba(22, 163, 74, 0.28);
-  box-shadow: 0 0 14px rgba(22, 163, 74, 0.15);
+  background: rgba(22, 163, 74, 0.14);
+  border-color: rgba(22, 163, 74, 0.4);
+  box-shadow: 0 0 20px rgba(22,163,74,0.25), inset 0 1px 0 rgba(134,239,172,0.1);
 }
 
 .fridgely-link:hover i {
   opacity: 1;
-  transform: scale(1.15);
-}
-
-.fridgely-link:hover::after {
-  transform: scaleX(1);
+  transform: scale(1.2);
 }
 
 /* ── Fresh Produce button ── */
@@ -157,9 +143,9 @@
 /* Mobile link rows — bigger tap targets */
 @media (max-width: 991px) {
   .fridgely-link {
-    padding: 13px 18px !important;
+    padding: 13px 20px !important;
     font-size: 16px;
-    border-radius: 10px;
+    border-radius: 9999px;
     display: flex;
   }
 
