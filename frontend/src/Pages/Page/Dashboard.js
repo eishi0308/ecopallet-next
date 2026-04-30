@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import './dashboard.css';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { calculateStatus } from './inventory';
