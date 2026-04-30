@@ -323,9 +323,8 @@
 
 /* ── Hero: Gone to Waste ── */
 .dash-waste-hero {
-  background: linear-gradient(135deg, #FEF2F2 0%, #FFE4E4 100%);
-  border: 1px solid #FECACA;
-  border-left: 5px solid #EF4444;
+  background: linear-gradient(135deg, #DC2626 0%, #EF4444 50%, #F97316 100%);
+  border: none;
   border-radius: 20px;
   padding: 36px 40px;
   display: flex;
@@ -333,6 +332,18 @@
   justify-content: space-between;
   gap: 20px;
   margin-bottom: 16px;
+  box-shadow: 0 8px 32px rgba(220,38,38,0.4);
+  position: relative;
+  overflow: hidden;
+}
+.dash-waste-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.18), transparent);
+  border-radius: 20px 20px 0 0;
+  pointer-events: none;
 }
 .dash-waste-hero-eyebrow {
   display: block;
@@ -340,16 +351,17 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #EF4444;
+  color: rgba(255,255,255,0.85);
   margin-bottom: 10px;
 }
 .dash-waste-hero-amount {
   font-size: 4rem;
   font-weight: 900;
-  color: #DC2626;
+  color: #fff;
   letter-spacing: -2px;
   line-height: 1;
   margin-bottom: 10px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
 .dash-waste-hero-row {
   display: flex;
@@ -364,27 +376,26 @@
 .dash-waste-hero-divider {
   width: 1px;
   height: 56px;
-  background: rgba(185,28,28,0.25);
+  background: rgba(255,255,255,0.3);
   flex-shrink: 0;
 }
 .dash-waste-hero-pct {
   font-size: 2.8rem;
   font-weight: 900;
-  color: #991B1B;
+  color: #fff;
   letter-spacing: -1.5px;
   line-height: 1;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
 .dash-waste-hero-pct-label {
   font-size: 13px;
-  color: #B91C1C;
-  opacity: 0.8;
+  color: rgba(255,255,255,0.75);
   margin: 0;
 }
 .dash-waste-hero-sub {
   font-size: 14px;
-  color: #B91C1C;
+  color: rgba(255,255,255,0.75);
   margin: 0;
-  opacity: 0.8;
 }
 .dash-waste-hero-badge {
   display: flex;
@@ -444,16 +455,26 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+.dash-metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.18), transparent);
+  border-radius: 20px 20px 0 0;
+  pointer-events: none;
 }
 .dash-metric--saved {
-  background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
-  border: 1px solid #BBF7D0;
-  border-left: 5px solid #16A34A;
+  background: linear-gradient(135deg, #16A34A 0%, #10B981 60%, #059669 100%);
+  box-shadow: 0 8px 32px rgba(22,163,74,0.4);
 }
 .dash-metric--risk {
-  background: linear-gradient(135deg, #FFFBEB, #FEF3C7);
-  border: 1px solid #FDE68A;
-  border-left: 5px solid #F59E0B;
+  background: linear-gradient(135deg, #D97706 0%, #F59E0B 50%, #FBBF24 100%);
+  box-shadow: 0 8px 32px rgba(217,119,6,0.4);
 }
 .dash-metric-eyebrow {
   font-size: 12px;
@@ -461,24 +482,22 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 4px;
+  color: rgba(255,255,255,0.8);
 }
-.dash-metric--saved .dash-metric-eyebrow { color: #16A34A; }
-.dash-metric--risk  .dash-metric-eyebrow { color: #B45309; }
 .dash-metric-amount {
   font-size: 2.6rem;
   font-weight: 900;
   letter-spacing: -1.5px;
   line-height: 1;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
-.dash-metric--saved .dash-metric-amount { color: #15803D; }
-.dash-metric--risk  .dash-metric-amount { color: #92400E; }
 .dash-metric-sub {
   font-size: 13px;
   margin: 0;
   font-weight: 400;
+  color: rgba(255,255,255,0.75);
 }
-.dash-metric--saved .dash-metric-sub { color: #166534; opacity: 0.8; }
-.dash-metric--risk  .dash-metric-sub { color: #78350F; opacity: 0.8; }
 .dash-metric-row {
   display: flex;
   align-items: center;
@@ -493,15 +512,17 @@
   width: 1px;
   height: 48px;
   flex-shrink: 0;
+  background: rgba(255,255,255,0.3);
 }
-.dash-metric--saved .dash-metric-divider { background: rgba(22,163,74,0.25); }
 .dash-metric-pct {
   font-size: 2.2rem;
   font-weight: 900;
   letter-spacing: -1px;
   line-height: 1;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
-.dash-metric-pct--saved { color: #15803D; }
+.dash-metric-pct--saved { color: #fff; }
 
 /* ══════════════════════════════════════════
    RESPONSIVE
