@@ -640,6 +640,16 @@ export function Maininventory() {
                     }}
                     dateFormat="dd MMM yyyy"
                     className="date-picker add-date-picker"
+                    portalId="root"
+                    popperPlacement="bottom"
+                    fixedHeight
+                    renderCustomHeader={({ date, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
+                      <div className="dp-header">
+                        <button className="dp-nav-btn" onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>‹</button>
+                        <span className="dp-header-label">{date.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+                        <button className="dp-nav-btn" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>›</button>
+                      </div>
+                    )}
                   />
                 </div>
                 <div className="form-actions">
