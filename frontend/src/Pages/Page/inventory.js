@@ -613,16 +613,18 @@ export function Maininventory() {
           {inventory.length > 0 && (
             <div className="inv-filter-bar">
               <div className="inv-filter-search">
-                <span className="inv-filter-search-icon">🔍</span>
+                <i className="bi bi-search inv-filter-search-icon" />
                 <input
                   className="inv-filter-input"
                   type="text"
-                  placeholder="Search items…"
+                  placeholder="Search your pantry…"
                   value={filterText}
                   onChange={e => setFilterText(e.target.value)}
                 />
                 {filterText && (
-                  <button className="inv-filter-clear" onClick={() => setFilterText('')}>✕</button>
+                  <button className="inv-filter-clear" onClick={() => setFilterText('')}>
+                    <i className="bi bi-x-circle-fill" />
+                  </button>
                 )}
               </div>
               {filteredInventory.length !== inventory.length && (
