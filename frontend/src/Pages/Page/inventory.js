@@ -621,15 +621,15 @@ export function Maininventory() {
                   value={filterText}
                   onChange={e => setFilterText(e.target.value)}
                 />
+                {filteredInventory.length !== inventory.length && (
+                  <span className="inv-filter-count">{filteredInventory.length} shown</span>
+                )}
                 {filterText && (
                   <button className="inv-filter-clear" onClick={() => setFilterText('')}>
                     <i className="bi bi-x-circle-fill" />
                   </button>
                 )}
               </div>
-              {filteredInventory.length !== inventory.length && (
-                <span className="inv-filter-count">{filteredInventory.length} shown</span>
-              )}
             </div>
           )}
 
