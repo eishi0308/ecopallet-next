@@ -155,6 +155,16 @@ header { display: none; }
   background: #64748B;
 }
 
+.inv-stat-total.inv-stat-card--active-filter {
+  border-color: #3B82F6;
+  box-shadow:
+    0 0 0 3px rgba(59,130,246,0.15),
+    0 16px 40px rgba(59,130,246,0.2);
+}
+.inv-stat-total.inv-stat-card--active-filter::before {
+  background: linear-gradient(90deg, #1D4ED8, #93C5FD);
+}
+
 .inv-stat-fresh.inv-stat-card--active-filter {
   border-color: #16A34A;
   box-shadow:
@@ -288,6 +298,13 @@ header { display: none; }
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
+
+.inv-stat-total {
+  background: #EFF6FF;
+  border-color: #BFDBFE;
+}
+.inv-stat-total .inv-stat-num { color: #1D4ED8; }
+.inv-stat-total .inv-stat-label { color: #2563EB; }
 
 .inv-stat-fresh {
   background: #F0FDF4;

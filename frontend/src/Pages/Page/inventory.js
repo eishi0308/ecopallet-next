@@ -545,7 +545,7 @@ export function Maininventory() {
           {/* ── Stats Row ── */}
           <div className="inv-stats-row">
             <div
-              className={`inv-stat-card inv-stat-card--clickable${filterStatus === 'all' ? ' inv-stat-card--active-filter' : ''}`}
+              className={`inv-stat-card inv-stat-total inv-stat-card--clickable${filterStatus === 'all' ? ' inv-stat-card--active-filter' : ''}`}
               onClick={() => setFilterStatus('all')}
             >
               <span className="inv-stat-num">{inventory.length}</span>
