@@ -1524,7 +1524,15 @@ header { display: none; }
 .react-datepicker__day { border-radius: 6px; color: var(--text-1); transition: background 150ms; }
 .react-datepicker__day:hover { background: var(--accent-light, #F0FDF4); }
 .react-datepicker__day--selected { background: var(--accent, #16A34A) !important; color: #fff; }
-.react-datepicker__day--today { font-weight: 800; }
+.react-datepicker__day--today {
+  font-weight: 800;
+  color: #16A34A !important;
+  border: 2px solid #16A34A;
+  border-radius: 6px;
+}
+.react-datepicker__day--today.react-datepicker__day--selected {
+  color: #fff !important;
+}
 .react-datepicker__day--disabled { color: var(--text-3); }
 .react-datepicker-popper { z-index: 9999 !important; }
 #root > .react-datepicker-popper { z-index: 9999 !important; }
