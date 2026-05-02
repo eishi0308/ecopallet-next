@@ -20,6 +20,7 @@ export const Recipes = () => {
   const [displayedInventory, setDisplayedInventory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [outOfStockToast, setOutOfStockToast] = useState(false);
+  const [sLoading, setSLoading] = useState(false);
   const recipesPerPage = 4;
 
   const handleNextPage = () => setCurrentPage(prev => prev + 1);
@@ -153,12 +154,13 @@ export const Recipes = () => {
   useEffect(() => {
     const fetchRecipesFromInventory = async () => {
       try {
+        setSLoading(true);
         const currentDate = new Date();
         currentDate.setDate(currentDate.getDate() - 1);
         const sorted = [...inventory].sort((a, b) => new Date(a.expiryDate) - new Date(b.expiryDate));
         const validItems = sorted.filter(item => new Date(item.expiryDate) > currentDate);
         const topIngredients = validItems.slice(0, 3).map(item => item.name.split(' - ')[0]);
-        if (topIngredients.length === 0) return;
+        if (topIngredients.length === 0) { setSLoading(false); return; }
 
         const result = await fetchRecipes(topIngredients.join(','));
         if (!result || !Array.isArray(result)) throw new Error('Invalid response');
@@ -167,6 +169,8 @@ export const Recipes = () => {
         setsRecipes(recipesWithIngredients);
       } catch (error) {
         console.error("Error fetching inventory recipes:", error.message);
+      } finally {
+        setSLoading(false);
       }
     };
 
@@ -210,10 +214,20 @@ export const Recipes = () => {
         </div>
 
         <div className="srecipes-container">
-          {displayedRecipes.length > 0 ? displayedRecipes.map((sampleRecipe, index) => (
+          {sLoading ? (
+            [0,1,2,3].map(i => (
+              <div key={i} className="srecipe-skeleton">
+                <div className="srecipe-skeleton-img" />
+                <div className="srecipe-skeleton-body">
+                  <div className="srecipe-skeleton-line srecipe-skeleton-line--title" />
+                  <div className="srecipe-skeleton-line srecipe-skeleton-line--sub" />
+                </div>
+              </div>
+            ))
+          ) : displayedRecipes.length > 0 ? displayedRecipes.map((sampleRecipe, index) => (
             <SRecipeCard key={index} recipe={sampleRecipe} />
           )) : (
-            <p className="no-recipes-msg">Loading recipes from your expiring ingredients…</p>
+            <p className="no-recipes-msg">Add items to your inventory to see recipe suggestions.</p>
           )}
         </div>
       </section>

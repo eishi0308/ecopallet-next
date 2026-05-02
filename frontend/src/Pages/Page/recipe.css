@@ -305,6 +305,55 @@
   margin: 0;
 }
 
+/* ── Recipe skeleton loading cards ── */
+@keyframes recipe-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.srecipe-skeleton {
+  background: var(--surface, #fff);
+  border: 1px solid var(--border, #E2E8F0);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.srecipe-skeleton-img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background-size: 800px 100%;
+  animation: recipe-shimmer 1.4s ease-in-out infinite;
+}
+
+.srecipe-skeleton-body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.srecipe-skeleton-line {
+  border-radius: 6px;
+  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background-size: 800px 100%;
+  animation: recipe-shimmer 1.4s ease-in-out infinite;
+}
+
+.srecipe-skeleton-line--title {
+  height: 14px;
+  width: 85%;
+  animation-delay: 0.1s;
+}
+
+.srecipe-skeleton-line--sub {
+  height: 12px;
+  width: 55%;
+  animation-delay: 0.2s;
+}
+
 .srecipe-container { display: flex; flex-direction: column; height: 100%; }
 
 .srecipe-card {
