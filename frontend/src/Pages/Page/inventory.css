@@ -1920,6 +1920,10 @@ header { display: none; }
   /* Tabs — full width on mobile */
   .inv-tabs { width: 100%; }
 
+  /* Filter bar — full width on mobile */
+  .inv-filter-bar { flex-wrap: wrap; }
+  .inv-filter-search { max-width: 100%; width: 100%; }
+
   /* Hero — compact on mobile */
   .inv-page-header {
     flex-direction: column;
