@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./landing.css";
 
 const steps = [
@@ -51,9 +52,9 @@ export const Landing = () => {
           </div>
 
           {/* CTA */}
-          <a href="/inventory" className="landing-cta">
+          <Link to="/inventory" className="landing-cta">
             Scan Your First Receipt →
-          </a>
+          </Link>
 
         </div>
       </div>

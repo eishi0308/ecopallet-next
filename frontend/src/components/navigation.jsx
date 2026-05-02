@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import Webcam from "react-webcam";
 import logo from "../ProjectLogo.png";
 import samimg2 from "./2.jpeg";
 import './navigation.css';
 
 export const Navigation = () => {
+  const { pathname } = useLocation();
   const [navOpen, setNavOpen] = useState(false);
   const [showScanProducePopup, setShowScanProducePopup] = useState(false);
   const [showUploadInfoPopup, setShowUploadInfoPopup] = useState(false);
@@ -67,10 +69,10 @@ export const Navigation = () => {
         <div className="container">
 
           {/* Brand */}
-          <a className="navbar-brand fridgely-brand" href="/">
+          <Link className="navbar-brand fridgely-brand" to="/">
             <img src={logo} className="nav-logo" alt="Fridgely" />
             Fridgely
-          </a>
+          </Link>
 
           {/* Bootstrap hamburger toggler — React state controlled */}
           <button
@@ -89,19 +91,19 @@ export const Navigation = () => {
           <div className={`navbar-collapse ${navOpen ? 'show' : 'collapse'}`} id="fridgelyNav">
             <ul className="navbar-nav ms-auto align-items-lg-center gap-lg-2">
               <li className="nav-item">
-                <a className="nav-link fridgely-link" href="/inventory" onClick={closeNav}>
+                <Link className={`nav-link fridgely-link${pathname === '/inventory' ? ' fridgely-link--active' : ''}`} to="/inventory" onClick={closeNav}>
                   <i className="bi bi-box-seam me-2" />Inventory
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link fridgely-link" href="/recipes" onClick={closeNav}>
+                <Link className={`nav-link fridgely-link${pathname === '/recipes' ? ' fridgely-link--active' : ''}`} to="/recipes" onClick={closeNav}>
                   <i className="bi bi-egg-fried me-2" />Recipes
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link fridgely-link" href="/tips" onClick={closeNav}>
+                <Link className={`nav-link fridgely-link${pathname === '/tips' ? ' fridgely-link--active' : ''}`} to="/tips" onClick={closeNav}>
                   <i className="bi bi-lightbulb me-2" />Tips
-                </a>
+                </Link>
               </li>
               {/* Fresh Produce hidden — feature temporarily disabled
               <li className="nav-item mt-2 mt-lg-0 ms-lg-2">

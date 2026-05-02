@@ -83,11 +83,25 @@ export function Maininventory() {
   const [showCongratsTimer, setShowCongratsTimer] = useState(true);
   const [scanBtnEntrance, setScanBtnEntrance] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [filterText, setFilterText] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
+
+  const filteredInventory = inventory.filter(i => {
+    const matchesText = i.name.toLowerCase().includes(filterText.toLowerCase());
+    const color = calculateStatus(i.expiryDate).color;
+    const matchesStatus =
+      filterStatus === 'all' ||
+      (filterStatus === 'green'   && color === 'green') ||
+      (filterStatus === 'warning' && color === '#DAA520') ||
+      (filterStatus === 'red'     && color === 'red');
+    return matchesText && matchesStatus;
+  });
+
   const itemsPerPage = 8;
+  const totalPages = Math.ceil(filteredInventory.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, inventory.length);
-  const currentInventory = inventory.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(inventory.length / itemsPerPage);
+  const endIndex = Math.min(startIndex + itemsPerPage, filteredInventory.length);
+  const currentInventory = filteredInventory.slice(startIndex, endIndex);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [confirmationShown, setConfirmationShown] = useState(false);
   const [deletionHistory, setDeletionHistory] = useState(() =>
@@ -127,6 +141,8 @@ export function Maininventory() {
   }, [showExpiredModal]);
 
   useEffect(() => { if (!showCongratsTimer) setShowCongratsPopup(false); }, [showCongratsTimer]);
+
+  useEffect(() => { setCurrentPage(1); }, [filterText, filterStatus]);
 
   useEffect(() => {
     if (hasOneItemInInventory && showCongratsTimer) setShowCongratsPopup(true);
@@ -528,19 +544,31 @@ export function Maininventory() {
 
           {/* ── Stats Row ── */}
           <div className="inv-stats-row">
-            <div className="inv-stat-card">
+            <div
+              className={`inv-stat-card inv-stat-card--clickable${filterStatus === 'all' ? ' inv-stat-card--active-filter' : ''}`}
+              onClick={() => setFilterStatus('all')}
+            >
               <span className="inv-stat-num">{inventory.length}</span>
               <span className="inv-stat-label">🛒 Total items</span>
             </div>
-            <div className="inv-stat-card inv-stat-fresh">
+            <div
+              className={`inv-stat-card inv-stat-fresh inv-stat-card--clickable${filterStatus === 'green' ? ' inv-stat-card--active-filter' : ''}`}
+              onClick={() => setFilterStatus(filterStatus === 'green' ? 'all' : 'green')}
+            >
               <span className="inv-stat-num">{freshCount}</span>
               <span className="inv-stat-label">✅ Fresh</span>
             </div>
-            <div className="inv-stat-card inv-stat-warning">
+            <div
+              className={`inv-stat-card inv-stat-warning inv-stat-card--clickable${filterStatus === 'warning' ? ' inv-stat-card--active-filter' : ''}`}
+              onClick={() => setFilterStatus(filterStatus === 'warning' ? 'all' : 'warning')}
+            >
               <span className="inv-stat-num">{expiringCount}</span>
               <span className="inv-stat-label">⚡ Expiring soon</span>
             </div>
-            <div className="inv-stat-card inv-stat-danger">
+            <div
+              className={`inv-stat-card inv-stat-danger inv-stat-card--clickable${filterStatus === 'red' ? ' inv-stat-card--active-filter' : ''}`}
+              onClick={() => setFilterStatus(filterStatus === 'red' ? 'all' : 'red')}
+            >
               <span className="inv-stat-num">{expiredCount}</span>
               <span className="inv-stat-label">❌ Expired</span>
             </div>
@@ -580,6 +608,28 @@ export function Maininventory() {
               </button>
             </div>
           </div>
+
+          {/* ── Filter Bar ── */}
+          {inventory.length > 0 && (
+            <div className="inv-filter-bar">
+              <div className="inv-filter-search">
+                <span className="inv-filter-search-icon">🔍</span>
+                <input
+                  className="inv-filter-input"
+                  type="text"
+                  placeholder="Search items…"
+                  value={filterText}
+                  onChange={e => setFilterText(e.target.value)}
+                />
+                {filterText && (
+                  <button className="inv-filter-clear" onClick={() => setFilterText('')}>✕</button>
+                )}
+              </div>
+              {filteredInventory.length !== inventory.length && (
+                <span className="inv-filter-count">{filteredInventory.length} shown</span>
+              )}
+            </div>
+          )}
 
           {/* ── Empty State ── */}
           {inventory.length === 0 && (
