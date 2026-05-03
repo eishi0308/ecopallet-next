@@ -562,14 +562,14 @@ export function Maininventory() {
               onClick={() => setFilterStatus('all')}
             >
               <span className="inv-stat-num">{inventory.length}</span>
-              <span className="inv-stat-label">🛒 Total items</span>
+              <span className="inv-stat-label">Total items</span>
             </div>
             <div
               className={`inv-stat-card inv-stat-fresh inv-stat-card--clickable${filterStatus === 'green' ? ' inv-stat-card--active-filter' : ''}`}
               onClick={() => setFilterStatus(filterStatus === 'green' ? 'all' : 'green')}
             >
               <span className="inv-stat-num">{freshCount}</span>
-              <span className="inv-stat-label">✅ Fresh</span>
+              <span className="inv-stat-label">Fresh</span>
             </div>
             <div
               className={`inv-stat-card inv-stat-warning inv-stat-card--clickable${filterStatus === 'warning' ? ' inv-stat-card--active-filter' : ''}`}
@@ -577,7 +577,7 @@ export function Maininventory() {
             >
               <span className="inv-stat-num">{expiringCount}</span>
               <span className="inv-stat-label">
-                ⚡ Expiring soon
+                Expiring soon
                 <span className="inv-stat-tooltip-wrap">
                   <span className="inv-stat-tooltip-icon">ℹ</span>
                   <span className="inv-stat-tooltip-text">Expires within 3 days</span>
@@ -589,7 +589,7 @@ export function Maininventory() {
               onClick={() => setFilterStatus(filterStatus === 'red' ? 'all' : 'red')}
             >
               <span className="inv-stat-num">{expiredCount}</span>
-              <span className="inv-stat-label">❌ Expired</span>
+              <span className="inv-stat-label">Expired</span>
             </div>
           </div>
 
