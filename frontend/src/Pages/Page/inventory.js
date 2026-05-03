@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InventoryList from './InventoryList';
 import './inventory.css';
@@ -113,6 +113,8 @@ export function Maininventory() {
   const [expiredItemsList, setExpiredItemsList] = useState([]);
   const [toastMsg, setToastMsg] = useState('');
   const [toastType, setToastType] = useState('default');
+  const [undoData, setUndoData] = useState(null);
+  const undoTimerRef = useRef(null);
 
   const handleEditingItemChange = (itemId) => setEditingItem(itemId);
 
@@ -228,27 +230,38 @@ export function Maininventory() {
     showToast('Expired items kept. You can remove them manually anytime.', 'warning');
   };
 
-  const handleDeleteItem = (id) => {
+  const handleDeleteItem = (id, category) => {
     const item = inventory.find(i => i.id === id);
-    if (item) {
-      const status = calculateStatus(item.expiryDate);
-      // expired when deleted → wasted; expiring-soon OR safe when deleted → saved (consumed)
-      const category = status.color === 'red' ? 'wasted' : 'saved';
+    if (!item) return;
+    const resolvedCategory = category || (calculateStatus(item.expiryDate).color === 'red' ? 'wasted' : 'saved');
+    const entry = {
+      id: Date.now(),
+      name: item.name.split(' - ')[0],
+      amount: item.amount,
+      spent: parseFloat(item.spent) || 0,
+      category: resolvedCategory,
+      deletedAt: new Date().toISOString(),
+    };
+    const newHistory = [...deletionHistory, entry];
+    setDeletionHistory(newHistory);
+    localStorage.setItem('deletionHistory', JSON.stringify(newHistory));
+    setInventory(prev => prev.filter(i => i.id !== id));
 
-      const entry = {
-        id: Date.now(),
-        name: item.name.split(' - ')[0],   // strip batch suffix
-        amount: item.amount,
-        spent: parseFloat(item.spent) || 0,
-        category,
-        deletedAt: new Date().toISOString(),
-      };
+    // Undo support — keep deleted item recoverable for 5 seconds
+    setUndoData({ item, historyEntryId: entry.id });
+    if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+    undoTimerRef.current = setTimeout(() => setUndoData(null), 5000);
+  };
 
-      const newHistory = [...deletionHistory, entry];
-      setDeletionHistory(newHistory);
-      localStorage.setItem('deletionHistory', JSON.stringify(newHistory));
-      setInventory(prev => prev.filter(i => i.id !== id));
-    }
+  const handleUndoDelete = () => {
+    if (!undoData) return;
+    setInventory(prev => [...prev, undoData.item]);
+    const newHistory = deletionHistory.filter(e => e.id !== undoData.historyEntryId);
+    setDeletionHistory(newHistory);
+    localStorage.setItem('deletionHistory', JSON.stringify(newHistory));
+    setUndoData(null);
+    if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+    showToast('Item restored.', 'success');
   };
 
   const handleBulkDeleteItems = (ids) => {
@@ -563,7 +576,13 @@ export function Maininventory() {
               onClick={() => setFilterStatus(filterStatus === 'warning' ? 'all' : 'warning')}
             >
               <span className="inv-stat-num">{expiringCount}</span>
-              <span className="inv-stat-label">⚡ Expiring soon</span>
+              <span className="inv-stat-label">
+                ⚡ Expiring soon
+                <span className="inv-stat-tooltip-wrap">
+                  <span className="inv-stat-tooltip-icon">ℹ</span>
+                  <span className="inv-stat-tooltip-text">Expires within 3 days</span>
+                </span>
+              </span>
             </div>
             <div
               className={`inv-stat-card inv-stat-danger inv-stat-card--clickable${filterStatus === 'red' ? ' inv-stat-card--active-filter' : ''}`}
@@ -734,7 +753,7 @@ export function Maininventory() {
               <h2 style={{ marginBottom: 4 }}>📄 Upload PDF Receipt</h2>
 
               {/* Step 1: file picker */}
-              {pdfItems.length === 0 && (
+              {pdfItems.length === 0 && !pdfLoading && (
                 <>
                   <p style={{ color: '#666', fontSize: 14, marginBottom: 16 }}>
                     Upload a Woolworths e-receipt PDF. Items will be parsed and expiry dates estimated by AI automatically.
@@ -755,9 +774,7 @@ export function Maininventory() {
                     </label>
                     {pdfError && <p style={{ color: '#c0392b', margin: 0, fontSize: 13 }}>⚠️ {pdfError}</p>}
                     <div style={{ display: 'flex', gap: 8 }}>
-                      <button type="submit" disabled={pdfLoading} style={{ flex: 1 }}>
-                        {pdfLoading ? '⏳ Parsing & estimating expiry…' : '🔍 Upload & Parse'}
-                      </button>
+                      <button type="submit" style={{ flex: 1 }}>🔍 Upload & Parse</button>
                       <button type="button" className="popup-cancel-btn" onClick={closeAllPopups}>Cancel</button>
                     </div>
                   </form>
@@ -768,6 +785,18 @@ export function Maininventory() {
                     </a>{' '}to try it out.
                   </p>
                 </>
+              )}
+
+              {/* Step 1b: loading state */}
+              {pdfItems.length === 0 && pdfLoading && (
+                <div className="pdf-loading-state">
+                  <div className="pdf-loading-spinner" />
+                  <p className="pdf-loading-title">Reading your receipt…</p>
+                  <p className="pdf-loading-sub">AI is identifying items and estimating expiry dates.<br/>This usually takes 5–10 seconds.</p>
+                  <div className="pdf-loading-dots">
+                    <span /><span /><span />
+                  </div>
+                </div>
               )}
 
               {/* Step 2: review cards */}
@@ -1092,6 +1121,15 @@ export function Maininventory() {
             {toastType === 'success' ? '✅' : toastType === 'warning' ? '⚠️' : toastType === 'danger' ? '🗑' : 'ℹ️'}
           </span>
           <p className="inv-toast-msg">{toastMsg}</p>
+        </div>
+      )}
+
+      {/* ── Undo toast (shown after single item delete) ── */}
+      {undoData && (
+        <div className="inv-toast inv-toast--danger inv-toast--undo">
+          <span className="inv-toast-icon">🗑</span>
+          <p className="inv-toast-msg">"{undoData.item.name.split(' - ')[0]}" removed</p>
+          <button className="inv-toast-undo-btn" onClick={handleUndoDelete}>Undo</button>
         </div>
       )}
     </div>

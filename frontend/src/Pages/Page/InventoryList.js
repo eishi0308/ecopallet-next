@@ -203,8 +203,8 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
     setItemToDelete(id);
   };
 
-  const handleDelete = () => {
-    onDelete(itemToDelete);
+  const handleDelete = (category) => {
+    onDelete(itemToDelete, category);
     setShowDeleteConfirmation(false);
     setItemToDelete(null);
   };
@@ -482,13 +482,22 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
         <>
           <div className="modal-overlay" onClick={cancelDelete} />
           <div className="delete-confirmation-popup">
-            <div className="del-confirm-icon">🗑️</div>
-            <h2 className="del-confirm-title">Delete this item?</h2>
-            <p className="del-confirm-sub">This action cannot be undone.</p>
-            <div className="del-confirm-actions">
-              <button className="del-confirm-btn-delete" onClick={handleDelete}>Yes, delete</button>
-              <button className="del-confirm-btn-cancel" onClick={cancelDelete}>Cancel</button>
+            <div className="del-confirm-icon">🤔</div>
+            <h2 className="del-confirm-title">How did this item go?</h2>
+            <p className="del-confirm-sub">Helps track your food habits &amp; savings.</p>
+            <div className="del-confirm-choice">
+              <button className="del-choice-btn del-choice-saved" onClick={() => handleDelete('saved')}>
+                <span className="del-choice-emoji">✅</span>
+                <span className="del-choice-label">Used it up</span>
+                <span className="del-choice-hint">Counts as saved</span>
+              </button>
+              <button className="del-choice-btn del-choice-wasted" onClick={() => handleDelete('wasted')}>
+                <span className="del-choice-emoji">🗑</span>
+                <span className="del-choice-label">Went to waste</span>
+                <span className="del-choice-hint">Counts as wasted</span>
+              </button>
             </div>
+            <button className="del-confirm-btn-cancel" onClick={cancelDelete}>Cancel</button>
           </div>
         </>
       )}
