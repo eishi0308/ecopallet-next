@@ -105,7 +105,7 @@ const Dashboard = ({ inventory, deletionHistory }) => {
           <div className="dash-waste-hero-row">
             <div className="dash-waste-hero-col">
               <div className="dash-waste-hero-amount">${m.wastedCost.toFixed(2)}</div>
-              <p className="dash-waste-hero-sub">of ${m.totalCost.toFixed(2)} total tracked</p>
+              <p className="dash-waste-hero-sub">{m.wastedCount} item{m.wastedCount !== 1 ? 's' : ''} gone to waste</p>
             </div>
             {m.wasteRate > 0 && (
               <>
@@ -120,8 +120,8 @@ const Dashboard = ({ inventory, deletionHistory }) => {
         </div>
       </div>
 
-      {/* ── Saved + Still at Risk ── */}
-      <div className="dash-two-col">
+      {/* ── Saved + Total + At Risk ── */}
+      <div className="dash-three-col">
         <div className="dash-metric-card dash-metric--saved">
           <span className="dash-metric-eyebrow">✅ Saved</span>
           <div className="dash-metric-row">
@@ -139,6 +139,11 @@ const Dashboard = ({ inventory, deletionHistory }) => {
               </>
             )}
           </div>
+        </div>
+        <div className="dash-metric-card dash-metric--total">
+          <span className="dash-metric-eyebrow">💰 Total Tracked</span>
+          <div className="dash-metric-amount">${m.totalCost.toFixed(2)}</div>
+          <p className="dash-metric-sub">all spending tracked</p>
         </div>
         <div className="dash-metric-card dash-metric--risk">
           <span className="dash-metric-eyebrow">⚠️ Still at risk</span>

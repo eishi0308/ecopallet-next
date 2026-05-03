@@ -113,7 +113,7 @@ header { display: none; }
   gap: 6px;
   background: var(--surface, #fff);
   border: 1.5px solid var(--border, #E2E8F0);
-  border-radius: 20px;
+  border-radius: 24px;
   padding: 24px 28px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   min-width: 120px;
@@ -126,15 +126,14 @@ header { display: none; }
 .inv-stat-card::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
+  inset: 0;
   background: transparent;
-  border-radius: 20px 20px 0 0;
+  pointer-events: none;
   transition: background 200ms ease;
 }
 
 .inv-stat-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   box-shadow: 0 12px 32px rgba(0,0,0,0.1);
 }
 
@@ -155,12 +154,21 @@ header { display: none; }
   background: #64748B;
 }
 
-.inv-stat-total.inv-stat-card--active-filter,
-.inv-stat-fresh.inv-stat-card--active-filter,
-.inv-stat-warning.inv-stat-card--active-filter,
+.inv-stat-total.inv-stat-card--active-filter {
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.25), 0 8px 32px rgba(37,99,235,0.2);
+  transform: translateY(-5px) scale(1.02);
+}
+.inv-stat-fresh.inv-stat-card--active-filter {
+  box-shadow: 0 0 0 3px rgba(22,163,74,0.25), 0 8px 32px rgba(22,163,74,0.2);
+  transform: translateY(-5px) scale(1.02);
+}
+.inv-stat-warning.inv-stat-card--active-filter {
+  box-shadow: 0 0 0 3px rgba(217,119,6,0.25), 0 8px 32px rgba(217,119,6,0.2);
+  transform: translateY(-5px) scale(1.02);
+}
 .inv-stat-danger.inv-stat-card--active-filter {
-  border-color: transparent;
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.9), 0 20px 48px rgba(0,0,0,0.2);
+  box-shadow: 0 0 0 3px rgba(220,38,38,0.25), 0 8px 32px rgba(220,38,38,0.2);
+  transform: translateY(-5px) scale(1.02);
 }
 
 /* ── Filter bar ── */
@@ -271,83 +279,88 @@ header { display: none; }
   z-index: 2;
 }
 
-/* ── Vivid bright stat cards ── */
-.inv-stat-total,
-.inv-stat-fresh,
-.inv-stat-warning,
-.inv-stat-danger {
-  border-color: transparent;
-}
-
+/* ── Glowing pastel stat cards ── */
 .inv-stat-total {
-  background: linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #93C5FD 100%);
-  box-shadow: 0 8px 28px rgba(37,99,235,0.38), 0 2px 6px rgba(37,99,235,0.18);
+  background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+  border-color: #93C5FD;
+  box-shadow:
+    0 0 0 1px rgba(37,99,235,0.06),
+    0 4px 20px rgba(37,99,235,0.13),
+    0 12px 40px rgba(37,99,235,0.08);
 }
+.inv-stat-total::before {
+  background: radial-gradient(ellipse at 15% 50%, rgba(59,130,246,0.14) 0%, transparent 65%);
+}
+.inv-stat-total::after  { content: '🧺'; }
+
 .inv-stat-fresh {
-  background: linear-gradient(135deg, #16A34A 0%, #22C55E 50%, #86EFAC 100%);
-  box-shadow: 0 8px 28px rgba(22,163,74,0.38), 0 2px 6px rgba(22,163,74,0.18);
+  background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
+  border-color: #6EE7A0;
+  box-shadow:
+    0 0 0 1px rgba(22,163,74,0.06),
+    0 4px 20px rgba(22,163,74,0.13),
+    0 12px 40px rgba(22,163,74,0.08);
 }
+.inv-stat-fresh::before {
+  background: radial-gradient(ellipse at 15% 50%, rgba(34,197,94,0.14) 0%, transparent 65%);
+}
+.inv-stat-fresh::after  { content: '🌿'; }
+
 .inv-stat-warning {
-  background: linear-gradient(135deg, #D97706 0%, #F59E0B 50%, #FDE68A 100%);
-  box-shadow: 0 8px 28px rgba(217,119,6,0.38), 0 2px 6px rgba(217,119,6,0.18);
+  background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+  border-color: #FCD34D;
+  box-shadow:
+    0 0 0 1px rgba(217,119,6,0.06),
+    0 4px 20px rgba(217,119,6,0.13),
+    0 12px 40px rgba(217,119,6,0.08);
 }
+.inv-stat-warning::before {
+  background: radial-gradient(ellipse at 15% 50%, rgba(251,191,36,0.16) 0%, transparent 65%);
+}
+.inv-stat-warning::after { content: '⚡'; }
+
 .inv-stat-danger {
-  background: linear-gradient(135deg, #DC2626 0%, #EF4444 50%, #FCA5A5 100%);
-  box-shadow: 0 8px 28px rgba(220,38,38,0.38), 0 2px 6px rgba(220,38,38,0.18);
+  background: linear-gradient(135deg, #FFF1F2 0%, #FEE2E2 100%);
+  border-color: #FCA5A5;
+  box-shadow:
+    0 0 0 1px rgba(220,38,38,0.06),
+    0 4px 20px rgba(220,38,38,0.13),
+    0 12px 40px rgba(220,38,38,0.08);
 }
-
-/* White numbers on vivid backgrounds */
-.inv-stat-total .inv-stat-num,
-.inv-stat-fresh .inv-stat-num,
-.inv-stat-warning .inv-stat-num,
-.inv-stat-danger .inv-stat-num {
-  color: #fff;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.15);
-}
-
-/* White labels */
-.inv-stat-total .inv-stat-label,
-.inv-stat-fresh .inv-stat-label,
-.inv-stat-warning .inv-stat-label,
-.inv-stat-danger .inv-stat-label {
-  color: #fff;
-  font-size: 14px;
-  font-weight: 800;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.25);
-  letter-spacing: 0.04em;
-}
-
-/* Tooltip icon on vivid cards */
-.inv-stat-warning .inv-stat-tooltip-icon { color: rgba(255,255,255,0.7); }
-
-/* Top sheen overlay */
-.inv-stat-total::before,
-.inv-stat-fresh::before,
-.inv-stat-warning::before,
 .inv-stat-danger::before {
-  height: 48%;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.18), transparent) !important;
+  background: radial-gradient(ellipse at 15% 50%, rgba(239,68,68,0.14) 0%, transparent 65%);
 }
+.inv-stat-danger::after  { content: '🗑'; }
 
 /* Emoji watermark */
-.inv-stat-total::after  { content: '🧺'; }
-.inv-stat-fresh::after  { content: '✅'; }
-.inv-stat-warning::after { content: '⚡'; }
-.inv-stat-danger::after { content: '❌'; }
-
 .inv-stat-total::after,
 .inv-stat-fresh::after,
 .inv-stat-warning::after,
 .inv-stat-danger::after {
   position: absolute;
-  bottom: 8px;
-  right: 12px;
-  font-size: 64px;
-  opacity: 0.55;
+  bottom: 6px;
+  right: 10px;
+  font-size: 52px;
+  opacity: 0.12;
   pointer-events: none;
   line-height: 1;
-  z-index: 1;
+  z-index: 0;
 }
+
+/* Numbers — coloured with glow */
+.inv-stat-total .inv-stat-num   { color: #1D4ED8; text-shadow: 0 2px 16px rgba(37,99,235,0.18); }
+.inv-stat-fresh .inv-stat-num   { color: #166534; text-shadow: 0 2px 16px rgba(22,163,74,0.18); }
+.inv-stat-warning .inv-stat-num { color: #92400E; text-shadow: 0 2px 16px rgba(217,119,6,0.18); }
+.inv-stat-danger .inv-stat-num  { color: #B91C1C; text-shadow: 0 2px 16px rgba(220,38,38,0.18); }
+
+/* Labels */
+.inv-stat-total .inv-stat-label   { color: #2563EB; }
+.inv-stat-fresh .inv-stat-label   { color: #16A34A; }
+.inv-stat-warning .inv-stat-label { color: #B45309; }
+.inv-stat-danger .inv-stat-label  { color: #DC2626; }
+
+/* Tooltip icon */
+.inv-stat-warning .inv-stat-tooltip-icon { color: #B45309; }
 
 /* ══════════════════════════════════════════
    TABS

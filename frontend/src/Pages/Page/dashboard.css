@@ -330,27 +330,39 @@
 
 /* ── Hero: Gone to Waste ── */
 .dash-waste-hero {
-  background: linear-gradient(145deg, #B91C1C 0%, #DC2626 55%, #F87171 100%);
-  border: none;
-  border-radius: 20px;
+  background: linear-gradient(135deg, #FFF1F2 0%, #FEE2E2 60%, #FECACA 100%);
+  border: 1.5px solid #FCA5A5;
+  border-radius: 24px;
   padding: 36px 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
   margin-bottom: 16px;
-  box-shadow: 0 4px 24px rgba(185,28,28,0.22), 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow:
+    0 0 0 1px rgba(239,68,68,0.08),
+    0 4px 24px rgba(220,38,38,0.14),
+    0 12px 48px rgba(220,38,38,0.10);
   position: relative;
   overflow: hidden;
 }
 .dash-waste-hero::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 45%;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.12), transparent);
-  border-radius: 20px 20px 0 0;
+  inset: 0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(239,68,68,0.10) 0%, transparent 65%);
   pointer-events: none;
+}
+.dash-waste-hero::after {
+  content: '🗑';
+  position: absolute;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 80px;
+  opacity: 0.07;
+  pointer-events: none;
+  line-height: 1;
 }
 .dash-waste-hero-eyebrow {
   display: block;
@@ -358,18 +370,21 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #fff;
+  color: #B91C1C;
   margin-bottom: 10px;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 1;
 }
 .dash-waste-hero-amount {
   font-size: 4rem;
   font-weight: 900;
-  color: #fff;
+  color: #DC2626;
   letter-spacing: -2px;
   line-height: 1;
   margin-bottom: 10px;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 16px rgba(220,38,38,0.18);
 }
 .dash-waste-hero-row {
   display: flex;
@@ -384,25 +399,27 @@
 .dash-waste-hero-divider {
   width: 1px;
   height: 56px;
-  background: rgba(255,255,255,0.3);
+  background: #FECACA;
   flex-shrink: 0;
 }
 .dash-waste-hero-pct {
   font-size: 2.8rem;
   font-weight: 900;
-  color: #fff;
+  color: #DC2626;
   letter-spacing: -1.5px;
   line-height: 1;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  text-shadow: 0 2px 16px rgba(220,38,38,0.18);
+  position: relative;
+  z-index: 1;
 }
 .dash-waste-hero-pct-label {
   font-size: 13px;
-  color: rgba(255,255,255,0.75);
+  color: #6B7280;
   margin: 0;
 }
 .dash-waste-hero-sub {
   font-size: 14px;
-  color: rgba(255,255,255,0.75);
+  color: #6B7280;
   margin: 0;
 }
 .dash-waste-hero-badge {
@@ -450,39 +467,73 @@
   background: rgba(255,255,255,0.4);
 }
 
-/* ── Two-col: Saved + At Risk ── */
-.dash-two-col {
+/* ── Three-col: Saved + Total + At Risk ── */
+.dash-three-col {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 16px;
   margin-bottom: 16px;
 }
 .dash-metric-card {
-  border-radius: 20px;
+  border-radius: 24px;
   padding: 28px 32px;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  border: none;
+  border: 1.5px solid transparent;
   position: relative;
   overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
-.dash-metric-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 40%;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
-  border-radius: 20px 20px 0 0;
-  pointer-events: none;
+.dash-metric-card:hover {
+  transform: translateY(-3px);
 }
 .dash-metric--saved {
-  background: linear-gradient(145deg, #166534 0%, #15803D 55%, #4ADE80 100%);
-  box-shadow: 0 4px 24px rgba(22,101,52,0.22), 0 1px 4px rgba(0,0,0,0.08);
+  background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
+  border-color: #6EE7A0;
+  box-shadow:
+    0 0 0 1px rgba(22,163,74,0.06),
+    0 4px 20px rgba(22,163,74,0.13),
+    0 12px 40px rgba(22,163,74,0.08);
 }
+.dash-metric--saved::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 15% 40%, rgba(34,197,94,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+.dash-metric--total {
+  background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+  border-color: #93C5FD;
+  box-shadow:
+    0 0 0 1px rgba(37,99,235,0.06),
+    0 4px 20px rgba(37,99,235,0.13),
+    0 12px 40px rgba(37,99,235,0.08);
+}
+.dash-metric--total::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 15% 40%, rgba(59,130,246,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+.dash-metric--total .dash-metric-eyebrow { color: #2563EB; }
+.dash-metric--total .dash-metric-amount  { color: #1D4ED8; text-shadow: 0 2px 16px rgba(37,99,235,0.18); }
 .dash-metric--risk {
-  background: linear-gradient(145deg, #92400E 0%, #B45309 55%, #FCD34D 100%);
-  box-shadow: 0 4px 24px rgba(146,64,14,0.22), 0 1px 4px rgba(0,0,0,0.08);
+  background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+  border-color: #FCD34D;
+  box-shadow:
+    0 0 0 1px rgba(217,119,6,0.06),
+    0 4px 20px rgba(217,119,6,0.13),
+    0 12px 40px rgba(217,119,6,0.08);
+}
+.dash-metric--risk::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 15% 40%, rgba(251,191,36,0.14) 0%, transparent 60%);
+  pointer-events: none;
 }
 .dash-metric-eyebrow {
   font-size: 12px;
@@ -490,22 +541,22 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 4px;
-  color: #fff;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.3);
 }
+.dash-metric--saved .dash-metric-eyebrow { color: #15803D; }
+.dash-metric--risk  .dash-metric-eyebrow { color: #B45309; }
 .dash-metric-amount {
   font-size: 2.6rem;
   font-weight: 900;
   letter-spacing: -1.5px;
   line-height: 1;
-  color: #fff;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
+.dash-metric--saved .dash-metric-amount { color: #166534; text-shadow: 0 2px 16px rgba(22,163,74,0.18); }
+.dash-metric--risk  .dash-metric-amount { color: #92400E; text-shadow: 0 2px 16px rgba(217,119,6,0.18); }
 .dash-metric-sub {
   font-size: 13px;
   margin: 0;
   font-weight: 400;
-  color: rgba(255,255,255,0.75);
+  color: #6B7280;
 }
 .dash-metric-row {
   display: flex;
@@ -517,21 +568,22 @@
   flex-direction: column;
   gap: 4px;
 }
+.dash-metric--saved .dash-metric-divider { background: #86EFAC; }
+.dash-metric--risk  .dash-metric-divider { background: #FDE68A; }
 .dash-metric-divider {
   width: 1px;
   height: 48px;
   flex-shrink: 0;
-  background: rgba(255,255,255,0.3);
 }
 .dash-metric-pct {
   font-size: 2.2rem;
   font-weight: 900;
   letter-spacing: -1px;
   line-height: 1;
-  color: #fff;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
-.dash-metric-pct--saved { color: #fff; }
+.dash-metric--saved .dash-metric-pct { color: #166534; }
+.dash-metric--risk  .dash-metric-pct { color: #92400E; }
+.dash-metric-pct--saved { color: #166534; }
 
 /* ══════════════════════════════════════════
    RESPONSIVE
@@ -556,7 +608,7 @@
   .dash-waste-hero-badge { flex-direction: row; min-width: unset; width: 100%; }
   .dash-hero-stat { flex: 1; padding: 14px 16px; }
   .dash-hero-divider { width: 1px; height: auto; }
-  .dash-two-col { grid-template-columns: 1fr; }
+  .dash-three-col { grid-template-columns: 1fr; }
   .dash-metric-card { padding: 20px; }
   .dash-metric-amount { font-size: 2rem; }
 }
