@@ -576,13 +576,8 @@ export function Maininventory() {
               onClick={() => setFilterStatus(filterStatus === 'warning' ? 'all' : 'warning')}
             >
               <span className="inv-stat-num">{expiringCount}</span>
-              <span className="inv-stat-label">
-                Expiring soon
-                <span className="inv-stat-tooltip-wrap">
-                  <span className="inv-stat-tooltip-icon">ℹ</span>
-                  <span className="inv-stat-tooltip-text">Expires within 3 days</span>
-                </span>
-              </span>
+              <span className="inv-stat-label">Expiring soon</span>
+              <span className="inv-stat-sublabel">within 3 days</span>
             </div>
             <div
               className={`inv-stat-card inv-stat-danger inv-stat-card--clickable${filterStatus === 'red' ? ' inv-stat-card--active-filter' : ''}`}
