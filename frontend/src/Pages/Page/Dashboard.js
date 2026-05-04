@@ -98,30 +98,26 @@ const Dashboard = ({ inventory, deletionHistory }) => {
   return (
     <div className="dash">
 
-      {/* ── Hero ── */}
-      <div className="dash-waste-hero">
-        <div className="dash-waste-hero-left">
-          <span className="dash-waste-hero-eyebrow">🗑 Gone to waste</span>
-          <div className="dash-waste-hero-row">
-            <div className="dash-waste-hero-col">
-              <div className="dash-waste-hero-amount">${m.wastedCost.toFixed(2)}</div>
-              <p className="dash-waste-hero-sub">{m.wastedCount} item{m.wastedCount !== 1 ? 's' : ''} gone to waste</p>
+      {/* ── 2x2 Grid ── */}
+      <div className="dash-two-by-two">
+        <div className="dash-metric-card dash-metric--wasted">
+          <span className="dash-metric-eyebrow">🗑 Gone to waste</span>
+          <div className="dash-metric-row">
+            <div className="dash-metric-col">
+              <div className="dash-metric-amount">${m.wastedCost.toFixed(2)}</div>
+              <p className="dash-metric-sub">{m.wastedCount} item{m.wastedCount !== 1 ? 's' : ''} gone to waste</p>
             </div>
             {m.wasteRate > 0 && (
               <>
-                <div className="dash-waste-hero-divider" />
-                <div className="dash-waste-hero-col">
-                  <div className="dash-waste-hero-pct">{m.wasteRate}%</div>
-                  <p className="dash-waste-hero-pct-label">of total spend</p>
+                <div className="dash-metric-divider" />
+                <div className="dash-metric-col">
+                  <div className="dash-metric-pct">{m.wasteRate}%</div>
+                  <p className="dash-metric-sub">of total spend</p>
                 </div>
               </>
             )}
           </div>
         </div>
-      </div>
-
-      {/* ── Saved + Total + At Risk ── */}
-      <div className="dash-three-col">
         <div className="dash-metric-card dash-metric--saved">
           <span className="dash-metric-eyebrow">✅ Saved</span>
           <div className="dash-metric-row">
