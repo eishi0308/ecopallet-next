@@ -853,31 +853,40 @@ export function Maininventory() {
                           boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
                           position: 'relative',
                         }}>
-                          {/* Remove button */}
-                          <button
-                            onClick={() => setPdfItems(prev => prev.filter((_, i) => i !== idx))}
-                            title="Remove"
-                            style={{
-                              position: 'absolute', top: 10, right: 10,
-                              background: 'none', border: 'none', cursor: 'pointer',
-                              color: '#94A3B8', fontSize: 15, lineHeight: 1, padding: 4,
-                              borderRadius: 4, transition: 'color 150ms',
-                            }}
-                            onMouseEnter={e => e.currentTarget.style.color = '#EF4444'}
-                            onMouseLeave={e => e.currentTarget.style.color = '#CBD5E1'}
-                          >✕</button>
-
-                          {/* Name */}
-                          <input
-                            type="text" value={item.name}
-                            onChange={e => handlePdfItemChange(idx, 'name', e.target.value)}
-                            style={{
-                              width: '100%', border: 'none', borderBottom: '1.5px solid #E2E8F0',
-                              fontSize: 14, fontWeight: 700, color: '#0F172A',
-                              padding: '0 0 6px', background: 'transparent', outline: 'none',
-                              paddingRight: 28, boxSizing: 'border-box',
-                            }}
-                          />
+                          {/* Name + Remove row */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                            <input
+                              type="text" value={item.name}
+                              onChange={e => handlePdfItemChange(idx, 'name', e.target.value)}
+                              style={{
+                                flex: 1, minWidth: 0,
+                                border: '1.5px solid #E2E8F0', borderRadius: 10,
+                                fontSize: 14, fontWeight: 700, color: '#0F172A',
+                                padding: '8px 12px', background: '#F8FAFC',
+                                outline: 'none', fontFamily: 'Inter, sans-serif',
+                                boxSizing: 'border-box', transition: 'border-color 150ms',
+                              }}
+                              onFocus={e => e.currentTarget.style.borderColor = cat.accent}
+                              onBlur={e => e.currentTarget.style.borderColor = '#E2E8F0'}
+                            />
+                            <button
+                              onClick={() => setPdfItems(prev => prev.filter((_, i) => i !== idx))}
+                              title="Remove"
+                              style={{
+                                flexShrink: 0,
+                                width: 32, height: 32, minWidth: 32, minHeight: 32,
+                                borderRadius: '50%',
+                                background: '#FEF2F2', border: '1.5px solid #FECACA',
+                                cursor: 'pointer', color: '#EF4444',
+                                fontSize: 18, fontWeight: 400, lineHeight: 1,
+                                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                                padding: 0, margin: 0, boxSizing: 'border-box',
+                                transition: 'background 150ms, border-color 150ms, color 150ms',
+                              }}
+                              onMouseEnter={e => { e.currentTarget.style.background = '#EF4444'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = '#EF4444'; }}
+                              onMouseLeave={e => { e.currentTarget.style.background = '#FEF2F2'; e.currentTarget.style.color = '#EF4444'; e.currentTarget.style.borderColor = '#FECACA'; }}
+                            >×</button>
+                          </div>
 
                           {/* Category badge + shelf life */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 7, marginBottom: 12 }}>
