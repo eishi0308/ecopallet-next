@@ -52,7 +52,7 @@ const Dashboard = ({ inventory, deletionHistory }) => {
   const maxQty    = m.top5.length > 0 ? m.top5[0].qty : 1;
 
   const chartData = {
-    labels: ['Wasted', 'About to Expire', 'Saved'],
+    labels: ['Wasted', 'At Risk', 'Saved'],
     datasets: [{
       data: hasValues
         ? [m.wastedCost, m.aboutToExpireCost, m.savedCost]
@@ -80,7 +80,7 @@ const Dashboard = ({ inventory, deletionHistory }) => {
 
   const legend = [
     { label: 'Wasted',          color: '#EF4444', value: m.wastedCost,        bg: '#FEF2F2' },
-    { label: 'About to Expire', color: '#F59E0B', value: m.aboutToExpireCost, bg: '#FFFBEB' },
+    { label: 'At Risk',         color: '#F59E0B', value: m.aboutToExpireCost, bg: '#FFFBEB' },
     { label: 'Saved',           color: '#16A34A', value: m.savedCost,         bg: '#F0FDF4' },
   ];
 
