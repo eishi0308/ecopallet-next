@@ -803,7 +803,7 @@ export function Maininventory() {
                       <div style={{ fontSize: 18, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.3px' }}>
                         {pdfItems.length} items found
                       </div>
-                      <div style={{ fontSize: 13, color: '#64748B', marginTop: 2 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: '#334155', marginTop: 2 }}>
                         Review and edit before adding to your pantry
                       </div>
                     </div>
@@ -860,7 +860,7 @@ export function Maininventory() {
                             style={{
                               position: 'absolute', top: 10, right: 10,
                               background: 'none', border: 'none', cursor: 'pointer',
-                              color: '#CBD5E1', fontSize: 15, lineHeight: 1, padding: 4,
+                              color: '#94A3B8', fontSize: 15, lineHeight: 1, padding: 4,
                               borderRadius: 4, transition: 'color 150ms',
                             }}
                             onMouseEnter={e => e.currentTarget.style.color = '#EF4444'}
@@ -889,7 +889,7 @@ export function Maininventory() {
                             }}>
                               {cat.emoji} {item.category}
                             </span>
-                            <span style={{ fontSize: 11, color: '#94A3B8' }}>
+                            <span style={{ fontSize: 11, fontWeight: 600, color: '#64748B' }}>
                               · {item.shelf_days}d shelf life
                             </span>
                           </div>
@@ -897,7 +897,7 @@ export function Maininventory() {
                           {/* Fields */}
                           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                             <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                              <span style={{ fontSize: 10, fontWeight: 700, color: '#94A3B8', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Qty</span>
+                              <span style={{ fontSize: 11, fontWeight: 700, color: '#475569', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Qty</span>
                               <input
                                 type="number" value={item.qty} min={1}
                                 onChange={e => handlePdfItemChange(idx, 'qty', parseInt(e.target.value) || 1)}
@@ -905,7 +905,7 @@ export function Maininventory() {
                               />
                             </label>
                             <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                              <span style={{ fontSize: 10, fontWeight: 700, color: '#94A3B8', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Price ($)</span>
+                              <span style={{ fontSize: 11, fontWeight: 700, color: '#475569', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Price ($)</span>
                               <input
                                 type="number" value={item.unit_price} min={0} step={0.01}
                                 onChange={e => handlePdfItemChange(idx, 'unit_price', parseFloat(e.target.value) || 0)}
@@ -913,7 +913,7 @@ export function Maininventory() {
                               />
                             </label>
                             <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                              <span style={{ fontSize: 10, fontWeight: 700, color: '#94A3B8', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Expiry date</span>
+                              <span style={{ fontSize: 11, fontWeight: 700, color: '#475569', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Expiry date</span>
                               <input
                                 type="text" value={item.expiryDate}
                                 onChange={e => handlePdfItemChange(idx, 'expiryDate', e.target.value)}
