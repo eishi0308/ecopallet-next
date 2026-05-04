@@ -338,10 +338,10 @@ header { display: none; }
 .inv-stat-warning::after,
 .inv-stat-danger::after {
   position: absolute;
-  bottom: 6px;
-  right: 10px;
-  font-size: 52px;
-  opacity: 0.12;
+  bottom: 8px;
+  right: 12px;
+  font-size: 56px;
+  opacity: 0.45;
   pointer-events: none;
   line-height: 1;
   z-index: 0;
