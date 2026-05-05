@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./landing.css";
 
@@ -9,14 +9,25 @@ const steps = [
 ];
 
 export const Landing = () => {
+  const [itemCount, setItemCount] = useState(0);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('inventory');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) setItemCount(parsed.length);
+      }
+    } catch (_) {}
+  }, []);
+
+  const isReturning = itemCount > 0;
+
   return (
     <div className="landing-root">
       <div className="landing-bg">
 
         <div className="landing-content">
-
-          {/* Brand */}
-          <div className="landing-brand">Welcome to Fridgely</div>
 
           {/* Headline */}
           <div className="landing-headline">
@@ -26,7 +37,7 @@ export const Landing = () => {
 
           {/* Subtitle */}
           <p className="landing-sub">
-            It starts with one scan.
+            {isReturning ? `Welcome back — your pantry is waiting.` : `It starts with one scan.`}
           </p>
 
           {/* Step journey */}
@@ -52,9 +63,20 @@ export const Landing = () => {
           </div>
 
           {/* CTA */}
-          <Link to="/inventory" className="landing-cta">
-            Scan Your First Receipt →
-          </Link>
+          {isReturning ? (
+            <div className="landing-cta-group">
+              <Link to="/inventory" className="landing-cta">
+                You have {itemCount} item{itemCount !== 1 ? 's' : ''} tracked → Go to Pantry
+              </Link>
+              <Link to="/inventory" className="landing-cta landing-cta--secondary">
+                + Scan New Receipt
+              </Link>
+            </div>
+          ) : (
+            <Link to="/inventory" className="landing-cta">
+              Scan Your First Receipt →
+            </Link>
+          )}
 
         </div>
       </div>

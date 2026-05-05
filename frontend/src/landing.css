@@ -253,6 +253,30 @@
 }
 .landing-cta:active { transform: translateY(-1px); }
 
+.landing-cta-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.landing-cta--secondary {
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.85);
+  box-shadow: none;
+  padding: 11px 32px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.landing-cta--secondary:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.45);
+  color: #fff;
+  box-shadow: none;
+  transform: translateY(-2px);
+}
+
 /* ── Responsive ── */
 @media (max-width: 600px) {
   .landing-h1-white,
