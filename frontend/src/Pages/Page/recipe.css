@@ -82,6 +82,10 @@
 .oos-toast-close:hover { background: #333; transform: translateY(-1px); }
 .oos-toast-close:active { transform: translateY(0); }
 
+.cooking-done-toast { border-top: 4px solid #16A34A; }
+.cooking-done-toast-close { background: #16A34A; }
+.cooking-done-toast-close:hover { background: #15803D; }
+
 /* ── Status badge pills (matches inventory table) ── */
 .status-badge {
   display: inline-flex;

@@ -20,6 +20,7 @@ export const Recipes = () => {
   const [displayedInventory, setDisplayedInventory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [outOfStockToast, setOutOfStockToast] = useState(false);
+  const [cookingDoneToast, setCookingDoneToast] = useState(false);
   const [sLoading, setSLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const recipesPerPage = 4;
@@ -101,7 +102,7 @@ export const Recipes = () => {
     setInventory([...displayedInventory]);
     try {
       localStorage.setItem('inventory', JSON.stringify(displayedInventory));
-      alert("Yay! Glad you liked the recipe. Your inventory state is updated!");
+      setCookingDoneToast(true);
     } catch (error) {
       console.error('Error saving inventory:', error);
     }
@@ -334,6 +335,19 @@ export const Recipes = () => {
           )}
         </div>
       </div>
+
+      {/* ── Cooking done toast ── */}
+      {cookingDoneToast && (
+        <>
+          <div className="oos-overlay" onClick={() => setCookingDoneToast(false)} />
+          <div className="oos-toast cooking-done-toast">
+            <span className="oos-toast-icon">🍽️</span>
+            <p className="oos-toast-title">Enjoy your meal!</p>
+            <p className="oos-toast-sub">Your pantry has been updated with the ingredients used.</p>
+            <button className="oos-toast-close cooking-done-toast-close" onClick={() => setCookingDoneToast(false)}>Got it</button>
+          </div>
+        </>
+      )}
 
       {/* ── Out-of-stock popup ── */}
       {outOfStockToast && (

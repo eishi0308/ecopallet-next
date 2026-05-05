@@ -22,16 +22,12 @@ export const RecipeCard = ({ recipe, finalizeInventory }) => {
     // Call finalizeInventory if user confirms
     finalizeInventory();
 
-    // Implement your logic here for when the user clicks "I'm cooking this"
-    console.log(`Cooking ${recipe.title}`);
   };
 
   const handleCancel = () => {
     // Close the popup
     setShowPopup(false);
 
-    // Implement logic for when the user cancels the update
-    console.log("User canceled inventory update");
   };
 
   return (
