@@ -21,6 +21,7 @@ export const Recipes = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [outOfStockToast, setOutOfStockToast] = useState(false);
   const [sLoading, setSLoading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const recipesPerPage = 4;
 
   const handleNextPage = () => setCurrentPage(prev => prev + 1);
@@ -81,6 +82,8 @@ export const Recipes = () => {
 
   // Manual search triggered by user clicking "Generate"
   const handleFetchRecipes = async () => {
+    setIsGenerating(true);
+    setRecipes([]);
     try {
       const result = await fetchRecipes();
       if (!result || !Array.isArray(result)) throw new Error('Invalid response');
@@ -89,6 +92,8 @@ export const Recipes = () => {
       setRecipes(recipesWithIngredients);
     } catch (error) {
       console.error("Error fetching recipes:", error.message);
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -301,6 +306,7 @@ export const Recipes = () => {
             selectedItems={selectedItems}
             onRemoveSelected={handleRemoveSelected}
             onAddToSearch={handleAddToSearchManual}
+            isGenerating={isGenerating}
           />
         </div>
       </div>
@@ -308,11 +314,24 @@ export const Recipes = () => {
       {/* ── Generated Results ── */}
       <div className="recipes-results-wrapper">
         <div id="recipes-container" className="recipes-container">
-          {recipes.map((recipe, index) => (
-            recipe.image && recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0 && (
-              <RecipeCard key={index} recipe={recipe} finalizeInventory={finalizeInventory} />
-            )
-          ))}
+          {isGenerating ? (
+            [0,1,2,3].map(i => (
+              <div key={i} className="recipe-gen-skeleton">
+                <div className="recipe-gen-skeleton-img" />
+                <div className="recipe-gen-skeleton-body">
+                  <div className="recipe-gen-skeleton-line recipe-gen-skeleton-line--title" />
+                  <div className="recipe-gen-skeleton-line recipe-gen-skeleton-line--sub" />
+                  <div className="recipe-gen-skeleton-line recipe-gen-skeleton-line--sub2" />
+                </div>
+              </div>
+            ))
+          ) : (
+            recipes.map((recipe, index) => (
+              recipe.image && recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0 && (
+                <RecipeCard key={index} recipe={recipe} finalizeInventory={finalizeInventory} />
+              )
+            ))
+          )}
         </div>
       </div>
 

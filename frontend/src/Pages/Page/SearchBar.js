@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export const SearchBar = ({ onSearch, onInputChange, selectedItems, onRemoveSelected, onAddToSearch }) => {
+export const SearchBar = ({ onSearch, onInputChange, selectedItems, onRemoveSelected, onAddToSearch, isGenerating }) => {
   const [input, setInput] = useState('');
   const handleInputChange = (value) => {
     setInput(value);
@@ -46,7 +46,11 @@ export const SearchBar = ({ onSearch, onInputChange, selectedItems, onRemoveSele
             onKeyPress={handleKeyPress}
           />
         </div>
-        <button className="search-button" onClick={onSearch}>Generate Recipes</button>
+        <button className={`search-button${isGenerating ? ' search-button--generating' : ''}`} onClick={onSearch} disabled={isGenerating}>
+          {isGenerating ? (
+            <><span className="search-button-spinner" />Finding recipes…</>
+          ) : 'Generate Recipes'}
+        </button>
       </div>
     </div>
   );

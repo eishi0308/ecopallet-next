@@ -929,6 +929,59 @@
 .search-button:hover::after { transform: translateX(100%); }
 .search-button:active { filter: brightness(0.95); transform: translateY(0); }
 
+.search-button--generating {
+  opacity: 0.85;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.search-button--generating::before { display: none; }
+
+@keyframes search-spin {
+  to { transform: rotate(360deg); }
+}
+.search-button-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: search-spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ── Generate recipe skeleton cards ── */
+.recipe-gen-skeleton {
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+.recipe-gen-skeleton-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background-size: 800px 100%;
+  animation: recipe-shimmer 1.4s ease-in-out infinite;
+}
+.recipe-gen-skeleton-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.recipe-gen-skeleton-line {
+  border-radius: 6px;
+  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background-size: 800px 100%;
+  animation: recipe-shimmer 1.4s ease-in-out infinite;
+}
+.recipe-gen-skeleton-line--title  { height: 16px; width: 80%; animation-delay: 0.1s; }
+.recipe-gen-skeleton-line--sub    { height: 12px; width: 55%; animation-delay: 0.2s; }
+.recipe-gen-skeleton-line--sub2   { height: 12px; width: 40%; animation-delay: 0.3s; }
+
 .add-to-search-button {
   display: inline-flex;
   align-items: center;
