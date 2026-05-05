@@ -111,6 +111,8 @@ export function Maininventory() {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showExpiredModal, setShowExpiredModal] = useState(false);
   const [expiredItemsList, setExpiredItemsList] = useState([]);
+  const [showZeroQtyModal, setShowZeroQtyModal] = useState(false);
+  const [zeroQtyItems, setZeroQtyItems] = useState([]);
   const [toastMsg, setToastMsg] = useState('');
   const [toastType, setToastType] = useState('default');
   const [undoData, setUndoData] = useState(null);
@@ -171,24 +173,26 @@ export function Maininventory() {
   useEffect(() => {
     const zeroQty = inventory.filter(item => item.amount === 0);
     if (zeroQty.length > 0) {
-      if (window.confirm('Do you want to delete items with quantity 0?')) {
-        const newEntries = zeroQty.map(item => {
-          const status = calculateStatus(item.expiryDate);
-          const category = status.color === 'red' ? 'wasted' : 'saved';
-          return { id: Date.now() + Math.random(), name: item.name.split(' - ')[0], amount: item.amount, spent: parseFloat(item.spent) || 0, category, deletedAt: new Date().toISOString() };
-        });
-        const newHistory = [...deletionHistory, ...newEntries];
-        setDeletionHistory(newHistory);
-        localStorage.setItem('deletionHistory', JSON.stringify(newHistory));
-        const updated = inventory.filter(item => item.amount !== 0);
-        setInventory(updated);
-        localStorage.setItem('inventory', JSON.stringify(updated));
-        alert('Items with quantity 0 have been deleted.');
-      } else {
-        alert('Deletion canceled.');
-      }
+      setZeroQtyItems(zeroQty);
+      setShowZeroQtyModal(true);
     }
-  }, [inventory]);
+  }, []);
+
+  const handleZeroQtyConfirm = () => {
+    const newEntries = zeroQtyItems.map(item => {
+      const status = calculateStatus(item.expiryDate);
+      const category = status.color === 'red' ? 'wasted' : 'saved';
+      return { id: Date.now() + Math.random(), name: item.name.split(' - ')[0], amount: item.amount, spent: parseFloat(item.spent) || 0, category, deletedAt: new Date().toISOString() };
+    });
+    const newHistory = [...deletionHistory, ...newEntries];
+    setDeletionHistory(newHistory);
+    localStorage.setItem('deletionHistory', JSON.stringify(newHistory));
+    const updated = inventory.filter(item => item.amount !== 0);
+    setInventory(updated);
+    localStorage.setItem('inventory', JSON.stringify(updated));
+    setShowZeroQtyModal(false);
+    showToast(`${zeroQtyItems.length} empty item${zeroQtyItems.length !== 1 ? 's' : ''} removed.`, 'danger');
+  };
 
   useEffect(() => {
     const expired = inventory.filter(item => calculateStatus(item.expiryDate).color === 'red');
@@ -1111,6 +1115,36 @@ export function Maininventory() {
                 🗑 Delete All Expired
               </button>
               <button className="expired-modal-btn-keep" onClick={handleKeepExpired}>
+                Keep for Now
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* ── Zero quantity modal ── */}
+      {showZeroQtyModal && (
+        <>
+          <div className="expired-modal-overlay" onClick={() => setShowZeroQtyModal(false)} />
+          <div className="expired-modal">
+            <div className="expired-modal-icon">🫙</div>
+            <h2 className="expired-modal-title">Empty Items Found</h2>
+            <p className="expired-modal-subtitle">
+              {zeroQtyItems.length} item{zeroQtyItems.length !== 1 ? 's have' : ' has'} a quantity of 0. Remove them?
+            </p>
+            <ul className="expired-modal-list">
+              {zeroQtyItems.map(item => (
+                <li key={item.id} className="expired-modal-item">
+                  <span className="expired-modal-name">{item.name.split(' - ')[0]}</span>
+                  <span className="expired-modal-badge" style={{ background: '#F1F5F9', color: '#64748B' }}>qty 0</span>
+                </li>
+              ))}
+            </ul>
+            <div className="expired-modal-actions">
+              <button className="expired-modal-btn-delete" onClick={handleZeroQtyConfirm}>
+                🗑 Remove Empty Items
+              </button>
+              <button className="expired-modal-btn-keep" onClick={() => setShowZeroQtyModal(false)}>
                 Keep for Now
               </button>
             </div>
