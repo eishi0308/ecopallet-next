@@ -107,29 +107,18 @@ export const Tips = () => {
   const [validInventoryNames, setValidInventoryNames] = useState([]);
   useEffect(() => {
     try {
-      console.log('Attempting to read inventory from localStorage...');
       const storedInventory = localStorage.getItem('inventory');
       if (storedInventory) {
-        console.log('Stored inventory:', storedInventory);
         const parsedInventory = JSON.parse(storedInventory);
-        // get unexpired items
         const validItems = parsedInventory.filter(item => {
           const status = calculateStatus(item.expiryDate);
-          console.log(`Item: ${item.name}, ExpiryDate: ${item.expiryDate}, Status:`, status);
-          // unexpired items 
           return status.color === 'green' || status.color === '#DAA520';
         });
-
-        // Convert names to lowercase before getting unique names
         const uniqueNames = [...new Set(validItems.map(item => item.name.toLowerCase()))];
-
-        console.log('Valid inventory names:', uniqueNames);
         setValidInventoryNames(uniqueNames);
-      } else {
-        console.log('No inventory found in localStorage.');
       }
     } catch (error) {
-      console.error('Error parsing inventory:', error);
+      // silently ignore parse errors
     }
   }, []);
 

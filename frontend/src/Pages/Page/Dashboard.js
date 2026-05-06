@@ -10,7 +10,7 @@ function computeMetrics(inventory, deletionHistory) {
   const sum = arr => arr.reduce((s, i) => s + (parseFloat(i.spent) || 0), 0);
 
   const liveWasted        = inventory.filter(i => calculateStatus(i.expiryDate).color === 'red');
-  const liveAboutToExpire = inventory.filter(i => calculateStatus(i.expiryDate).color !== 'red');
+  const liveAboutToExpire = inventory.filter(i => calculateStatus(i.expiryDate).color === '#DAA520');
   const histWasted        = deletionHistory.filter(i => i.category === 'wasted');
   const histSaved         = deletionHistory.filter(i => i.category === 'saved');
 
@@ -85,11 +85,16 @@ const Dashboard = ({ inventory, deletionHistory }) => {
   ];
 
   if (!hasValues) {
+    const hasItems = inventory.length > 0 || deletionHistory.length > 0;
     return (
       <div className="dash">
         <div className="dash-empty-state">
-          <span className="dash-empty-icon">📦</span>
-          <p className="dash-empty-msg">Add items to your pantry to see your spending analytics.</p>
+          <span className="dash-empty-icon">{hasItems ? '📊' : '📦'}</span>
+          <p className="dash-empty-msg">
+            {hasItems
+              ? 'No waste data yet — analytics will appear as you use or remove items.'
+              : 'Add items to your pantry to see your spending analytics.'}
+          </p>
         </div>
       </div>
     );
