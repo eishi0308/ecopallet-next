@@ -326,17 +326,19 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
                 aria-label="Select all"
               />
             </th>
-            <th>Name</th>
-            <th>Qty</th>
+            <th>🏷️ Name</th>
+            <th>🔢 Qty</th>
             <th>
-              Status
-              <button onClick={toggleSortingOrder} className="sort-button">
-                {sortingOrder === 'asc' ? '↑' : '↓'}
-              </button>
+              <span className="th-status-wrap">
+                🚦 Status
+                <button onClick={toggleSortingOrder} className="sort-button">
+                  {sortingOrder === 'asc' ? '↑' : '↓'}
+                </button>
+              </span>
             </th>
-            <th>Expiry Date</th>
-            <th>Price $</th>
-            <th>Actions</th>
+            <th>📅 Expiry Date</th>
+            <th>💰 Price</th>
+            <th>⚙️ Actions</th>
           </tr>
         </thead>
         <tbody>
