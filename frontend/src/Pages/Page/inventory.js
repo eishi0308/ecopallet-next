@@ -603,7 +603,6 @@ export function Maininventory() {
               >
                 <span className="inv-scan-cta-icon">📄</span>
                 Scan Receipt
-                {inventory.length === 0 && <span className="inv-scan-cta-ring" />}
               </button>
               <button className="inv-action-btn" onClick={() => togglePopup('add')} disabled={editingItem !== null}>
                 + Add Item
