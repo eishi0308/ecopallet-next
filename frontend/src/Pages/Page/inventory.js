@@ -748,21 +748,48 @@ export function Maininventory() {
           {/* ── PDF Receipt Popup ── */}
           {showPdfReceiptPopup && (
             <div className="popup" style={{ maxWidth: 760, width: '95vw', maxHeight: '85vh', overflowY: 'auto' }}>
-              <h2 style={{ marginBottom: 4 }}>📄 Upload PDF Receipt</h2>
+
+              {/* Header */}
+              <div style={{ marginBottom: 22 }}>
+                <span style={{
+                  display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
+                  textTransform: 'uppercase', color: '#16A34A',
+                  background: 'rgba(22,163,74,0.08)', border: '1px solid rgba(22,163,74,0.2)',
+                  borderRadius: 9999, padding: '3px 10px', marginBottom: 10,
+                  fontFamily: 'Inter, -apple-system, sans-serif',
+                }}>
+                  📄 Scan Receipt
+                </span>
+                <h2 style={{
+                  margin: 0, fontSize: 22, fontWeight: 800, color: '#0F172A',
+                  letterSpacing: '-0.4px', fontFamily: 'Inter, -apple-system, sans-serif', lineHeight: 1.2,
+                }}>
+                  📄 Upload your receipt
+                </h2>
+                <p style={{
+                  margin: '6px 0 0', fontSize: 14, fontWeight: 500,
+                  color: '#64748B', fontFamily: 'Inter, -apple-system, sans-serif',
+                }}>
+                  Woolworths e-receipt PDF · AI identifies items & estimates expiry dates
+                </p>
+              </div>
 
               {/* Step 1: file picker */}
               {pdfItems.length === 0 && !pdfLoading && (
                 <>
-                  <p style={{ color: '#666', fontSize: 14, marginBottom: 16 }}>
-                    Upload a Woolworths e-receipt PDF. Items will be parsed and expiry dates estimated by AI automatically.
-                  </p>
                   <form onSubmit={handlePdfUpload} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                     <label style={{
-                      display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px',
-                      border: '2px dashed #ccc', borderRadius: 8, cursor: 'pointer', background: '#fafafa'
+                      display: 'flex', alignItems: 'center', gap: 14, padding: '16px 18px',
+                      border: `2px dashed ${pdfFile ? '#16A34A' : '#E2E8F0'}`,
+                      borderRadius: 14, cursor: 'pointer',
+                      background: pdfFile ? 'rgba(22,163,74,0.04)' : '#F8FAFC',
+                      transition: 'border-color 200ms, background 200ms',
                     }}>
-                      <span style={{ fontSize: 28 }}>📂</span>
-                      <span style={{ color: '#555', fontSize: 14, textTransform: 'none' }}>
+                      <span style={{ fontSize: 28, flexShrink: 0 }}>{pdfFile ? '✅' : '📂'}</span>
+                      <span style={{
+                        color: pdfFile ? '#15803D' : '#94A3B8', fontSize: 14,
+                        fontWeight: 600, fontFamily: 'Inter, -apple-system, sans-serif',
+                      }}>
                         {pdfFile ? pdfFile.name : 'Click to choose a PDF file…'}
                       </span>
                       <input
@@ -770,17 +797,17 @@ export function Maininventory() {
                         onChange={e => { setPdfFile(e.target.files[0]); setPdfError(''); }}
                       />
                     </label>
-                    {pdfError && <p style={{ color: '#c0392b', margin: 0, fontSize: 13 }}>⚠️ {pdfError}</p>}
+                    {pdfError && <p style={{ color: '#DC2626', margin: 0, fontSize: 13, fontWeight: 600, fontFamily: 'Inter, sans-serif' }}>⚠️ {pdfError}</p>}
                     <div style={{ display: 'flex', gap: 8 }}>
                       <button type="submit" style={{ flex: 1 }}>🔍 Upload & Parse</button>
                       <button type="button" className="popup-cancel-btn" onClick={closeAllPopups}>Cancel</button>
                     </div>
                   </form>
-                  <p style={{ marginTop: 12, fontSize: 13, color: '#888' }}>
-                    Don't have a receipt handy?{' '}
-                    <a href={samplePdf} download="woolworth_sample_ereceipt.pdf" style={{ color: '#2563eb' }}>
-                      📥 Download sample PDF
-                    </a>{' '}to try it out.
+                  <p style={{ marginTop: 14, fontSize: 13, fontWeight: 500, color: '#94A3B8', fontFamily: 'Inter, sans-serif' }}>
+                    No receipt?{' '}
+                    <a href={samplePdf} download="woolworth_sample_ereceipt.pdf" style={{ color: '#16A34A', fontWeight: 700, textDecoration: 'none' }}>
+                      Download a sample PDF →
+                    </a>
                   </p>
                 </>
               )}
