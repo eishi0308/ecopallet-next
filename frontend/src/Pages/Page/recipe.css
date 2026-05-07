@@ -729,6 +729,8 @@
 }
 .inventory-table tr:last-child td { border-bottom: none; }
 .inventory-table tbody tr { transition: background 140ms ease; }
+.inventory-table tr.inv-row-zero-qty { opacity: 0.45; }
+.inventory-table tr.inv-row-zero-qty .add-to-search-button { cursor: not-allowed; }
 
 /* Empty pantry state */
 .inventory-empty-state { text-align: center; padding: 0; }
@@ -1500,6 +1502,8 @@
   .inventory-table tr.inv-row-safe:hover    td { background: transparent; color: #15803D; }
   .inventory-table tr.inv-row-warning:hover td { background: transparent; color: #B45309; }
   .inventory-table tr.inv-row-danger:hover  td { background: transparent; color: #DC2626; }
+
+  .inventory-table tr.inv-row-zero-qty { opacity: 0.45; }
   .add-to-search-button {
     width: 28px;
     height: 28px;

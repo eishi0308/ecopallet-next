@@ -61,6 +61,7 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
   const [uploadingImage, setUploadingImage] = useState(false);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
+  const [validationError, setValidationError] = useState(null);
 
   const toggleSortingOrder = () => setSortingOrder(o => o === 'asc' ? 'desc' : 'asc');
 
@@ -178,18 +179,18 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
     const specialCharsRegex = /[!@#$%^&*(),.?":{}|<>]/;
     const specialCharsExceptDot = /[!@#$%^&*(),?":{}|<>]/;
     if (!updatedValues.name || !updatedValues.amount || !updatedValues.spent || !updatedValues.expiryDate) {
-      alert('Please fill in all the fields'); return;
+      setValidationError('Please fill in all the fields.'); return;
     }
     if (specialCharsRegex.test(updatedValues.name) || specialCharsRegex.test(updatedValues.amount)) {
-      alert('Special characters are not allowed.'); return;
+      setValidationError('Special characters are not allowed.'); return;
     }
     if (specialCharsExceptDot.test(updatedValues.spent)) {
-      alert('Special characters except decimal are not allowed.'); return;
+      setValidationError('Only numbers and a decimal point are allowed for price.'); return;
     }
     const amount = parseFloat(updatedValues.amount);
-    if (isNaN(amount) || amount <= 0) { alert('Please enter a valid amount'); return; }
+    if (isNaN(amount) || amount <= 0) { setValidationError('Please enter a valid quantity.'); return; }
     const spent = parseFloat(updatedValues.spent);
-    if (isNaN(spent) || spent <= 0) { alert('Please enter a valid spent amount'); return; }
+    if (isNaN(spent) || spent <= 0) { setValidationError('Please enter a valid price.'); return; }
     const formattedSpent = parseFloat(updatedValues.spent).toFixed(2);
     const formattedExpiryDate = `${updatedValues.expiryDate.getDate()} ${getMonthName(updatedValues.expiryDate.getMonth())} ${updatedValues.expiryDate.getFullYear()}`;
     onEdit(id, { ...updatedValues, amount, spent: formattedSpent, expiryDate: formattedExpiryDate });
@@ -500,6 +501,18 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
               </button>
             </div>
             <button className="del-confirm-btn-cancel" onClick={cancelDelete}>Cancel</button>
+          </div>
+        </>
+      )}
+
+      {validationError && (
+        <>
+          <div className="modal-overlay" onClick={() => setValidationError(null)} />
+          <div className="validation-modal">
+            <div className="validation-modal-icon">⚠️</div>
+            <h2 className="validation-modal-title">Oops!</h2>
+            <p className="validation-modal-message">{validationError}</p>
+            <button className="validation-modal-btn" onClick={() => setValidationError(null)}>Got it</button>
           </div>
         </>
       )}

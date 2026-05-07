@@ -280,20 +280,23 @@ export const Recipes = () => {
                     </td>
                   </tr>
                 ) : (
-                  displayedInventory.map((item) => (
-                    <tr key={item.id} className={`inv-row-${item.status.color === 'red' ? 'danger' : item.status.color === '#DAA520' ? 'warning' : 'safe'}`}>
-                      <td>{item.name}</td>
-                      <td>{item.amount}</td>
-                      <td>
-                        <span className={`status-badge status-${item.status.color === 'red' ? 'danger' : item.status.color === '#DAA520' ? 'warning' : 'safe'}`}>
-                          {item.status.text}
-                        </span>
-                      </td>
-                      <td>
-                        <button className="add-to-search-button" onClick={() => handleAddToSearch(item.name)}>+</button>
-                      </td>
-                    </tr>
-                  ))
+                  displayedInventory.map((item) => {
+                    const isZeroQty = Number(item.amount) === 0;
+                    return (
+                      <tr key={item.id} className={`inv-row-${item.status.color === 'red' ? 'danger' : item.status.color === '#DAA520' ? 'warning' : 'safe'}${isZeroQty ? ' inv-row-zero-qty' : ''}`}>
+                        <td>{item.name}</td>
+                        <td>{item.amount}</td>
+                        <td>
+                          <span className={`status-badge status-${item.status.color === 'red' ? 'danger' : item.status.color === '#DAA520' ? 'warning' : 'safe'}`}>
+                            {item.status.text}
+                          </span>
+                        </td>
+                        <td>
+                          <button className="add-to-search-button" onClick={() => handleAddToSearch(item.name)} disabled={isZeroQty}>+</button>
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>
