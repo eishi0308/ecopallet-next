@@ -292,7 +292,7 @@ export const Recipes = () => {
                           </span>
                         </td>
                         <td>
-                          <button className="add-to-search-button" onClick={() => handleAddToSearch(item.name)} disabled={isZeroQty}>+</button>
+                          <button className="add-to-search-button" onClick={() => handleAddToSearch(item.name)}>+</button>
                         </td>
                       </tr>
                     );
