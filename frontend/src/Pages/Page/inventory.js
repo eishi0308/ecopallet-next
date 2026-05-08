@@ -195,6 +195,8 @@ export function Maininventory() {
   };
 
   useEffect(() => {
+    const hasZeroQty = inventory.some(item => item.amount === 0);
+    if (hasZeroQty) return;
     const expired = inventory.filter(item => calculateStatus(item.expiryDate).color === 'red');
     if (expired.length > 0 && !confirmationShown) {
       setExpiredItemsList(expired);
