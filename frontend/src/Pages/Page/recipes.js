@@ -233,7 +233,12 @@ export const Recipes = () => {
           ) : displayedRecipes.length > 0 ? displayedRecipes.map((sampleRecipe, index) => (
             <SRecipeCard key={index} recipe={sampleRecipe} />
           )) : (
-            <p className="no-recipes-msg">Add items to your inventory to see recipe suggestions.</p>
+            <div className="no-recipes-empty">
+              <span className="no-recipes-empty-icon">🧺</span>
+              <p className="no-recipes-empty-title">Your pantry is empty</p>
+              <p className="no-recipes-empty-sub">Add items to your inventory and we'll auto-suggest recipes from your expiring ingredients.</p>
+              <a href="/inventory" className="no-recipes-empty-cta">Go to Inventory →</a>
+            </div>
           )}
         </div>
       </section>

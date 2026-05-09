@@ -40,8 +40,8 @@
   position: relative;
 }
 .tips-hero-sub {
-  font-size: 15px;
-  color: rgba(255,255,255,0.72);
+  font-size: 16px;
+  color: rgba(255,255,255,0.85);
   max-width: 540px;
   line-height: 1.7;
   margin: 0;
@@ -103,8 +103,9 @@
 }
 
 .tips-panel-sub {
-  font-size: 13px;
-  color: var(--text-3, #94A3B8);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-2, #64748B);
   margin: 0;
   flex-shrink: 0;
   align-self: center;
@@ -529,6 +530,66 @@
   padding: 24px 0;
   font-size: 14px;
   line-height: 1.6;
+}
+
+/* ── Tips page empty state ── */
+.inv-empty-state-tips {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  padding: 52px 24px;
+  background: linear-gradient(135deg, #F0FDF4 0%, #F8FAFC 100%);
+  border-radius: 16px;
+  border: 2px dashed #BBF7D0;
+}
+
+.inv-empty-icon-tips {
+  font-size: 46px;
+  line-height: 1;
+  margin-bottom: 18px;
+  display: block;
+  filter: drop-shadow(0 4px 10px rgba(22,163,74,0.18));
+}
+
+.inv-empty-title-tips {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 8px;
+  letter-spacing: -0.35px;
+}
+
+.inv-empty-sub-tips {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 14px;
+  color: #64748B;
+  margin: 0 0 26px;
+  max-width: 320px;
+  line-height: 1.7;
+}
+
+.inv-empty-link-tips {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #16A34A;
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  padding: 10px 22px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: all 150ms ease;
+  box-shadow: 0 2px 8px rgba(22,163,74,0.15);
+}
+.inv-empty-link-tips:hover {
+  background: #DCFCE7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(22,163,74,0.28);
 }
 .link-style {
   color: var(--accent, #16A34A);

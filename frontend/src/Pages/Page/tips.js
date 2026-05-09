@@ -384,11 +384,12 @@ export const Tips = () => {
                 </button>
               ))
           ) : (
-            <p className="centered-message-inventory">
-              No active items found.{' '}
-              <Link to="/inventory" className="link-style">Add items to your pantry</Link>{' '}
-              or use the search bar below.
-            </p>
+            <div className="inv-empty-state-tips">
+              <span className="inv-empty-icon-tips">🌿</span>
+              <p className="inv-empty-title-tips">No active items found</p>
+              <p className="inv-empty-sub-tips">Add items to your pantry to see personalised storage tips here, or use the search bar below.</p>
+              <Link to="/inventory" className="inv-empty-link-tips">Go to Inventory →</Link>
+            </div>
           )}
         </div>
         {totalPages > 1 && (
