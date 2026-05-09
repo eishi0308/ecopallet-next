@@ -307,26 +307,25 @@ export const Tips = () => {
 
   // quick tips
   const categoryTips = [
-    { category: 'Meat', frontLogo: meatLogo, backLogo: meatTip },
-    { category: 'Fruits', frontLogo: fruitLogo, backLogo: fruitTip },
-    { category: 'Vegetables', frontLogo: vegeLogo, backLogo: vegeTip },
-    { category: 'Dairy', frontLogo: dairyLogo, backLogo: dairyTip },
-    { category: 'Grains', frontLogo: grainsLogo, backLogo: grainsTip },
-    { category: 'Canned Foods', frontLogo: cannedLogo, backLogo: cannedTip },
+    { category: 'Meat',         emoji: '🥩', frontLogo: meatLogo,   backLogo: meatTip   },
+    { category: 'Fruits',       emoji: '🍎', frontLogo: fruitLogo,  backLogo: fruitTip  },
+    { category: 'Vegetables',   emoji: '🥦', frontLogo: vegeLogo,   backLogo: vegeTip   },
+    { category: 'Dairy',        emoji: '🧀', frontLogo: dairyLogo,  backLogo: dairyTip  },
+    { category: 'Grains',       emoji: '🌾', frontLogo: grainsLogo, backLogo: grainsTip },
+    { category: 'Canned Foods', emoji: '🥫', frontLogo: cannedLogo, backLogo: cannedTip },
   ];
 
-  const CategoryTipItem = ({ frontLogo, backLogo }) => {
-    const [showBackLogo, setShowBackLogo] = useState(false);
-
-    const toggleLogo = () => {
-      setShowBackLogo(!showBackLogo);
-    };
+  const CategoryTipItem = ({ frontLogo, backLogo, category }) => {
+    const [isFlipped, setIsFlipped] = useState(false);
 
     return (
-      <div className="category-tip-item" onClick={toggleLogo}>
+      <div
+        className={`category-tip-item${isFlipped ? ' is-flipped' : ''}`}
+        onClick={() => setIsFlipped(f => !f)}
+      >
         <div className="category-logo-tip">
-          <img src={frontLogo} alt="Category Front" className="logo-front" />
-          <img src={backLogo} alt="Category Back" className="logo-back" />
+          <img src={frontLogo} alt={category} className="logo-front" />
+          <img src={backLogo} alt={`${category} storage tips`} className="logo-back" />
         </div>
       </div>
     );
@@ -343,19 +342,23 @@ export const Tips = () => {
       </div>
 
       {/* ── Quick Category Cards ── */}
-      <section className="tips-panel">
-        <div className="tips-panel-header">
-          <div>
-            <span className="tips-eyebrow">Quick Reference</span>
-            <h2 className="tips-panel-title">Storage Tips by Category</h2>
-          </div>
-          <p className="tips-panel-sub">Hover (or tap) each card to reveal storage tips</p>
+      <section className="tips-panel tips-category-panel">
+        <div className="tips-category-header">
+          <span className="tips-eyebrow">Quick Reference</span>
+          <h2 className="tips-panel-title">Storage Tips by Category</h2>
         </div>
         <div className="category-tips-container">
           {categoryTips.map((item, index) => (
             <div key={index} className="category-tip-wrap">
-              <CategoryTipItem frontLogo={item.frontLogo} backLogo={item.backLogo} />
-              <span className="category-tip-label">{item.category}</span>
+              <CategoryTipItem
+                frontLogo={item.frontLogo}
+                backLogo={item.backLogo}
+                category={item.category}
+              />
+              <span className="category-tip-label">
+                <span className="cat-label-emoji">{item.emoji}</span>
+                {item.category}
+              </span>
             </div>
           ))}
         </div>
