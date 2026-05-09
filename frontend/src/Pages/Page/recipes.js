@@ -245,12 +245,21 @@ export const Recipes = () => {
 
       {/* ── Bridge CTA ── */}
       <div className="bridge-cta">
-        <div className="bridge-line" />
-        <div className="bridge-center">
-          <span className="bridge-hint">Don't see what you want?</span>
-          <button className="gen-button" onClick={scrollToInventory}>Build your own ↓</button>
+        <div className="bridge-card">
+          <div className="bridge-card-body">
+            <span className="bridge-eyebrow">✦ Custom Builder</span>
+            <h2 className="bridge-card-title">Want something specific?</h2>
+            <p className="bridge-card-desc">Pick ingredients from your pantry — or type anything — and we'll find the perfect match.</p>
+            <div className="bridge-features">
+              <span className="bridge-feature">✓ From your inventory</span>
+              <span className="bridge-feature">✓ Any ingredient</span>
+            </div>
+          </div>
+          <button className="bridge-cta-btn" onClick={scrollToInventory}>
+            <span className="bridge-btn-label">Build your recipe</span>
+            <span className="bridge-btn-arrow">↓</span>
+          </button>
         </div>
-        <div className="bridge-line" />
       </div>
 
       {/* ── Custom Builder ── */}

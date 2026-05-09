@@ -630,50 +630,122 @@
 /* ══════════════════════════════════════════
    BRIDGE CTA
 ══════════════════════════════════════════ */
+@keyframes bridgeBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(5px); }
+}
+
 .bridge-cta {
+  margin: 8px 0 20px;
+}
+
+.bridge-card {
   display: flex;
   align-items: center;
-  gap: 20px;
-  margin: 20px 0 24px;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 36px 40px;
+  background: linear-gradient(135deg, #0F172A 0%, #1a2e3f 55%, #0e4429 100%);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.bridge-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 65% 90% at 100% 50%, rgba(22,163,74,0.22) 0%, transparent 65%);
+  pointer-events: none;
 }
 
-.bridge-line {
-  flex: 1;
-  height: 1px;
-  background: var(--border, #E2E8F0);
+.bridge-card-body {
+  position: relative;
 }
 
-.bridge-center {
+.bridge-eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #86efac;
+  background: rgba(22,163,74,0.18);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  border: 1px solid rgba(22,163,74,0.35);
+  margin-bottom: 14px;
+}
+
+.bridge-card-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 10px;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.bridge-card-desc {
+  font-size: 14px;
+  color: rgba(255,255,255,0.70);
+  margin: 0 0 20px;
+  line-height: 1.65;
+  max-width: 420px;
+}
+
+.bridge-features {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.bridge-hint {
-  font-size: 13px;
-  color: var(--text-3, #94A3B8);
-  white-space: nowrap;
-  font-weight: 500;
-}
-
-.gen-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 13px;
+.bridge-feature {
+  font-size: 12px;
   font-weight: 600;
-  padding: 10px 20px;
-  background: var(--text-1, #0F172A);
+  color: #86efac;
+  background: rgba(22,163,74,0.15);
+  border: 1px solid rgba(22,163,74,0.30);
+  padding: 4px 12px;
+  border-radius: 9999px;
+}
+
+.bridge-cta-btn {
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: #16A34A;
   color: #fff;
   border: none;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: 18px;
+  padding: 22px 36px;
   cursor: pointer;
-  transition: background-color 150ms ease, transform 150ms ease;
-  white-space: nowrap;
+  font-family: 'Inter', -apple-system, sans-serif;
+  transition: background 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  box-shadow: 0 4px 24px rgba(22,163,74,0.35);
+  min-width: 168px;
 }
-.gen-button:hover { background: #1E293B; transform: translateY(-1px); }
+.bridge-cta-btn:hover {
+  background: #15803D;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(22,163,74,0.45);
+}
+.bridge-cta-btn:active { transform: translateY(0); }
+
+.bridge-btn-label {
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: -0.2px;
+}
+
+.bridge-btn-arrow {
+  font-size: 22px;
+  line-height: 1;
+  animation: bridgeBounce 1.6s ease-in-out infinite;
+}
 
 /* ══════════════════════════════════════════
    CUSTOM BUILDER SECTION
@@ -1474,8 +1546,11 @@
   .recipe-hero-tag { font-size: 11px; padding: 3px 9px; }
   .srecipes-container { grid-template-columns: repeat(2, 1fr); }
   .suggestion-header { flex-direction: column; gap: 12px; }
-  .bridge-cta { flex-direction: column; gap: 10px; }
-  .bridge-line { display: none; }
+  .bridge-card { flex-direction: column; align-items: flex-start; gap: 24px; padding: 28px 24px; }
+  .bridge-card-title { font-size: 1.35rem; }
+  .bridge-card-desc { font-size: 13px; }
+  .bridge-cta-btn { width: 100%; flex-direction: row; justify-content: center; gap: 10px; padding: 18px 24px; border-radius: 14px; }
+  .bridge-btn-arrow { animation: none; font-size: 18px; }
 
   /* ── Build Your Own — mobile ── */
   .inventory-container { padding: 20px 16px; }
