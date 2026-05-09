@@ -355,10 +355,6 @@ export const Tips = () => {
                 backLogo={item.backLogo}
                 category={item.category}
               />
-              <span className="category-tip-label">
-                <span className="cat-label-emoji">{item.emoji}</span>
-                {item.category}
-              </span>
             </div>
           ))}
         </div>
