@@ -1601,33 +1601,97 @@ header { display: none; }
 }
 
 /* ── Congrats toast ── */
-.congrats-popup {
+.congrats-toast {
   position: fixed;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--surface, #fff);
-  border-radius: var(--radius-lg, 16px);
-  box-shadow: var(--shadow-xl);
-  border-left: 4px solid var(--accent, #16A34A);
-  padding: 16px 24px;
+  bottom: 32px;
+  right: 32px;
   z-index: 1050;
-  text-align: center;
-  animation: slideDown 0.3s ease;
-  min-width: 260px;
-  max-width: 360px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #E2E8F0;
+  padding: 20px 20px 0 20px;
+  width: 300px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  overflow: hidden;
+  animation: toastSlideUp 0.4s cubic-bezier(0.34,1.2,0.64,1) both;
 }
-@keyframes slideDown {
-  from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+@keyframes toastSlideUp {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
-.congrats-popup p {
+.congrats-toast-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #94A3B8;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition: color 150ms;
+}
+.congrats-toast-close:hover { color: #475569; }
+.congrats-toast-icon {
+  font-size: 28px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.congrats-toast-body {
+  flex: 1;
+  min-width: 0;
+  padding-bottom: 18px;
+}
+.congrats-toast-title {
   font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-1, #0F172A);
-  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 4px;
+}
+.congrats-toast-sub {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 13px;
+  color: #64748B;
+  margin: 0 0 12px;
   line-height: 1.5;
+}
+.congrats-toast-cta {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #16A34A;
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  border-radius: 999px;
+  padding: 6px 14px;
+  text-decoration: none;
+  transition: all 150ms ease;
+}
+.congrats-toast-cta:hover {
+  background: #DCFCE7;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(22,163,74,0.2);
+}
+.congrats-toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #16A34A, #059669);
+  border-radius: 0 0 0 20px;
+  animation: toastProgress 6s linear forwards;
+}
+@keyframes toastProgress {
+  from { width: 100%; }
+  to   { width: 0%; }
 }
 
 /* ══════════════════════════════════════════
@@ -1797,19 +1861,6 @@ header { display: none; }
 }
 
 
-/* Congrats toast — richer */
-.congrats-popup {
-  border-radius: 18px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.14);
-  border-left-width: 5px;
-}
-.congrats-popup p {
-  font-size: 14px;
-  font-weight: 600;
-}
-.congrats-popup p::before {
-  content: '🎉 ';
-}
 
 /* ══════════════════════════════════════════
    DATEPICKER CALENDAR OVERRIDES

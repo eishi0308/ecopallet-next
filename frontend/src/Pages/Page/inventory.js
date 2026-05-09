@@ -122,7 +122,7 @@ export function Maininventory() {
 
 
   useEffect(() => {
-    const timeout = setTimeout(() => setShowCongratsTimer(false), 3000);
+    const timeout = setTimeout(() => setShowCongratsTimer(false), 6000);
     return () => clearTimeout(timeout);
   }, []);
 
@@ -149,9 +149,10 @@ export function Maininventory() {
   useEffect(() => { setCurrentPage(1); }, [filterText, filterStatus]);
 
   useEffect(() => {
-    if (hasOneItemInInventory && showCongratsTimer) setShowCongratsPopup(true);
+    const hasNoExpired = !inventory.some(i => calculateStatus(i.expiryDate).color === 'red');
+    if (hasOneItemInInventory && showCongratsTimer && hasNoExpired) setShowCongratsPopup(true);
     else setShowCongratsPopup(false);
-  }, [hasOneItemInInventory, showCongratsTimer]);
+  }, [hasOneItemInInventory, showCongratsTimer, inventory]);
 
   const handleEditItem = (id, updatedItem) => {
     const updatedInventory = inventory.map(item => {
@@ -1103,8 +1104,15 @@ export function Maininventory() {
 
           {/* ── Congrats toast ── */}
           {showCongratsPopup && (
-            <div className="congrats-popup">
-              <p>Congratulations on starting your inventory! Check out some recipes now.</p>
+            <div className="congrats-toast">
+              <button className="congrats-toast-close" onClick={() => setShowCongratsPopup(false)} aria-label="Dismiss">✕</button>
+              <div className="congrats-toast-icon">🎉</div>
+              <div className="congrats-toast-body">
+                <p className="congrats-toast-title">You're all set!</p>
+                <p className="congrats-toast-sub">Your pantry is live. Ready to cook something great?</p>
+                <a href="/recipes" className="congrats-toast-cta">View Recipes →</a>
+              </div>
+              <div className="congrats-toast-progress" />
             </div>
           )}
 
