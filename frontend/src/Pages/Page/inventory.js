@@ -60,7 +60,7 @@ export function Maininventory() {
   const [showScanProducePopup, setShowScanProducePopup] = useState(false);
   const [showScanPackagePopup, setShowScanPackagePopup] = useState(false);
   const [showPdfReceiptPopup, setShowPdfReceiptPopup] = useState(false);
-  const [pdfFile, setPdfFile] = useState(null);
+  const [pdfFiles, setPdfFiles] = useState([]);
   const [pdfItems, setPdfItems] = useState([]);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfError, setPdfError] = useState('');
@@ -303,7 +303,7 @@ export function Maininventory() {
     setShowScanPackagePopup(false);
     setShowPdfReceiptPopup(false);
     setPdfItems([]);
-    setPdfFile(null);
+    setPdfFiles([]);
     setPdfError('');
   };
 
@@ -454,23 +454,30 @@ export function Maininventory() {
 
   const handlePdfUpload = async (e) => {
     e.preventDefault();
-    if (!pdfFile) { setPdfError('Please select a PDF file.'); return; }
+    if (pdfFiles.length === 0) { setPdfError('Please select at least one PDF file.'); return; }
     setPdfLoading(true);
     setPdfError('');
-    const formData = new FormData();
-    formData.append('file', pdfFile);
     try {
-      const response = await fetch('https://ecopallet-next.onrender.com/ereceipt', { method: 'POST', body: formData });
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.detail || 'Failed to parse receipt');
-      }
-      const data = await response.json();
-      setPdfItems(data.items.map(item => ({
-        ...item,
-        expiryDate: item.expiry_date,
-        name: item.short_name || item.name,
-      })));
+      const results = await Promise.all(
+        pdfFiles.map(async (file) => {
+          const formData = new FormData();
+          formData.append('file', file);
+          const response = await fetch('https://ecopallet-next.onrender.com/ereceipt', { method: 'POST', body: formData });
+          if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.detail || `Failed to parse ${file.name}`);
+          }
+          return response.json();
+        })
+      );
+      const merged = results.flatMap(data =>
+        data.items.map(item => ({
+          ...item,
+          expiryDate: item.expiry_date,
+          name: item.short_name || item.name,
+        }))
+      );
+      setPdfItems(merged);
     } catch (error) {
       setPdfError(error.message || 'Something went wrong. Please try again.');
     } finally {
@@ -498,7 +505,7 @@ export function Maininventory() {
     localStorage.setItem('inventory', JSON.stringify(updated));
     setShowPdfReceiptPopup(false);
     setPdfItems([]);
-    setPdfFile(null);
+    setPdfFiles([]);
     const isFirstScan = inventory.length === 0;
     showToast(isFirstScan ? '🎉 Your pantry is alive. Great first scan!' : `${newItems.length} item${newItems.length > 1 ? 's' : ''} added from receipt.`, 'success');
   };
@@ -776,35 +783,58 @@ export function Maininventory() {
                     <label
                       style={{
                         display: 'flex', alignItems: 'center', gap: 14, padding: '16px 18px',
-                        border: `2px dashed ${isDragOver ? '#16A34A' : pdfFile ? '#16A34A' : '#E2E8F0'}`,
+                        border: `2px dashed ${isDragOver ? '#16A34A' : pdfFiles.length > 0 ? '#16A34A' : '#E2E8F0'}`,
                         borderRadius: 14, cursor: 'pointer',
-                        background: isDragOver ? 'rgba(22,163,74,0.08)' : pdfFile ? 'rgba(22,163,74,0.04)' : '#F8FAFC',
+                        background: isDragOver ? 'rgba(22,163,74,0.08)' : pdfFiles.length > 0 ? 'rgba(22,163,74,0.04)' : '#F8FAFC',
                         transition: 'border-color 200ms, background 200ms',
                       }}
                       onDragOver={e => { e.preventDefault(); setIsDragOver(true); }}
                       onDragLeave={() => setIsDragOver(false)}
                       onDrop={e => {
                         e.preventDefault(); setIsDragOver(false);
-                        const f = e.dataTransfer.files[0];
-                        if (f && f.name.toLowerCase().endsWith('.pdf')) { setPdfFile(f); setPdfError(''); }
-                        else setPdfError('Please drop a PDF file.');
+                        const dropped = Array.from(e.dataTransfer.files).filter(f => f.name.toLowerCase().endsWith('.pdf'));
+                        if (dropped.length > 0) { setPdfFiles(prev => [...prev, ...dropped]); setPdfError(''); }
+                        else setPdfError('Please drop PDF files only.');
                       }}
                     >
-                      <span style={{ fontSize: 28, flexShrink: 0 }}>{pdfFile ? '✅' : isDragOver ? '📥' : '📂'}</span>
-                      <span style={{
-                        color: pdfFile ? '#15803D' : '#94A3B8', fontSize: 14,
-                        fontWeight: 600, fontFamily: 'Inter, -apple-system, sans-serif',
-                      }}>
-                        {pdfFile ? pdfFile.name : isDragOver ? 'Drop it here!' : 'Click to choose or drag & drop a PDF'}
-                      </span>
+                      <span style={{ fontSize: 28, flexShrink: 0 }}>{pdfFiles.length > 0 ? '✅' : isDragOver ? '📥' : '📂'}</span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        {pdfFiles.length > 0 ? (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                            {pdfFiles.map((f, i) => (
+                              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                <span style={{ color: '#15803D', fontSize: 13, fontWeight: 600, fontFamily: 'Inter, sans-serif', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                  📄 {f.name}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={ev => { ev.preventDefault(); ev.stopPropagation(); setPdfFiles(prev => prev.filter((_, j) => j !== i)); }}
+                                  style={{ flexShrink: 0, border: 'none', background: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: 13, fontWeight: 700, padding: '0 2px', lineHeight: 1 }}
+                                  onMouseEnter={e => e.currentTarget.style.color = '#EF4444'}
+                                  onMouseLeave={e => e.currentTarget.style.color = '#94A3B8'}
+                                >✕</button>
+                              </div>
+                            ))}
+                            <span style={{ color: '#94A3B8', fontSize: 12, fontWeight: 500, marginTop: 2, fontFamily: 'Inter, sans-serif' }}>
+                              + Click or drop to add more PDFs
+                            </span>
+                          </div>
+                        ) : (
+                          <span style={{ color: '#94A3B8', fontSize: 14, fontWeight: 600, fontFamily: 'Inter, -apple-system, sans-serif' }}>
+                            {isDragOver ? 'Drop PDFs here!' : 'Click to choose or drag & drop — supports multiple PDFs'}
+                          </span>
+                        )}
+                      </div>
                       <input
-                        type="file" accept=".pdf" style={{ display: 'none' }}
-                        onChange={e => { setPdfFile(e.target.files[0]); setPdfError(''); }}
+                        type="file" accept=".pdf" multiple style={{ display: 'none' }}
+                        onChange={e => { setPdfFiles(prev => [...prev, ...Array.from(e.target.files)]); setPdfError(''); e.target.value = ''; }}
                       />
                     </label>
                     {pdfError && <p style={{ color: '#DC2626', margin: 0, fontSize: 13, fontWeight: 600, fontFamily: 'Inter, sans-serif' }}>⚠️ {pdfError}</p>}
                     <div style={{ display: 'flex', gap: 8 }}>
-                      <button type="submit" style={{ flex: 1 }}>🔍 Upload & Parse</button>
+                      <button type="submit" style={{ flex: 1 }}>
+                        🔍 Upload & Parse{pdfFiles.length > 1 ? ` (${pdfFiles.length} files)` : ''}
+                      </button>
                       <button type="button" className="popup-cancel-btn" onClick={closeAllPopups}>Cancel</button>
                     </div>
                   </form>
