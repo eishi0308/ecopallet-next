@@ -833,27 +833,28 @@ export function Maininventory() {
               {pdfItems.length > 0 && (
                 <>
                   {/* Header */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 18 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
                     <div>
-                      <div style={{ fontSize: 18, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.3px' }}>
-                        {pdfItems.length} items found
+                      <div style={{ fontSize: 19, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.4px' }}>
+                        {pdfItems.length} item{pdfItems.length !== 1 ? 's' : ''} found
                       </div>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: '#334155', marginTop: 2 }}>
-                        Review and edit before adding to your pantry
+                      <div style={{ fontSize: 12, fontWeight: 500, color: '#94A3B8', marginTop: 2, fontFamily: 'Inter, sans-serif' }}>
+                        Edit anything before saving to your pantry
                       </div>
                     </div>
                     <span style={{
                       display: 'inline-flex', alignItems: 'center', gap: 5,
-                      background: '#EFF6FF', color: '#1D4ED8', border: '1px solid #BFDBFE',
-                      borderRadius: 999, padding: '4px 12px', fontSize: 12, fontWeight: 600,
-                      whiteSpace: 'nowrap',
+                      background: 'linear-gradient(135deg, #EFF6FF, #DBEAFE)',
+                      color: '#1D4ED8', border: '1px solid #BFDBFE',
+                      borderRadius: 999, padding: '5px 13px', fontSize: 11, fontWeight: 700,
+                      whiteSpace: 'nowrap', letterSpacing: '0.03em',
                     }}>
                       🤖 AI estimated
                     </span>
                   </div>
 
                   {/* Item cards */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {pdfItems.map((item, idx) => {
                       const CAT = {
                         'Dairy':      { bg: '#EFF6FF', color: '#1D4ED8', emoji: '🧀', accent: '#3B82F6' },
@@ -874,96 +875,113 @@ export function Maininventory() {
                         'Pet':        { bg: '#FFF7ED', color: '#92400E', emoji: '🐾', accent: '#D97706' },
                       };
                       const cat = CAT[item.category] || { bg: '#F1F5F9', color: '#475569', emoji: '🏷️', accent: '#94A3B8' };
-                      const fieldInput = {
-                        background: '#F8FAFC', border: '1.5px solid #E2E8F0',
-                        borderRadius: 8, padding: '7px 10px', fontSize: 13,
-                        color: '#0F172A', outline: 'none', fontFamily: 'Inter, sans-serif',
+                      const fieldStyle = {
+                        border: '1.5px solid #E2E8F0', borderRadius: 8,
+                        padding: '6px 8px', fontSize: 13, fontWeight: 600,
+                        color: '#0F172A', outline: 'none', background: '#F8FAFC',
+                        fontFamily: 'Inter, sans-serif', boxSizing: 'border-box',
+                        transition: 'border-color 150ms',
                       };
                       return (
                         <div key={idx} style={{
-                          background: '#fff', borderRadius: 14,
-                          border: '1px solid #F1F5F9',
-                          borderLeft: `4px solid ${cat.accent}`,
-                          padding: '14px 16px',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-                          position: 'relative',
+                          background: '#fff', borderRadius: 16,
+                          border: '1.5px solid #F1F5F9',
+                          overflow: 'hidden',
+                          boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
                         }}>
-                          {/* Name + Remove row */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                            <input
-                              type="text" value={item.name}
-                              onChange={e => handlePdfItemChange(idx, 'name', e.target.value)}
-                              style={{
-                                flex: 1, minWidth: 0,
-                                border: '1.5px solid #E2E8F0', borderRadius: 10,
-                                fontSize: 14, fontWeight: 700, color: '#0F172A',
-                                padding: '8px 12px', background: '#F8FAFC',
-                                outline: 'none', fontFamily: 'Inter, sans-serif',
-                                boxSizing: 'border-box', transition: 'border-color 150ms',
-                              }}
-                              onFocus={e => e.currentTarget.style.borderColor = cat.accent}
-                              onBlur={e => e.currentTarget.style.borderColor = '#E2E8F0'}
-                            />
-                            <button
-                              onClick={() => setPdfItems(prev => prev.filter((_, i) => i !== idx))}
-                              title="Remove"
-                              style={{
-                                flexShrink: 0,
-                                width: 32, height: 32, minWidth: 32, minHeight: 32,
-                                borderRadius: '50%',
-                                background: '#FEF2F2', border: '1.5px solid #FECACA',
-                                cursor: 'pointer', color: '#EF4444',
-                                fontSize: 18, fontWeight: 400, lineHeight: 1,
-                                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                                padding: 0, margin: 0, boxSizing: 'border-box',
-                                transition: 'background 150ms, border-color 150ms, color 150ms',
-                              }}
-                              onMouseEnter={e => { e.currentTarget.style.background = '#EF4444'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = '#EF4444'; }}
-                              onMouseLeave={e => { e.currentTarget.style.background = '#FEF2F2'; e.currentTarget.style.color = '#EF4444'; e.currentTarget.style.borderColor = '#FECACA'; }}
-                            >×</button>
-                          </div>
+                          {/* Category accent bar */}
+                          <div style={{ height: 3, background: `linear-gradient(90deg, ${cat.accent}, ${cat.accent}55)` }} />
 
-                          {/* Category badge + shelf life */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 7, marginBottom: 12 }}>
-                            <span style={{
-                              display: 'inline-flex', alignItems: 'center', gap: 4,
-                              background: cat.bg, color: cat.color,
-                              borderRadius: 999, padding: '2px 9px',
-                              fontSize: 11, fontWeight: 600,
+                          <div style={{ padding: '13px 15px 14px' }}>
+                            {/* Row 1: Emoji avatar + name input + remove */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 10 }}>
+                              <div style={{
+                                width: 38, height: 38, borderRadius: 11, flexShrink: 0,
+                                background: cat.bg, display: 'flex', alignItems: 'center',
+                                justifyContent: 'center', fontSize: 19,
+                              }}>
+                                {cat.emoji}
+                              </div>
+                              <input
+                                type="text" value={item.name}
+                                onChange={e => handlePdfItemChange(idx, 'name', e.target.value)}
+                                style={{
+                                  flex: 1, minWidth: 0, border: 'none',
+                                  borderBottom: `2px solid ${cat.accent}25`,
+                                  background: 'transparent', fontSize: 15, fontWeight: 700,
+                                  color: '#0F172A', padding: '3px 0', outline: 'none',
+                                  fontFamily: 'Inter, sans-serif', transition: 'border-color 150ms',
+                                }}
+                                onFocus={e => e.currentTarget.style.borderBottomColor = cat.accent}
+                                onBlur={e => e.currentTarget.style.borderBottomColor = `${cat.accent}25`}
+                              />
+                              <button
+                                onClick={() => setPdfItems(prev => prev.filter((_, i) => i !== idx))}
+                                title="Remove item"
+                                style={{
+                                  flexShrink: 0, width: 28, height: 28, borderRadius: 8,
+                                  border: 'none', background: '#F1F5F9', color: '#CBD5E1',
+                                  fontSize: 13, cursor: 'pointer', fontWeight: 700,
+                                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                                  transition: 'all 150ms',
+                                }}
+                                onMouseEnter={e => { e.currentTarget.style.background = '#FEE2E2'; e.currentTarget.style.color = '#EF4444'; }}
+                                onMouseLeave={e => { e.currentTarget.style.background = '#F1F5F9'; e.currentTarget.style.color = '#CBD5E1'; }}
+                              >✕</button>
+                            </div>
+
+                            {/* Row 2: category pill + shelf life */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 11 }}>
+                              <span style={{
+                                display: 'inline-flex', alignItems: 'center',
+                                background: cat.bg, color: cat.color,
+                                borderRadius: 999, padding: '2px 10px',
+                                fontSize: 11, fontWeight: 700, letterSpacing: '0.02em',
+                              }}>
+                                {item.category}
+                              </span>
+                              <span style={{ fontSize: 11, color: '#94A3B8', fontWeight: 600, fontFamily: 'Inter, sans-serif' }}>
+                                · 🗓 {item.shelf_days}d shelf life
+                              </span>
+                            </div>
+
+                            {/* Row 3: fields */}
+                            <div style={{
+                              display: 'grid', gridTemplateColumns: '64px 84px 1fr', gap: 8,
+                              background: '#F8FAFC', borderRadius: 10, padding: '10px 12px',
+                              border: '1px solid #F1F5F9',
                             }}>
-                              {cat.emoji} {item.category}
-                            </span>
-                            <span style={{ fontSize: 11, fontWeight: 600, color: '#64748B' }}>
-                              · {item.shelf_days}d shelf life
-                            </span>
-                          </div>
-
-                          {/* Fields */}
-                          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                            <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                              <span style={{ fontSize: 11, fontWeight: 700, color: '#475569', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Qty</span>
-                              <input
-                                type="number" value={item.qty} min={1}
-                                onChange={e => handlePdfItemChange(idx, 'qty', parseInt(e.target.value) || 1)}
-                                style={{ ...fieldInput, width: 60, textAlign: 'center' }}
-                              />
-                            </label>
-                            <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                              <span style={{ fontSize: 11, fontWeight: 700, color: '#475569', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Price ($)</span>
-                              <input
-                                type="number" value={item.unit_price} min={0} step={0.01}
-                                onChange={e => handlePdfItemChange(idx, 'unit_price', parseFloat(e.target.value) || 0)}
-                                style={{ ...fieldInput, width: 80 }}
-                              />
-                            </label>
-                            <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                              <span style={{ fontSize: 11, fontWeight: 700, color: '#475569', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Expiry date</span>
-                              <input
-                                type="text" value={item.expiryDate}
-                                onChange={e => handlePdfItemChange(idx, 'expiryDate', e.target.value)}
-                                style={{ ...fieldInput, width: 118 }}
-                              />
-                            </label>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                                <span style={{ fontSize: 9, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: 'Inter, sans-serif' }}>QTY</span>
+                                <input
+                                  type="number" value={item.qty} min={1}
+                                  onChange={e => handlePdfItemChange(idx, 'qty', parseInt(e.target.value) || 1)}
+                                  style={{ ...fieldStyle, width: '100%', textAlign: 'center' }}
+                                  onFocus={e => e.currentTarget.style.borderColor = cat.accent}
+                                  onBlur={e => e.currentTarget.style.borderColor = '#E2E8F0'}
+                                />
+                              </div>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                                <span style={{ fontSize: 9, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: 'Inter, sans-serif' }}>PRICE ($)</span>
+                                <input
+                                  type="number" value={item.unit_price} min={0} step={0.01}
+                                  onChange={e => handlePdfItemChange(idx, 'unit_price', parseFloat(e.target.value) || 0)}
+                                  style={{ ...fieldStyle, width: '100%', textAlign: 'center' }}
+                                  onFocus={e => e.currentTarget.style.borderColor = cat.accent}
+                                  onBlur={e => e.currentTarget.style.borderColor = '#E2E8F0'}
+                                />
+                              </div>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                                <span style={{ fontSize: 9, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: 'Inter, sans-serif' }}>EXPIRES</span>
+                                <input
+                                  type="text" value={item.expiryDate}
+                                  onChange={e => handlePdfItemChange(idx, 'expiryDate', e.target.value)}
+                                  style={{ ...fieldStyle, width: '100%' }}
+                                  onFocus={e => e.currentTarget.style.borderColor = cat.accent}
+                                  onBlur={e => e.currentTarget.style.borderColor = '#E2E8F0'}
+                                />
+                              </div>
+                            </div>
                           </div>
                         </div>
                       );
@@ -975,20 +993,25 @@ export function Maininventory() {
                     <button
                       onClick={handleAddToPantryClick}
                       style={{
-                        width: '100%', background: '#16A34A', color: '#fff',
-                        border: 'none', borderRadius: 12, padding: '14px',
-                        fontSize: 15, fontWeight: 700, cursor: 'pointer',
-                        boxShadow: '0 4px 14px rgba(22,163,74,0.3)',
-                        transition: 'background 150ms',
+                        width: '100%', border: 'none', borderRadius: 14, padding: '15px',
+                        fontSize: 15, fontWeight: 800, cursor: 'pointer', letterSpacing: '-0.2px',
+                        background: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
+                        color: '#fff',
+                        boxShadow: '0 6px 20px rgba(22,163,74,0.35)',
+                        transition: 'transform 100ms, box-shadow 100ms',
+                        fontFamily: 'Inter, sans-serif',
                       }}
+                      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(22,163,74,0.45)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(22,163,74,0.35)'; }}
                     >
-                      ✅ Add {pdfItems.length} item{pdfItems.length > 1 ? 's' : ''} to pantry
+                      Add {pdfItems.length} item{pdfItems.length > 1 ? 's' : ''} to pantry →
                     </button>
                     <button
                       onClick={closeAllPopups}
                       style={{
                         background: 'none', border: 'none', color: '#94A3B8',
-                        fontSize: 13, cursor: 'pointer', padding: '4px',
+                        fontSize: 13, cursor: 'pointer', padding: '6px',
+                        fontFamily: 'Inter, sans-serif', fontWeight: 500,
                       }}
                     >
                       Cancel
