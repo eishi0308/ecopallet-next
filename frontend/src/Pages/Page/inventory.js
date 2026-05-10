@@ -605,7 +605,7 @@ export function Maininventory() {
                 disabled={editingItem !== null}
               >
                 <span className="inv-scan-cta-icon">📄</span>
-                Scan Receipt
+                Upload Receipt
               </button>
               <button className="inv-action-btn" onClick={() => togglePopup('add')} disabled={editingItem !== null}>
                 + Add Item
@@ -660,13 +660,13 @@ export function Maininventory() {
                 <span className="inv-empty-scan-line" />
                 <span className="inv-empty-icon">🧾</span>
               </div>
-              <h2 className="inv-empty-title">Start by scanning a receipt</h2>
-              <p className="inv-empty-sub">Point your camera and we'll fill in the rest</p>
+              <h2 className="inv-empty-title">Start by uploading a receipt</h2>
+              <p className="inv-empty-sub">Upload your Woolworths e-receipt PDF and we'll fill in the rest</p>
               <button
                 className="inv-empty-cta"
                 onClick={() => { closeAllPopups(); setShowPdfReceiptPopup(true); }}
               >
-                📄 Scan Your First Receipt
+                📄 Upload Your First Receipt
               </button>
             </div>
           )}
@@ -754,20 +754,11 @@ export function Maininventory() {
 
               {/* Header */}
               <div style={{ marginBottom: 22 }}>
-                <span style={{
-                  display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
-                  textTransform: 'uppercase', color: '#16A34A',
-                  background: 'rgba(22,163,74,0.08)', border: '1px solid rgba(22,163,74,0.2)',
-                  borderRadius: 9999, padding: '3px 10px', marginBottom: 10,
-                  fontFamily: 'Inter, -apple-system, sans-serif',
-                }}>
-                  📄 Scan Receipt
-                </span>
                 <h2 style={{
                   margin: 0, fontSize: 22, fontWeight: 800, color: '#0F172A',
                   letterSpacing: '-0.4px', fontFamily: 'Inter, -apple-system, sans-serif', lineHeight: 1.2,
                 }}>
-                  📄 Upload your receipt
+                  📄 Upload your e-receipt
                 </h2>
                 <p style={{
                   margin: '6px 0 0', fontSize: 14, fontWeight: 500,
