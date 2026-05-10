@@ -64,6 +64,7 @@ export function Maininventory() {
   const [pdfItems, setPdfItems] = useState([]);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfError, setPdfError] = useState('');
+  const [isDragOver, setIsDragOver] = useState(false);
   const [showNonPantryModal, setShowNonPantryModal] = useState(false);
   const [nonPantryChecked, setNonPantryChecked] = useState(new Set());
 
@@ -772,19 +773,29 @@ export function Maininventory() {
               {pdfItems.length === 0 && !pdfLoading && (
                 <>
                   <form onSubmit={handlePdfUpload} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                    <label style={{
-                      display: 'flex', alignItems: 'center', gap: 14, padding: '16px 18px',
-                      border: `2px dashed ${pdfFile ? '#16A34A' : '#E2E8F0'}`,
-                      borderRadius: 14, cursor: 'pointer',
-                      background: pdfFile ? 'rgba(22,163,74,0.04)' : '#F8FAFC',
-                      transition: 'border-color 200ms, background 200ms',
-                    }}>
-                      <span style={{ fontSize: 28, flexShrink: 0 }}>{pdfFile ? '✅' : '📂'}</span>
+                    <label
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 14, padding: '16px 18px',
+                        border: `2px dashed ${isDragOver ? '#16A34A' : pdfFile ? '#16A34A' : '#E2E8F0'}`,
+                        borderRadius: 14, cursor: 'pointer',
+                        background: isDragOver ? 'rgba(22,163,74,0.08)' : pdfFile ? 'rgba(22,163,74,0.04)' : '#F8FAFC',
+                        transition: 'border-color 200ms, background 200ms',
+                      }}
+                      onDragOver={e => { e.preventDefault(); setIsDragOver(true); }}
+                      onDragLeave={() => setIsDragOver(false)}
+                      onDrop={e => {
+                        e.preventDefault(); setIsDragOver(false);
+                        const f = e.dataTransfer.files[0];
+                        if (f && f.name.toLowerCase().endsWith('.pdf')) { setPdfFile(f); setPdfError(''); }
+                        else setPdfError('Please drop a PDF file.');
+                      }}
+                    >
+                      <span style={{ fontSize: 28, flexShrink: 0 }}>{pdfFile ? '✅' : isDragOver ? '📥' : '📂'}</span>
                       <span style={{
                         color: pdfFile ? '#15803D' : '#94A3B8', fontSize: 14,
                         fontWeight: 600, fontFamily: 'Inter, -apple-system, sans-serif',
                       }}>
-                        {pdfFile ? pdfFile.name : 'Click to choose a PDF file…'}
+                        {pdfFile ? pdfFile.name : isDragOver ? 'Drop it here!' : 'Click to choose or drag & drop a PDF'}
                       </span>
                       <input
                         type="file" accept=".pdf" style={{ display: 'none' }}
