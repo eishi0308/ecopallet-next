@@ -384,21 +384,17 @@ export const Recipes = () => {
       {expiredConfirm && (
         <>
           <div className="oos-overlay" onClick={() => setExpiredConfirm(null)} />
-          <div className="oos-toast" style={{ maxWidth: 340 }}>
-            <span className="oos-toast-icon">⚠️</span>
-            <p className="oos-toast-title">Expired ingredient</p>
-            <p className="oos-toast-sub">
-              <strong>{expiredConfirm}</strong> has expired. Are you sure you want to use it in your recipe?
+          <div className="expired-confirm-popup">
+            <div className="expired-confirm-icon-wrap">
+              <span className="expired-confirm-icon">⚠️</span>
+            </div>
+            <p className="expired-confirm-title">Expired Ingredient</p>
+            <p className="expired-confirm-sub">
+              <span className="expired-confirm-name">{expiredConfirm}</span> has passed its expiry date. It may not be safe to eat. Use it anyway?
             </p>
-            <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-              <button
-                onClick={() => { handleAddToSearch(expiredConfirm); setExpiredConfirm(null); }}
-                style={{ flex: 1, background: '#EF4444', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 0', fontWeight: 700, fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}
-              >Use anyway</button>
-              <button
-                onClick={() => setExpiredConfirm(null)}
-                style={{ flex: 1, background: '#F1F5F9', color: '#475569', border: 'none', borderRadius: 10, padding: '10px 0', fontWeight: 700, fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}
-              >Cancel</button>
+            <div className="expired-confirm-actions">
+              <button className="expired-confirm-btn expired-confirm-btn--cancel" onClick={() => setExpiredConfirm(null)}>Cancel</button>
+              <button className="expired-confirm-btn expired-confirm-btn--confirm" onClick={() => { handleAddToSearch(expiredConfirm); setExpiredConfirm(null); }}>Use anyway</button>
             </div>
           </div>
         </>
