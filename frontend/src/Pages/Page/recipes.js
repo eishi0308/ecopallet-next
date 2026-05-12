@@ -20,6 +20,7 @@ export const Recipes = () => {
   const [displayedInventory, setDisplayedInventory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [chipFilter, setChipFilter] = useState('');
+  const [expiredConfirm, setExpiredConfirm] = useState(null); // item name pending confirm
   const [outOfStockToast, setOutOfStockToast] = useState(false);
   const [cookingDoneToast, setCookingDoneToast] = useState(false);
   const [sLoading, setSLoading] = useState(false);
@@ -311,7 +312,10 @@ export const Recipes = () => {
                         <button
                           key={item.id}
                           className={`ingredient-chip ingredient-chip--${sClass}${isZero ? ' ingredient-chip--zero' : ''}`}
-                          onClick={() => handleAddToSearch(item.name)}
+                          onClick={() => {
+                            if (sClass === 'danger' && !isZero) { setExpiredConfirm(item.name); return; }
+                            handleAddToSearch(item.name);
+                          }}
                           disabled={isZero}
                           title={isZero ? 'Out of stock' : `Add ${item.name}`}
                         >
@@ -372,6 +376,30 @@ export const Recipes = () => {
             <p className="oos-toast-title">Enjoy your meal!</p>
             <p className="oos-toast-sub">Your pantry has been updated with the ingredients used.</p>
             <button className="oos-toast-close cooking-done-toast-close" onClick={() => setCookingDoneToast(false)}>Got it</button>
+          </div>
+        </>
+      )}
+
+      {/* ── Expired ingredient confirm ── */}
+      {expiredConfirm && (
+        <>
+          <div className="oos-overlay" onClick={() => setExpiredConfirm(null)} />
+          <div className="oos-toast" style={{ maxWidth: 340 }}>
+            <span className="oos-toast-icon">⚠️</span>
+            <p className="oos-toast-title">Expired ingredient</p>
+            <p className="oos-toast-sub">
+              <strong>{expiredConfirm}</strong> has expired. Are you sure you want to use it in your recipe?
+            </p>
+            <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+              <button
+                onClick={() => { handleAddToSearch(expiredConfirm); setExpiredConfirm(null); }}
+                style={{ flex: 1, background: '#EF4444', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 0', fontWeight: 700, fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}
+              >Use anyway</button>
+              <button
+                onClick={() => setExpiredConfirm(null)}
+                style={{ flex: 1, background: '#F1F5F9', color: '#475569', border: 'none', borderRadius: 10, padding: '10px 0', fontWeight: 700, fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}
+              >Cancel</button>
+            </div>
           </div>
         </>
       )}
