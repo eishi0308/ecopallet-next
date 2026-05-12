@@ -19,6 +19,7 @@ export const Recipes = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [displayedInventory, setDisplayedInventory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [chipFilter, setChipFilter] = useState('');
   const [outOfStockToast, setOutOfStockToast] = useState(false);
   const [cookingDoneToast, setCookingDoneToast] = useState(false);
   const [sLoading, setSLoading] = useState(false);
@@ -151,6 +152,10 @@ export const Recipes = () => {
     });
   };
 
+  const filteredInventory = chipFilter.trim()
+    ? displayedInventory.filter(item => item.name.toLowerCase().includes(chipFilter.toLowerCase()))
+    : displayedInventory;
+
   const scrollToInventory = () => {
     const el = document.getElementById('inventory-container');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -271,49 +276,54 @@ export const Recipes = () => {
         </div>
         <div className="inventory-search-container">
           <div className="inventory-table-wrapper">
-            <p className="table-col-label">Your Inventory</p>
-            <table className="inventory-table">
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Qty</th>
-                  <th>Status</th>
-                  <th>Add</th>
-                </tr>
-              </thead>
-              <tbody className="inventory-body">
-                {displayedInventory.length === 0 ? (
-                  <tr>
-                    <td colSpan="4" className="inventory-empty-state">
-                      <div className="inventory-empty-inner">
-                        <span className="inventory-empty-icon">🧺</span>
-                        <p className="inventory-empty-title">Your pantry is empty</p>
-                        <p className="inventory-empty-sub">Scan a receipt to add items to your pantry</p>
-                        <a href="/inventory" className="inventory-empty-link">Go to Inventory →</a>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  displayedInventory.map((item) => {
-                    const isZeroQty = Number(item.amount) === 0;
-                    return (
-                      <tr key={item.id} className={`inv-row-${item.status.color === 'red' ? 'danger' : item.status.color === '#DAA520' ? 'warning' : 'safe'}${isZeroQty ? ' inv-row-zero-qty' : ''}`}>
-                        <td>{item.name}</td>
-                        <td>{item.amount}</td>
-                        <td>
-                          <span className={`status-badge status-${item.status.color === 'red' ? 'danger' : item.status.color === '#DAA520' ? 'warning' : 'safe'}`}>
-                            {item.status.text}
-                          </span>
-                        </td>
-                        <td>
-                          <button className="add-to-search-button" onClick={() => handleAddToSearch(item.name)}>+</button>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
+            <div className="chip-panel-header">
+              <span className="chip-panel-label">Your Pantry</span>
+              {displayedInventory.length > 0 && (
+                <span className="chip-panel-count">{displayedInventory.length} items</span>
+              )}
+            </div>
+            {displayedInventory.length === 0 ? (
+              <div className="inventory-empty-inner">
+                <span className="inventory-empty-icon">🧺</span>
+                <p className="inventory-empty-title">Your pantry is empty</p>
+                <p className="inventory-empty-sub">Scan a receipt to add items to your pantry</p>
+                <a href="/inventory" className="inventory-empty-link">Go to Inventory →</a>
+              </div>
+            ) : (
+              <>
+                <div className="chip-filter-wrap">
+                  <input
+                    type="text"
+                    className="chip-filter-input"
+                    placeholder="Filter ingredients…"
+                    value={chipFilter}
+                    onChange={e => setChipFilter(e.target.value)}
+                  />
+                </div>
+                <div className="chip-grid">
+                  {filteredInventory.length === 0 ? (
+                    <p className="chip-no-match">No match for "{chipFilter}"</p>
+                  ) : (
+                    filteredInventory.map(item => {
+                      const sClass = item.status.color === 'red' ? 'danger' : item.status.color === '#DAA520' ? 'warning' : 'safe';
+                      const isZero = Number(item.amount) === 0;
+                      return (
+                        <button
+                          key={item.id}
+                          className={`ingredient-chip ingredient-chip--${sClass}${isZero ? ' ingredient-chip--zero' : ''}`}
+                          onClick={() => handleAddToSearch(item.name)}
+                          disabled={isZero}
+                          title={isZero ? 'Out of stock' : `Add ${item.name}`}
+                        >
+                          {item.name}
+                          <span className="chip-qty">{item.amount}</span>
+                        </button>
+                      );
+                    })
+                  )}
+                </div>
+              </>
+            )}
           </div>
 
           <div className="search-arrow-divider">→</div>

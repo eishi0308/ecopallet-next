@@ -821,6 +821,110 @@
   display: block;
 }
 
+/* ── Ingredient chip picker ── */
+.chip-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 10px;
+  background: var(--surface-2, #F1F5F9);
+  border-bottom: 1px solid var(--border, #E2E8F0);
+}
+.chip-panel-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-3, #94A3B8);
+}
+.chip-panel-count {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-3, #94A3B8);
+  background: var(--border, #E2E8F0);
+  border-radius: 999px;
+  padding: 2px 9px;
+}
+
+.chip-filter-wrap {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border, #E2E8F0);
+}
+.chip-filter-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid var(--border, #E2E8F0);
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: var(--text-1, #0F172A);
+  background: var(--surface, #fff);
+  outline: none;
+  transition: border-color 150ms;
+}
+.chip-filter-input::placeholder { color: var(--text-3, #94A3B8); }
+.chip-filter-input:focus { border-color: var(--accent, #16A34A); }
+
+.chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px;
+  max-height: 272px;
+  overflow-y: auto;
+}
+.chip-grid::-webkit-scrollbar { width: 4px; }
+.chip-grid::-webkit-scrollbar-track { background: transparent; }
+.chip-grid::-webkit-scrollbar-thumb { background: var(--border, #E2E8F0); border-radius: 4px; }
+
+.chip-no-match {
+  color: var(--text-3, #94A3B8);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Inter', -apple-system, sans-serif;
+  margin: 0;
+  padding: 4px 2px;
+}
+
+.ingredient-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 6px 11px 6px 13px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, sans-serif;
+  cursor: pointer;
+  border: 1.5px solid;
+  transition: transform 120ms, box-shadow 120ms, background 120ms;
+  line-height: 1;
+  white-space: nowrap;
+}
+.ingredient-chip:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+}
+.ingredient-chip:active:not(:disabled) { transform: scale(0.96); }
+.ingredient-chip--zero { opacity: 0.35; cursor: not-allowed; }
+
+.ingredient-chip--safe    { background: #F0FDF4; border-color: #BBF7D0; color: #15803D; }
+.ingredient-chip--warning { background: #FEF3C7; border-color: #FCD34D; color: #92400E; }
+.ingredient-chip--danger  { background: #FEE2E2; border-color: #FCA5A5; color: #DC2626; }
+.ingredient-chip--safe:hover:not(:disabled)    { background: #DCFCE7; }
+.ingredient-chip--warning:hover:not(:disabled) { background: #FDE68A; }
+.ingredient-chip--danger:hover:not(:disabled)  { background: #FECACA; }
+
+.chip-qty {
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(0,0,0,0.07);
+  border-radius: 999px;
+  padding: 1px 6px;
+  line-height: 1.5;
+}
+
 /* Inventory table inside builder */
 .inventory-table {
   width: 100%;
@@ -1571,71 +1675,6 @@
     border-radius: 14px;
     overflow: hidden;
   }
-  .inventory-table thead { display: none; }
-  .inventory-table,
-  .inventory-table tbody {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 14px;
-    background: var(--surface, #fff);
-  }
-  .inventory-table tr {
-    display: inline-flex;
-    align-items: center;
-    border-radius: 999px;
-    overflow: hidden;
-  }
-  /* Status-matched chip colours */
-  .inventory-table tr.inv-row-safe    { background: #F0FDF4; border: 1px solid #BBF7D0; }
-  .inventory-table tr.inv-row-warning { background: #FEF3C7; border: 1px solid #FCD34D; }
-  .inventory-table tr.inv-row-danger  { background: #FEE2E2; border: 1px solid #FCA5A5; }
-  .inventory-table td {
-    padding: 0;
-    border: none;
-    background: transparent;
-  }
-  /* Hide qty and status — name + add only */
-  .inventory-table td:nth-child(2),
-  .inventory-table td:nth-child(3) { display: none; }
-  .inventory-table td:nth-child(1) {
-    padding: 8px 6px 8px 14px;
-    font-size: 13px;
-    font-weight: 600;
-  }
-  .inventory-table tr.inv-row-safe    td:nth-child(1) { color: #15803D; }
-  .inventory-table tr.inv-row-warning td:nth-child(1) { color: #B45309; }
-  .inventory-table tr.inv-row-danger  td:nth-child(1) { color: #DC2626; }
-  .inventory-table td:nth-child(4) { padding: 4px 4px 4px 0; }
-  /* + button matches chip status colour */
-  .inventory-table tr.inv-row-safe    .add-to-search-button { background: rgba(22,163,74,0.15);  color: #15803D; border-color: rgba(22,163,74,0.4); }
-  .inventory-table tr.inv-row-warning .add-to-search-button { background: rgba(245,158,11,0.15); color: #B45309; border-color: rgba(245,158,11,0.4); }
-  .inventory-table tr.inv-row-danger  .add-to-search-button { background: rgba(239,68,68,0.15);  color: #DC2626; border-color: rgba(239,68,68,0.4); }
-  /* + button hover — status-matched solid fill */
-  .inventory-table tr.inv-row-safe    .add-to-search-button:hover { background: #16A34A; color: #fff; border-color: #16A34A; transform: scale(1.12); }
-  .inventory-table tr.inv-row-warning .add-to-search-button:hover { background: #D97706; color: #fff; border-color: #D97706; transform: scale(1.12); }
-  .inventory-table tr.inv-row-danger  .add-to-search-button:hover { background: #DC2626; color: #fff; border-color: #DC2626; transform: scale(1.12); }
-  /* chip row hover — override global green td:hover rule */
-  .inventory-table tr.inv-row-safe:hover    { background: #DCFCE7; }
-  .inventory-table tr.inv-row-warning:hover { background: #FEF08A; }
-  .inventory-table tr.inv-row-danger:hover  { background: #FECACA; }
-  .inventory-table tr.inv-row-safe:hover    td { background: transparent; color: #15803D; }
-  .inventory-table tr.inv-row-warning:hover td { background: transparent; color: #B45309; }
-  .inventory-table tr.inv-row-danger:hover  td { background: transparent; color: #DC2626; }
-
-  .inventory-table tr.inv-row-zero-qty { opacity: 0.45; }
-  .add-to-search-button {
-    width: 28px;
-    height: 28px;
-    border-radius: 999px !important;
-    font-size: 16px;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
   /* SearchBar full-width — target the outer wrapper div too */
   .inventory-search-container > div:last-child { width: 100%; }
   .search-container { border-radius: 14px; width: 100%; }
