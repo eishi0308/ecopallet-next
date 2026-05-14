@@ -3,6 +3,20 @@ import './dashboard.css';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { calculateStatus } from './inventory';
+import { motion } from 'framer-motion';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 22 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+};
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } },
+};
+const cardFadeUp = {
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.32, ease: 'easeOut' } },
+};
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -87,7 +101,7 @@ const Dashboard = ({ inventory, deletionHistory }) => {
   if (!hasValues) {
     const hasItems = inventory.length > 0 || deletionHistory.length > 0;
     return (
-      <div className="dash">
+      <motion.div className="dash" variants={fadeUp} initial="hidden" animate="visible">
         <div className="dash-empty-state">
           <span className="dash-empty-icon">{hasItems ? '📊' : '📦'}</span>
           <p className="dash-empty-msg">
@@ -96,16 +110,16 @@ const Dashboard = ({ inventory, deletionHistory }) => {
               : 'Add items to your pantry to see your spending analytics.'}
           </p>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="dash">
+    <motion.div className="dash" variants={stagger} initial="hidden" animate="visible">
 
       {/* ── 2x2 Grid ── */}
-      <div className="dash-two-by-two">
-        <div className="dash-metric-card dash-metric--wasted">
+      <motion.div className="dash-two-by-two" variants={stagger}>
+        <motion.div variants={cardFadeUp} className="dash-metric-card dash-metric--wasted">
           <span className="dash-metric-eyebrow">🗑 Gone to waste</span>
           <div className="dash-metric-row">
             <div className="dash-metric-col">
@@ -122,8 +136,8 @@ const Dashboard = ({ inventory, deletionHistory }) => {
               </>
             )}
           </div>
-        </div>
-        <div className="dash-metric-card dash-metric--saved">
+        </motion.div>
+        <motion.div variants={cardFadeUp} className="dash-metric-card dash-metric--saved">
           <span className="dash-metric-eyebrow">✅ Saved</span>
           <div className="dash-metric-row">
             <div className="dash-metric-col">
@@ -140,25 +154,25 @@ const Dashboard = ({ inventory, deletionHistory }) => {
               </>
             )}
           </div>
-        </div>
-        <div className="dash-metric-card dash-metric--total">
+        </motion.div>
+        <motion.div variants={cardFadeUp} className="dash-metric-card dash-metric--total">
           <span className="dash-metric-eyebrow">💰 Total Tracked</span>
           <div className="dash-metric-amount">${m.totalCost.toFixed(2)}</div>
           <p className="dash-metric-sub">all spending tracked</p>
-        </div>
-        <div className="dash-metric-card dash-metric--risk">
+        </motion.div>
+        <motion.div variants={cardFadeUp} className="dash-metric-card dash-metric--risk">
           <span className="dash-metric-eyebrow">⚠️ Still at risk</span>
           <div className="dash-metric-amount">${m.aboutToExpireCost.toFixed(2)}</div>
           <p className="dash-metric-sub">
             {m.aboutToExpireCount} item{m.aboutToExpireCount !== 1 ? 's' : ''} not yet expired
           </p>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* ── Donut chart + Most Wasted Foods ── */}
-      <div className="dash-main">
+      <motion.div className="dash-main" variants={stagger}>
 
-        <div className="dash-panel dash-chart-panel">
+        <motion.div variants={cardFadeUp} className="dash-panel dash-chart-panel">
           <h3 className="dash-panel-title">Spending Breakdown</h3>
           <div className="dash-donut-wrap">
             <div className="dash-donut-canvas">
@@ -180,9 +194,9 @@ const Dashboard = ({ inventory, deletionHistory }) => {
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="dash-panel dash-top5-panel">
+        <motion.div variants={cardFadeUp} className="dash-panel dash-top5-panel">
           <h3 className="dash-panel-title">Most Wasted Foods</h3>
           <p className="dash-panel-sub">Your repeat offenders — buy less or use faster</p>
           {m.top5.length > 0 ? (
@@ -208,10 +222,10 @@ const Dashboard = ({ inventory, deletionHistory }) => {
               <p className="dash-empty-msg">No expired food — great work!</p>
             </div>
           )}
-        </div>
+        </motion.div>
 
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

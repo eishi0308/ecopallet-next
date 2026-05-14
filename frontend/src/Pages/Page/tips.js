@@ -5,6 +5,15 @@ import { Link } from 'react-router-dom';
 import { calculateStatus } from './calculateStatus';
 import Fuse from 'fuse.js';
 
+// framer-motion
+import { motion, AnimatePresence } from 'framer-motion';
+
+// lucide-react
+import { Search, X, Refrigerator, Snowflake, Archive, Lightbulb } from 'lucide-react';
+
+// sonner toast
+import { toast, Toaster } from 'sonner';
+
 
 
 // image resources
@@ -22,7 +31,7 @@ import dairyTip from '../images/tips/dairy-tip.png';
 import grainsTip from '../images/tips/grains-tip.png';
 import cannedTip from '../images/tips/canned-tip.png';
 import fruitTip from '../images/tips/fruit-tip.png';
-// images for tips results 
+// images for tips results
 import additionalLogo from '../images/tips/additional-logo.png';
 import pantryLogo from '../images/tips/pantry-logo.png';
 import freezerLogo from '../images/tips/freezer-logo.png';
@@ -32,22 +41,27 @@ import footer from '../images/tips/tips-footer.png';
 
 
 
-
-const ErrorModal = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
-  return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <div className="modal-body">
-          <p>The keyword you searched for is not in our database, please search again.</p>
-        </div>
-        <div className="modal-footer">
-          <button className="modal-button" onClick={onClose}>OK</button>
-        </div>
-      </div>
-    </div>
-  );
+// ── Animation variants ──────────────────────────────────────────
+const fadeUp = {
+  hidden: { opacity: 0, y: 22 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
 };
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.07 } },
+};
+
+const cardFadeUp = {
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.32, ease: 'easeOut' } },
+};
+
+const pillVariant = {
+  hidden: { opacity: 0, scale: 0.88 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.22, ease: 'easeOut' } },
+};
+
 
 
 const TipsContent = ({ selectedResult }) => {
@@ -57,10 +71,10 @@ const TipsContent = ({ selectedResult }) => {
 
   const getCardMeta = (title) => {
     const t = title.toLowerCase();
-    if (t.includes('pantry'))      return { icon: '🏺', color: '#F59E0B', bg: '#FFFBEB', border: '#FDE68A', logo: pantryLogo };
-    if (t.includes('freezer'))     return { icon: '❄️', color: '#3B82F6', bg: '#EFF6FF', border: '#BFDBFE', logo: freezerLogo };
-    if (t.includes('refrigerat'))  return { icon: '🧊', color: '#06B6D4', bg: '#ECFEFF', border: '#A5F3FC', logo: refrigeratorLogo };
-    return                                { icon: '💡', color: '#8B5CF6', bg: '#F5F3FF', border: '#DDD6FE', logo: additionalLogo };
+    if (t.includes('pantry'))      return { LucideIcon: Archive,      color: '#F59E0B', bg: '#FFFBEB', border: '#FDE68A', logo: pantryLogo };
+    if (t.includes('freezer'))     return { LucideIcon: Snowflake,    color: '#3B82F6', bg: '#EFF6FF', border: '#BFDBFE', logo: freezerLogo };
+    if (t.includes('refrigerat'))  return { LucideIcon: Refrigerator, color: '#06B6D4', bg: '#ECFEFF', border: '#A5F3FC', logo: refrigeratorLogo };
+    return                                { LucideIcon: Lightbulb,    color: '#8B5CF6', bg: '#F5F3FF', border: '#DDD6FE', logo: additionalLogo };
   };
 
   return (
@@ -69,30 +83,40 @@ const TipsContent = ({ selectedResult }) => {
         <h3 className="tips-result-food-name">{selectedResult.Name}</h3>
         <span className="tips-result-food-category">{selectedResult.Category_Name}</span>
       </div>
-      <div className="tips-cards-grid">
+      <motion.div
+        className="tips-cards-grid"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+      >
         {sections.map((section, index) => {
           const splitIndex = section.indexOf(':');
           if (splitIndex === -1) return null;
           const title = section.substring(0, splitIndex).trim();
           const content = section.substring(splitIndex + 1).trim();
-          const { icon, color, bg, border, logo } = getCardMeta(title);
+          const { LucideIcon, color, bg, border, logo } = getCardMeta(title);
 
           return (
-            <div key={index} className="tips-card" style={{ '--card-color': color, '--card-bg': bg, '--card-border': border }}>
+            <motion.div
+              key={index}
+              variants={cardFadeUp}
+              className="tips-card"
+              style={{ '--card-color': color, '--card-bg': bg, '--card-border': border }}
+            >
               <div className="tips-card-header">
                 <div className="tips-card-icon-wrap">
                   <img src={logo} alt={title} className="tips-card-logo" />
                 </div>
                 <div className="tips-card-title-row">
-                  <span className="tips-card-emoji">{icon}</span>
+                  <LucideIcon className="tips-card-lucide-icon" size={14} />
                   <h4 className="tips-card-title">{title}</h4>
                 </div>
               </div>
               <p className="tips-card-body">{content}</p>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </div>
   );
 };
@@ -100,10 +124,9 @@ const TipsContent = ({ selectedResult }) => {
 
 export const Tips = () => {
   const [showInitialContent, setShowInitialContent] = useState(true);
-  const [showErrorModal, setShowErrorModal] = useState(false);
   const searchResultsRef = useRef(null);
 
-  // get not-expiry items name 
+  // get not-expiry items name
   const [validInventoryNames, setValidInventoryNames] = useState([]);
   useEffect(() => {
     try {
@@ -122,49 +145,37 @@ export const Tips = () => {
     }
   }, []);
 
-  //  search keywords
+  // search keywords
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [selectedResult, setSelectedResult] = useState(null);
 
-
   const [searchPerformed, setSearchPerformed] = useState(false);
   const handleSearch = (name) => {
-    // Clear previous search results and selected result
     setSearchResults([]);
     setSelectedResult(null);
 
-    // Preprocessing user input
     let processedName = name.trim();
 
-    // If the search bar is empty, reset the search value and return
     if (processedName === '') {
       setSearchValue('');
       setShowInitialContent(true);
       return;
     }
 
-    // Check if the input is a number
     if (/^\d+$/.test(processedName)) {
       setShowInitialContent(false);
-      setShowErrorModal(true);
+      toast.error('The keyword you searched for is not in our database, please search again.');
       setSearchValue(name);
       return;
     }
 
-    // Convert to lowercase
     processedName = processedName.toLowerCase();
 
-    // Segment user input keywords
     const inputKeywords = processedName.split(' ');
-
-    // Generate all combinations of keywords
     const keywordCombinations = generateCombinations(inputKeywords);
-
-    // Sort keyword combinations in descending order of length
     keywordCombinations.sort((a, b) => b.length - a.length);
 
-    // Try to match keyword combinations one by one
     for (const combination of keywordCombinations) {
       const combinationString = combination.join(' ');
       const results = tipsdata.filter(item => {
@@ -175,13 +186,9 @@ export const Tips = () => {
       if (results.length > 0) {
         setSearchResults(results);
         setShowInitialContent(false);
-        setShowErrorModal(false);
         setSearchValue(name);
         setSearchPerformed(true);
 
-
-
-        // If there is only one search result, automatically select and display it
         if (results.length === 1) {
           setSelectedResult(results[0]);
         }
@@ -189,8 +196,7 @@ export const Tips = () => {
       }
     }
 
-    // If there are no exact matches, try fuzzy matching
-    const threshold = 0.3; // Set the matching threshold, e.g., 0.3
+    const threshold = 0.3;
     const fuse = new Fuse(tipsdata, {
       keys: ['Keywords'],
       threshold: threshold,
@@ -200,33 +206,26 @@ export const Tips = () => {
     const fuzzyResults = fuse.search(processedName);
 
     if (fuzzyResults.length > 0) {
-      // Extract the matched items and their scores
       const matchedItems = fuzzyResults.map(result => ({
         item: result.item,
         score: result.score,
       }));
-
-      // Sort the matched items by their scores in ascending order
       matchedItems.sort((a, b) => a.score - b.score);
-
-      // Choose the best match (the item with the lowest score)
       const bestMatch = matchedItems[0].item;
 
       setSearchResults([bestMatch]);
       setShowInitialContent(false);
-      setShowErrorModal(false);
       setSearchValue(name);
       setSelectedResult(bestMatch);
       setSearchPerformed(true);
-
       return;
     }
 
-    // If there are no matches, show the error modal
     setShowInitialContent(false);
-    setShowErrorModal(true);
+    toast.error('The keyword you searched for is not in our database, please search again.');
     setSearchValue(name);
   };
+
   useEffect(() => {
     if (searchPerformed && searchResultsRef.current) {
       searchResultsRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -235,34 +234,19 @@ export const Tips = () => {
   }, [searchPerformed, searchResultsRef]);
 
 
-  // Generate all combinations of keywords
   function generateCombinations(keywords) {
     const combinations = [];
-
     for (let i = 0; i < keywords.length; i++) {
       combinations.push([keywords[i]]);
-
       for (let j = i + 1; j < keywords.length; j++) {
         combinations.push([keywords[i], keywords[j]]);
-
         for (let k = j + 1; k < keywords.length; k++) {
           combinations.push([keywords[i], keywords[j], keywords[k]]);
         }
       }
     }
-
     return combinations;
   }
-
-
-
-  // error popup close
-  const handleCloseModal = () => {
-    setShowErrorModal(false);
-    if (searchResults.length === 0) {
-      setShowInitialContent(true);
-    }
-  };
 
 
   // Pages in inventory container
@@ -283,7 +267,6 @@ export const Tips = () => {
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
-
     for (let i = 1; i <= totalPages; i++) {
       pageNumbers.push(
         <button
@@ -298,26 +281,22 @@ export const Tips = () => {
     return pageNumbers;
   };
 
-
-  // Selected results processing logic
   const handleResultSelection = (result) => {
     setSelectedResult(result);
   };
 
-
   // quick tips
   const categoryTips = [
-    { category: 'Meat',         emoji: '🥩', frontLogo: meatLogo,   backLogo: meatTip   },
-    { category: 'Fruits',       emoji: '🍎', frontLogo: fruitLogo,  backLogo: fruitTip  },
-    { category: 'Vegetables',   emoji: '🥦', frontLogo: vegeLogo,   backLogo: vegeTip   },
-    { category: 'Dairy',        emoji: '🧀', frontLogo: dairyLogo,  backLogo: dairyTip  },
-    { category: 'Grains',       emoji: '🌾', frontLogo: grainsLogo, backLogo: grainsTip },
-    { category: 'Canned Foods', emoji: '🥫', frontLogo: cannedLogo, backLogo: cannedTip },
+    { category: 'Meat',         frontLogo: meatLogo,   backLogo: meatTip   },
+    { category: 'Fruits',       frontLogo: fruitLogo,  backLogo: fruitTip  },
+    { category: 'Vegetables',   frontLogo: vegeLogo,   backLogo: vegeTip   },
+    { category: 'Dairy',        frontLogo: dairyLogo,  backLogo: dairyTip  },
+    { category: 'Grains',       frontLogo: grainsLogo, backLogo: grainsTip },
+    { category: 'Canned Foods', frontLogo: cannedLogo, backLogo: cannedTip },
   ];
 
   const CategoryTipItem = ({ frontLogo, backLogo, category }) => {
     const [isFlipped, setIsFlipped] = useState(false);
-
     return (
       <div
         className={`category-tip-item${isFlipped ? ' is-flipped' : ''}`}
@@ -333,35 +312,59 @@ export const Tips = () => {
 
   return (
     <div className="tips-whole-page">
+      <Toaster position="top-center" richColors />
 
       {/* ── Hero ── */}
-      <div className="tips-hero">
+      <motion.div
+        className="tips-hero"
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
+      >
         <span className="tips-eyebrow">🌿 Food Storage Guide</span>
         <h1 className="tips-hero-title">Store smarter, waste less</h1>
         <p className="tips-hero-sub">Discover the best ways to store your food and extend shelf life — organised by category and tailored to your pantry.</p>
-      </div>
+      </motion.div>
 
       {/* ── Quick Category Cards ── */}
-      <section className="tips-panel tips-category-panel">
+      <motion.section
+        className="tips-panel tips-category-panel"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-60px' }}
+      >
         <div className="tips-category-header">
           <span className="tips-eyebrow">Quick Reference</span>
           <h2 className="tips-panel-title">Storage Tips by Category</h2>
         </div>
-        <div className="category-tips-container">
+        <motion.div
+          className="category-tips-container"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           {categoryTips.map((item, index) => (
-            <div key={index} className="category-tip-wrap">
+            <motion.div key={index} className="category-tip-wrap" variants={cardFadeUp}>
               <CategoryTipItem
                 frontLogo={item.frontLogo}
                 backLogo={item.backLogo}
                 category={item.category}
               />
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {/* ── Your Inventory ── */}
-      <section className="tips-panel">
+      <motion.section
+        className="tips-panel"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-60px' }}
+      >
         <div className="tips-panel-header">
           <div>
             <span className="tips-eyebrow">From Your Pantry</span>
@@ -369,18 +372,25 @@ export const Tips = () => {
           </div>
           <p className="tips-panel-sub">Click any item to get personalised storage tips</p>
         </div>
-        <div className="inventory-tips-container">
+        <motion.div
+          className="inventory-tips-container"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           {validInventoryNames.length > 0 ? (
             validInventoryNames
               .slice((currentPage - 1) * 10, currentPage * 10)
               .map((name, index) => (
-                <button
+                <motion.button
                   key={index}
+                  variants={pillVariant}
                   className={`inventory-item-button ${searchValue === name ? 'selected' : ''}`}
                   onClick={() => handleSearch(name)}
                 >
                   <span className="item-text">{name}</span>
-                </button>
+                </motion.button>
               ))
           ) : (
             <div className="inv-empty-state-tips">
@@ -390,34 +400,58 @@ export const Tips = () => {
               <Link to="/inventory" className="inv-empty-link-tips">Go to Inventory →</Link>
             </div>
           )}
-        </div>
+        </motion.div>
         {totalPages > 1 && (
           <div className="tips-pagination-controls">
             {renderPageNumbers()}
           </div>
         )}
-      </section>
+      </motion.section>
 
       {/* ── Search ── */}
-      <section className="tips-panel tips-search-panel">
+      <motion.section
+        className="tips-panel tips-search-panel"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-60px' }}
+      >
         <div className="tips-panel-header tips-panel-header--centered">
           <span className="tips-eyebrow">Deep Dive</span>
           <h2 className="tips-panel-title">Search for Storage Tips</h2>
           <p className="tips-panel-sub">Enter any ingredient or food name to find detailed storage guidance</p>
         </div>
         <div className="tips-search-area">
-          <input
-            type="text"
-            value={searchValue}
-            onChange={e => setSearchValue(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleSearch(searchValue)}
-            placeholder="e.g. milk, chicken, olive oil…"
-          />
+          <div className="tips-search-input-wrap">
+            <Search className="tips-search-icon" size={18} />
+            <input
+              type="text"
+              value={searchValue}
+              onChange={e => setSearchValue(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSearch(searchValue)}
+              placeholder="e.g. milk, chicken, olive oil…"
+            />
+            <AnimatePresence>
+              {searchValue && (
+                <motion.button
+                  className="tips-search-clear"
+                  onClick={() => handleSearch('')}
+                  initial={{ opacity: 0, scale: 0.7 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.15 }}
+                  aria-label="Clear search"
+                >
+                  <X size={15} />
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </div>
           <button className="tips-search-button" onClick={() => handleSearch(searchValue)}>
             Search
           </button>
         </div>
-      </section>
+      </motion.section>
 
       {searchResults.length === 0 && showInitialContent && (
         <div className="initial-content-footer">
@@ -425,35 +459,49 @@ export const Tips = () => {
         </div>
       )}
 
-      {searchResults.length > 0 && (
-        <div className="result-tips-container" ref={searchResultsRef}>
-          <div className="tips-results-area">
-            {searchResults.map((result, index) => (
-              <div
-                key={index}
-                className={`tips-result-item ${selectedResult === result ? 'selected' : ''}`}
-                onClick={() => handleResultSelection(result)}
-              >
-                <span className="tips-result-category">{result.Category_Name}</span>
-                <span className="tips-result-name">{result.Name}</span>
+      <AnimatePresence>
+        {searchResults.length > 0 && (
+          <motion.div
+            key="results"
+            className="result-tips-container"
+            ref={searchResultsRef}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+          >
+            <motion.div
+              className="tips-results-area"
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+            >
+              {searchResults.map((result, index) => (
+                <motion.div
+                  key={index}
+                  variants={cardFadeUp}
+                  className={`tips-result-item ${selectedResult === result ? 'selected' : ''}`}
+                  onClick={() => handleResultSelection(result)}
+                >
+                  <span className="tips-result-category">{result.Category_Name}</span>
+                  <span className="tips-result-name">{result.Name}</span>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {!selectedResult && (
+              <div className="tips-initial-placeholder">
+                <span className="tips-placeholder-icon">👆</span>
+                <p>Select a result to view storage tips</p>
               </div>
-            ))}
-          </div>
+            )}
 
-          {!selectedResult && (
-            <div className="tips-initial-placeholder">
-              <span className="tips-placeholder-icon">👆</span>
-              <p>Select a result to view storage tips</p>
-            </div>
-          )}
-
-          {selectedResult && (
-            <TipsContent selectedResult={selectedResult} />
-          )}
-        </div>
-      )}
-
-      <ErrorModal isOpen={showErrorModal} onClose={handleCloseModal} />
+            {selectedResult && (
+              <TipsContent selectedResult={selectedResult} />
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

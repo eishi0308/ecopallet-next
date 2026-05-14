@@ -7,6 +7,20 @@ import 'react-datepicker/dist/react-datepicker.css';
 import Dashboard from './Dashboard';
 import samimg2 from "./2.jpeg";
 import samplePdf from "./woolworth_sample_ereceipt.pdf";
+import { motion } from 'framer-motion';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 22 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+};
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } },
+};
+const cardFadeUp = {
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
+};
 
 
 const MONTH_MAP = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11 };
@@ -544,13 +558,13 @@ export function Maininventory() {
         <div className="App">
 
           {/* ── Page Header ── */}
-          <div className="inv-page-header">
+          <motion.div className="inv-page-header" variants={fadeUp} initial="hidden" animate="visible">
             <div>
               <span className="inv-eyebrow">🥦 Pantry Manager</span>
               <h1 className="inv-header-text">My Pantry</h1>
               <p className="inv-header-sub">Track what you have, reduce what you waste</p>
             </div>
-          </div>
+          </motion.div>
 
           {/* ── Tab Switcher ── */}
           <div className="inv-tabs">
@@ -571,37 +585,41 @@ export function Maininventory() {
           {activeTab === 'pantry' && <>
 
           {/* ── Stats Row ── */}
-          <div className="inv-stats-row">
-            <div
+          <motion.div className="inv-stats-row" variants={stagger} initial="hidden" animate="visible">
+            <motion.div
+              variants={cardFadeUp}
               className={`inv-stat-card inv-stat-total inv-stat-card--clickable${filterStatus === 'all' ? ' inv-stat-card--active-filter' : ''}`}
               onClick={() => setFilterStatus('all')}
             >
               <span className="inv-stat-num">{inventory.length}</span>
               <span className="inv-stat-label">Total items</span>
-            </div>
-            <div
+            </motion.div>
+            <motion.div
+              variants={cardFadeUp}
               className={`inv-stat-card inv-stat-fresh inv-stat-card--clickable${filterStatus === 'green' ? ' inv-stat-card--active-filter' : ''}`}
               onClick={() => setFilterStatus(filterStatus === 'green' ? 'all' : 'green')}
             >
               <span className="inv-stat-num">{freshCount}</span>
               <span className="inv-stat-label">Fresh</span>
-            </div>
-            <div
+            </motion.div>
+            <motion.div
+              variants={cardFadeUp}
               className={`inv-stat-card inv-stat-warning inv-stat-card--clickable${filterStatus === 'warning' ? ' inv-stat-card--active-filter' : ''}`}
               onClick={() => setFilterStatus(filterStatus === 'warning' ? 'all' : 'warning')}
             >
               <span className="inv-stat-num">{expiringCount}</span>
               <span className="inv-stat-label">Expiring soon</span>
               <span className="inv-stat-sublabel">within 3 days</span>
-            </div>
-            <div
+            </motion.div>
+            <motion.div
+              variants={cardFadeUp}
               className={`inv-stat-card inv-stat-danger inv-stat-card--clickable${filterStatus === 'red' ? ' inv-stat-card--active-filter' : ''}`}
               onClick={() => setFilterStatus(filterStatus === 'red' ? 'all' : 'red')}
             >
               <span className="inv-stat-num">{expiredCount}</span>
               <span className="inv-stat-label">Expired</span>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* ── Toolbar ── */}
           <div className="inv-toolbar">

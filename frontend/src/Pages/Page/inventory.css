@@ -7,7 +7,7 @@ header { display: none; }
 
 /* Page wrapper */
 .App {
-  padding: 120px 40px 40px;
+  padding: 40px 40px 40px;
   max-width: 1280px;
   margin: 0 auto;
   font-family: 'Inter', -apple-system, sans-serif;
@@ -22,7 +22,7 @@ header { display: none; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 32px;
+  margin-top: 0;
   margin-bottom: 24px;
   padding: 48px 40px;
   background: linear-gradient(135deg, #0F172A 0%, #1E3A2F 55%, #15803D 100%);

@@ -7,6 +7,20 @@ import { SearchBar } from './SearchBar';
 import { RecipeCard } from './RecipeCard';
 import { SRecipeCard } from './SRecipeCard';
 import { calculateStatus } from './calculateStatus';
+import { motion } from 'framer-motion';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 22 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+};
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.09 } },
+};
+const cardFadeUp = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.32, ease: 'easeOut' } },
+};
 
 const BACKEND_URL = 'https://ecopallet-next.onrender.com';
 
@@ -197,7 +211,7 @@ export const Recipes = () => {
     <div className="recipe-page">
 
       {/* ── Hero ── */}
-      <div className="recipe-hero">
+      <motion.div className="recipe-hero" variants={fadeUp} initial="hidden" animate="visible">
         <span className="recipe-hero-eyebrow">🍽 Recipe Assistant</span>
         <h1 className="recipe-hero-title">Turn your pantry into a meal</h1>
         <p className="recipe-hero-sub">Recipes auto-suggested from your expiring ingredients — or build your own from scratch.</p>
@@ -209,10 +223,10 @@ export const Recipes = () => {
             ))}
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* ── Smart Suggestions ── */}
-      <section className="suggestion-section">
+      <motion.section className="suggestion-section" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
         <div className="suggestion-header">
           <div className="suggestion-header-left">
             <span className="section-eyebrow">🌿 Smart Suggestions</span>
@@ -225,7 +239,7 @@ export const Recipes = () => {
           </div>
         </div>
 
-        <div className="srecipes-container">
+        <motion.div className="srecipes-container" variants={stagger} initial="hidden" animate="visible">
           {sLoading ? (
             [0,1,2,3].map(i => (
               <div key={i} className="srecipe-skeleton">
@@ -237,7 +251,7 @@ export const Recipes = () => {
               </div>
             ))
           ) : displayedRecipes.length > 0 ? displayedRecipes.map((sampleRecipe, index) => (
-            <SRecipeCard key={index} recipe={sampleRecipe} />
+            <motion.div key={index} variants={cardFadeUp}><SRecipeCard recipe={sampleRecipe} /></motion.div>
           )) : (
             <div className="no-recipes-empty">
               <span className="no-recipes-empty-icon">🧺</span>
@@ -246,11 +260,11 @@ export const Recipes = () => {
               <a href="/inventory" className="no-recipes-empty-cta">Go to Inventory →</a>
             </div>
           )}
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {/* ── Bridge CTA ── */}
-      <div className="bridge-cta">
+      <motion.div className="bridge-cta" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
         <div className="bridge-card">
           <div className="bridge-card-body">
             <span className="bridge-eyebrow">✦ Custom Builder</span>
@@ -266,10 +280,10 @@ export const Recipes = () => {
             <span className="bridge-btn-arrow">↓</span>
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* ── Custom Builder ── */}
-      <div id="inventory-container" className="inventory-container">
+      <motion.div id="inventory-container" className="inventory-container" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
         <div className="inventory-container-header">
           <span className="section-eyebrow">🔧 Custom Builder</span>
           <h3 className="inventory-section-title">Build Your Own Recipe</h3>
@@ -341,10 +355,10 @@ export const Recipes = () => {
             isGenerating={isGenerating}
           />
         </div>
-      </div>
+      </motion.div>
 
       {/* ── Generated Results ── */}
-      <div className="recipes-results-wrapper">
+      <motion.div className="recipes-results-wrapper" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
         <div id="recipes-container" className="recipes-container">
           {isGenerating ? (
             [0,1,2,3].map(i => (
@@ -365,7 +379,7 @@ export const Recipes = () => {
             ))
           )}
         </div>
-      </div>
+      </motion.div>
 
       {/* ── Cooking done toast ── */}
       {cookingDoneToast && (

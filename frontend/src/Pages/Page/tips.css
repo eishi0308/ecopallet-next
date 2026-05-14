@@ -276,6 +276,44 @@
   flex-wrap: wrap;
 }
 
+/* ── Search input wrapper (icon + clear button) ── */
+.tips-search-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  max-width: 480px;
+}
+
+.tips-search-icon {
+  position: absolute;
+  left: 18px;
+  color: var(--text-3, #94A3B8);
+  pointer-events: none;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.tips-search-clear {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--text-3, #94A3B8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: color 150ms, background 150ms;
+  z-index: 1;
+}
+.tips-search-clear:hover {
+  color: var(--text-1, #0F172A);
+  background: var(--surface-2, #F1F5F9);
+}
+
 .tips-search-area input[type="text"] {
   font-family: 'Inter', -apple-system, sans-serif;
   font-size: 15px;
@@ -788,11 +826,11 @@
 }
 .tips-search-panel::before { background: linear-gradient(90deg, #16A34A, #059669); }
 
-/* Search area — bigger, bolder */
+/* Search area — bigger, bolder, padded for icons */
 .tips-search-area input[type="text"] {
-  width: 480px;
+  width: 100%;
   font-size: 16px;
-  padding: 15px 22px;
+  padding: 15px 44px 15px 46px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   border-radius: 14px;
 }
@@ -844,6 +882,12 @@
   border-radius: 18px;
 }
 .tips-placeholder-icon { font-size: 2.5rem; opacity: 0.35; }
+
+/* ── Lucide icon inside tip card title row ── */
+.tips-card-lucide-icon {
+  color: var(--card-color, #16A34A);
+  flex-shrink: 0;
+}
 
 /* ══════════════════════════════════════════
    RESPONSIVE
