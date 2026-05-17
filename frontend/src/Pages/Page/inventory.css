@@ -12,7 +12,7 @@ header { display: none; }
   margin: 0 auto;
   font-family: 'Inter', -apple-system, sans-serif;
   background: var(--bg, #F7F8FA);
-  min-height: calc(100vh - 64px);
+  min-height: calc(100vh - 80px);
 }
 
 /* ══════════════════════════════════════════
@@ -22,7 +22,7 @@ header { display: none; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 0;
+  margin-top: 20px;
   margin-bottom: 24px;
   padding: 48px 40px;
   background: linear-gradient(135deg, #0F172A 0%, #1E3A2F 55%, #15803D 100%);
@@ -2124,7 +2124,7 @@ header { display: none; }
    RESPONSIVE
 ══════════════════════════════════════════ */
 @media (max-width: 900px) {
-  .App { padding: 24px 20px 40px; }
+  .App { padding: 40px 20px 40px; }
   .inv-stats-row { flex-wrap: wrap; }
   .inv-toolbar { flex-wrap: wrap; }
   .inventory-table-container table { table-layout: auto; }
@@ -2132,7 +2132,7 @@ header { display: none; }
   .inventory-table-container table td:nth-child(n) { width: auto; }
 }
 @media (max-width: 640px) {
-  .App { padding: 16px 20px 32px !important; }
+  .App { padding: 40px 20px 32px !important; }
 
   /* Tabs — full width on mobile */
   .inv-tabs { width: 100%; }

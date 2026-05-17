@@ -136,6 +136,8 @@ export function Maininventory() {
   const handleEditingItemChange = (itemId) => setEditingItem(itemId);
 
 
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
   useEffect(() => {
     const timeout = setTimeout(() => setShowCongratsTimer(false), 6000);
     return () => clearTimeout(timeout);
@@ -198,7 +200,7 @@ export function Maininventory() {
     const newEntries = zeroQtyItems.map(item => {
       const status = calculateStatus(item.expiryDate);
       const category = status.color === 'red' ? 'wasted' : 'saved';
-      return { id: Date.now() + Math.random(), name: item.name.split(' - ')[0], amount: item.amount, spent: parseFloat(item.spent) || 0, category, deletedAt: new Date().toISOString() };
+      return { id: Date.now() + Math.random(), name: item.name.split(' - ')[0], amount: item.amount, spent: parseFloat(item.spent) || 0, category, foodCategory: item.foodCategory || 'Other', deletedAt: new Date().toISOString() };
     });
     const newHistory = [...deletionHistory, ...newEntries];
     setDeletionHistory(newHistory);
@@ -234,6 +236,7 @@ export function Maininventory() {
       amount: item.amount,
       spent: parseFloat(item.spent) || 0,
       category: 'wasted',
+      foodCategory: item.foodCategory || 'Other',
       deletedAt: new Date().toISOString(),
     }));
     const newHistory = [...deletionHistory, ...newEntries];
@@ -262,6 +265,7 @@ export function Maininventory() {
       amount: item.amount,
       spent: parseFloat(item.spent) || 0,
       category: resolvedCategory,
+      foodCategory: item.foodCategory || 'Other',
       deletedAt: new Date().toISOString(),
     };
     const newHistory = [...deletionHistory, entry];
@@ -298,6 +302,7 @@ export function Maininventory() {
         amount: item.amount,
         spent: parseFloat(item.spent) || 0,
         category,
+        foodCategory: item.foodCategory || 'Other',
         deletedAt: new Date().toISOString(),
       };
     });
@@ -512,7 +517,7 @@ export function Maininventory() {
       spent: item.unit_price.toFixed(2),
       expiryDate: item.expiryDate,
       status: calculateStatus(item.expiryDate),
-      category: item.category,
+      foodCategory: item.category,
     }));
     const updated = [...inventory, ...newItems];
     setInventory(updated);
@@ -1066,86 +1071,87 @@ export function Maininventory() {
                     </button>
                   </div>
 
-                  {/* Non-pantry confirmation modal — rendered as fixed overlay */}
-                  {showNonPantryModal && (
-                    <>
-                      <div style={{
-                        position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.55)',
-                        backdropFilter: 'blur(2px)', zIndex: 1200,
-                      }} />
-                      <div style={{
-                        position: 'fixed', top: '50%', left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        background: '#fff', borderRadius: 18,
-                        padding: '28px 24px 22px', width: 'min(400px, calc(100vw - 32px))',
-                        boxShadow: '0 20px 60px rgba(0,0,0,0.25)', zIndex: 1201,
-                        maxHeight: '80vh', overflowY: 'auto',
-                      }}>
-                        <div style={{ fontSize: 32, textAlign: 'center', marginBottom: 10 }}>🧴</div>
-                        <div style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', textAlign: 'center', marginBottom: 6 }}>
-                          Not pantry items?
-                        </div>
-                        <div style={{ fontSize: 13, color: '#64748B', textAlign: 'center', marginBottom: 18, lineHeight: 1.5 }}>
-                          These items may not belong in your food pantry. Uncheck any you want to keep.
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
-                          {pdfItems.map((item, idx) => {
-                            if (!NON_PANTRY_CATEGORIES.has(item.category)) return null;
-                            const checked = nonPantryChecked.has(idx);
-                            return (
-                              <label key={idx} style={{
-                                display: 'flex', alignItems: 'center', gap: 12,
-                                background: checked ? '#FEF2F2' : '#F8FAFC',
-                                border: `1.5px solid ${checked ? '#FECACA' : '#E2E8F0'}`,
-                                borderRadius: 10, padding: '10px 14px', cursor: 'pointer',
-                                transition: 'all 150ms',
-                              }}>
-                                <input
-                                  type="checkbox"
-                                  checked={checked}
-                                  onChange={() => setNonPantryChecked(prev => {
-                                    const next = new Set(prev);
-                                    if (next.has(idx)) next.delete(idx); else next.add(idx);
-                                    return next;
-                                  })}
-                                  style={{ accentColor: '#EF4444', width: 16, height: 16, flexShrink: 0 }}
-                                />
-                                <div style={{ flex: 1, minWidth: 0 }}>
-                                  <div style={{ fontSize: 13, fontWeight: 600, color: '#0F172A' }}>{item.name}</div>
-                                  <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 1 }}>{item.category}</div>
-                                </div>
-                              </label>
-                            );
-                          })}
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                          <button
-                            onClick={() => handleNonPantryConfirm(nonPantryChecked)}
-                            style={{
-                              background: '#EF4444', color: '#fff', border: 'none',
-                              borderRadius: 10, padding: '11px', fontSize: 14,
-                              fontWeight: 700, cursor: 'pointer', width: '100%',
-                            }}
-                          >
-                            Remove checked & add rest
-                          </button>
-                          <button
-                            onClick={() => handleNonPantryConfirm(new Set())}
-                            style={{
-                              background: '#F1F5F9', color: '#475569', border: 'none',
-                              borderRadius: 10, padding: '11px', fontSize: 14,
-                              fontWeight: 600, cursor: 'pointer', width: '100%',
-                            }}
-                          >
-                            Add all anyway
-                          </button>
-                        </div>
-                      </div>
-                    </>
-                  )}
                 </>
               )}
             </div>
+          )}
+
+          {/* ── Non-Pantry Confirmation Modal ── */}
+          {showNonPantryModal && (
+            <>
+              <div style={{
+                position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.55)',
+                backdropFilter: 'blur(2px)', zIndex: 1200,
+              }} />
+              <div style={{
+                position: 'fixed', top: '50%', left: '50%',
+                transform: 'translate(-50%, -50%)',
+                background: '#fff', borderRadius: 18,
+                padding: '28px 24px 22px', width: 'min(400px, calc(100vw - 32px))',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.25)', zIndex: 1201,
+                maxHeight: '80vh', overflowY: 'auto',
+              }}>
+                <div style={{ fontSize: 32, textAlign: 'center', marginBottom: 10 }}>🧴</div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', textAlign: 'center', marginBottom: 6 }}>
+                  Not pantry items?
+                </div>
+                <div style={{ fontSize: 13, color: '#64748B', textAlign: 'center', marginBottom: 18, lineHeight: 1.5 }}>
+                  These items may not belong in your food pantry. Uncheck any you want to keep.
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
+                  {pdfItems.map((item, idx) => {
+                    if (!NON_PANTRY_CATEGORIES.has(item.category)) return null;
+                    const checked = nonPantryChecked.has(idx);
+                    return (
+                      <label key={idx} style={{
+                        display: 'flex', alignItems: 'center', gap: 12,
+                        background: checked ? '#FEF2F2' : '#F8FAFC',
+                        border: `1.5px solid ${checked ? '#FECACA' : '#E2E8F0'}`,
+                        borderRadius: 10, padding: '10px 14px', cursor: 'pointer',
+                        transition: 'all 150ms',
+                      }}>
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => setNonPantryChecked(prev => {
+                            const next = new Set(prev);
+                            if (next.has(idx)) next.delete(idx); else next.add(idx);
+                            return next;
+                          })}
+                          style={{ accentColor: '#EF4444', width: 16, height: 16, flexShrink: 0 }}
+                        />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: '#0F172A' }}>{item.name}</div>
+                          <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 1 }}>{item.category}</div>
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <button
+                    onClick={() => handleNonPantryConfirm(nonPantryChecked)}
+                    style={{
+                      background: '#EF4444', color: '#fff', border: 'none',
+                      borderRadius: 10, padding: '11px', fontSize: 14,
+                      fontWeight: 700, cursor: 'pointer', width: '100%',
+                    }}
+                  >
+                    Remove checked & add rest
+                  </button>
+                  <button
+                    onClick={() => handleNonPantryConfirm(new Set())}
+                    style={{
+                      background: '#F1F5F9', color: '#475569', border: 'none',
+                      borderRadius: 10, padding: '11px', fontSize: 14,
+                      fontWeight: 600, cursor: 'pointer', width: '100%',
+                    }}
+                  >
+                    Add all anyway
+                  </button>
+                </div>
+              </div>
+            </>
           )}
 
           {/* ── Scan Produce Popup ── */}
