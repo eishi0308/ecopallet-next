@@ -94,7 +94,7 @@ async def parse_receipt(file: UploadFile = File(...)):
 
     prompt = f"""You are a grocery expert. For each grocery item below, provide three things:
 1. A short clean display name (2-5 words max, no brand names, no store names like "Woolworths"/"Coles"/"Devondale", no weights or sizes) — e.g. "eggs", "mozzarella cheese", "olive oil", "broccoli", "chicken thighs", "toothpaste"
-2. The most specific category from ONLY this list: Fruit, Vegetable, Meat, Dairy, Drinks, Cooking, Bakery, Frozen, Pantry, Chilled, Health, Toiletries, Household, Baby, Pet
+2. The most specific category from ONLY this list: Fruit, Vegetable, Meat, Dairy, Drinks, Condiments, Bakery, Frozen, Pantry, Chilled, Health, Toiletries, Household, Baby, Pet
 3. How many days the item typically lasts after purchase when stored correctly at home
 
 Reply ONLY with a valid JSON array of objects in the same order as the items. No explanations, no markdown, just the JSON array.
@@ -116,7 +116,7 @@ Items:
         CATEGORY_DEFAULTS = {
             "Chilled": 7, "Dairy": 10, "Meat": 3, "Serviced": 3,
             "Fruit": 5, "Vegetable": 5, "Frozen": 90, "Bakery": 5, "Pantry": 180,
-            "Cooking": 180, "Drinks": 14, "Health": 365,
+            "Condiments": 180, "Drinks": 14, "Health": 365,
             "Toiletries": 365, "Household": 365,
         }
         ai_results = [

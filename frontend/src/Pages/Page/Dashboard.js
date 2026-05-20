@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import './dashboard.css';
-import { Doughnut } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Doughnut, Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 import { calculateStatus } from './inventory';
 import { motion } from 'framer-motion';
 
@@ -18,7 +18,38 @@ const cardFadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.32, ease: 'easeOut' } },
 };
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+
+function computeTrend(deletionHistory, period) {
+  const now = new Date();
+  const buckets = [];
+  if (period === 'weekly') {
+    for (let i = 7; i >= 0; i--) {
+      const end = new Date(now);
+      end.setDate(end.getDate() - i * 7);
+      end.setHours(23, 59, 59, 999);
+      const start = new Date(end);
+      start.setDate(start.getDate() - 6);
+      start.setHours(0, 0, 0, 0);
+      buckets.push({ start: new Date(start), end: new Date(end), label: i === 0 ? 'This wk' : `${i}w ago` });
+    }
+  } else {
+    for (let i = 5; i >= 0; i--) {
+      const start = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const end = new Date(now.getFullYear(), now.getMonth() - i + 1, 0, 23, 59, 59);
+      buckets.push({ start, end, label: start.toLocaleString('default', { month: 'short' }) });
+    }
+  }
+  return buckets.map(({ start, end, label }) => {
+    const items = deletionHistory.filter(item => {
+      const d = new Date(item.deletedAt);
+      return d >= start && d <= end;
+    });
+    const wasted = items.filter(i => i.category === 'wasted').reduce((s, i) => s + (parseFloat(i.spent) || 0), 0);
+    const saved  = items.filter(i => i.category === 'saved').reduce((s, i) => s + (parseFloat(i.spent) || 0), 0);
+    return { label, wasted: +wasted.toFixed(2), saved: +saved.toFixed(2) };
+  });
+}
 
 function computeMetrics(inventory, deletionHistory) {
   const sum = arr => arr.reduce((s, i) => s + (parseFloat(i.spent) || 0), 0);
@@ -56,11 +87,121 @@ function computeMetrics(inventory, deletionHistory) {
   };
 }
 
-const Dashboard = ({ inventory, deletionHistory }) => {
+const CATEGORY_COLORS = {
+  'Produce':    '#16A34A',
+  'Dairy':      '#2563EB',
+  'Meat':       '#DC2626',
+  'Seafood':    '#0891B2',
+  'Bakery':     '#D97706',
+  'Frozen':     '#0E7490',
+  'Beverages':  '#0284C7',
+  'Snacks':     '#EA580C',
+  'Pantry':     '#C2410C',
+  'Vegetable':  '#15803D',
+  'Fruit':      '#15803D',
+  'Condiments':    '#F97316',
+  'Drinks':     '#6D28D9',
+  'Health':     '#166534',
+  'Chilled':    '#0369A1',
+  'Serviced':   '#B91C1C',
+  'Toiletries': '#7E22CE',
+  'Household':  '#475569',
+  'Other':      '#94A3B8',
+};
+
+function computeCategoryBreakdown(inventory, deletionHistory) {
+  const map = {};
+  // Include current inventory items (in pantry)
+  inventory.forEach(item => {
+    const cat = item.foodCategory || item.category || 'Other';
+    if (!map[cat]) map[cat] = { wasted: 0, saved: 0, inPantry: 0 };
+    map[cat].inPantry += parseFloat(item.spent) || 0;
+  });
+  // Include history (wasted / saved)
+  deletionHistory.forEach(item => {
+    const cat = item.foodCategory || item.category || 'Other';
+    if (!map[cat]) map[cat] = { wasted: 0, saved: 0, inPantry: 0 };
+    if (item.category === 'wasted') map[cat].wasted += parseFloat(item.spent) || 0;
+    else map[cat].saved += parseFloat(item.spent) || 0;
+  });
+  return Object.entries(map)
+    .map(([cat, vals]) => ({
+      cat,
+      wasted:   +vals.wasted.toFixed(2),
+      saved:    +vals.saved.toFixed(2),
+      inPantry: +vals.inPantry.toFixed(2),
+      total:    +(vals.wasted + vals.saved + vals.inPantry).toFixed(2),
+    }))
+    .filter(d => d.total > 0)
+    .sort((a, b) => b.total - a.total);
+}
+
+const Dashboard = ({ inventory, deletionHistory, hideCategorySpending }) => {
+  const [trendPeriod, setTrendPeriod] = useState('weekly');
+
   const m = useMemo(
     () => computeMetrics(inventory, deletionHistory),
     [inventory, deletionHistory]
   );
+
+  const trendData = useMemo(
+    () => computeTrend(deletionHistory, trendPeriod),
+    [deletionHistory, trendPeriod]
+  );
+
+  const hasTrendData = trendData.some(d => d.wasted > 0 || d.saved > 0);
+
+  const categoryBreakdown = useMemo(
+    () => computeCategoryBreakdown(inventory, deletionHistory),
+    [inventory, deletionHistory]
+  );
+
+  const trendChartData = {
+    labels: trendData.map(d => d.label),
+    datasets: [
+      {
+        label: 'Wasted',
+        data: trendData.map(d => d.wasted),
+        backgroundColor: 'rgba(239,68,68,0.82)',
+        borderRadius: 6,
+        borderSkipped: false,
+      },
+      {
+        label: 'Saved',
+        data: trendData.map(d => d.saved),
+        backgroundColor: 'rgba(22,163,74,0.82)',
+        borderRadius: 6,
+        borderSkipped: false,
+      },
+    ],
+  };
+
+  const trendChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: { label: ctx => ` $${ctx.parsed.y.toFixed(2)}` },
+      },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { font: { size: 11, family: 'Inter, sans-serif' }, color: '#94A3B8' },
+      },
+      y: {
+        beginAtZero: true,
+        grid: { color: 'rgba(0,0,0,0.05)' },
+        ticks: {
+          font: { size: 11, family: 'Inter, sans-serif' },
+          color: '#94A3B8',
+          callback: v => `$${v}`,
+        },
+      },
+    },
+    animation: { duration: 500, easing: 'easeInOutQuart' },
+  };
 
   const hasValues = m.wastedCost > 0 || m.aboutToExpireCost > 0 || m.savedCost > 0;
   const maxQty    = m.top5.length > 0 ? m.top5[0].qty : 1;
@@ -225,6 +366,76 @@ const Dashboard = ({ inventory, deletionHistory }) => {
         </motion.div>
 
       </motion.div>
+
+      {/* ── Trend chart ── */}
+      <motion.div variants={cardFadeUp} className="dash-panel dash-trend-panel">
+        <div className="dash-trend-header">
+          <div>
+            <h3 className="dash-panel-title">Waste Trend</h3>
+            <p className="dash-panel-sub" style={{ margin: 0 }}>Wasted vs saved over time</p>
+          </div>
+          <div className="dash-trend-legend">
+            <span className="dash-trend-legend-dot dash-trend-legend-dot--wasted" />
+            <span className="dash-trend-legend-label">Wasted</span>
+            <span className="dash-trend-legend-dot dash-trend-legend-dot--saved" />
+            <span className="dash-trend-legend-label">Saved</span>
+            <div className="dash-toggle">
+              <button className={`dash-toggle-btn${trendPeriod === 'weekly' ? ' dash-toggle-btn--active' : ''}`} onClick={() => setTrendPeriod('weekly')}>W</button>
+              <button className={`dash-toggle-btn${trendPeriod === 'monthly' ? ' dash-toggle-btn--active' : ''}`} onClick={() => setTrendPeriod('monthly')}>M</button>
+            </div>
+          </div>
+        </div>
+        {hasTrendData ? (
+          <div className="dash-trend-chart">
+            <Bar data={trendChartData} options={trendChartOptions} />
+          </div>
+        ) : (
+          <div className="dash-empty-state">
+            <span className="dash-empty-icon">📈</span>
+            <p className="dash-empty-msg">No history yet — trend will appear as you remove items.</p>
+          </div>
+        )}
+      </motion.div>
+
+      {/* ── Category Breakdown ── */}
+      {!hideCategorySpending && (
+      <motion.div variants={cardFadeUp} className="dash-panel dash-cat-panel">
+        <h3 className="dash-panel-title">Spending by Category</h3>
+        <p className="dash-panel-sub" style={{ margin: '0 0 20px' }}>Which food types cost you the most</p>
+        {categoryBreakdown.length > 0 ? (
+          <div className="dash-cat-list">
+            {categoryBreakdown.map(({ cat, wasted, saved, inPantry, total }) => {
+              const color = CATEGORY_COLORS[cat] || CATEGORY_COLORS['Other'];
+              const maxTotal = categoryBreakdown[0].total;
+              return (
+                <div key={cat} className="dash-cat-row">
+                  <div className="dash-cat-meta">
+                    <span className="dash-cat-name" style={{ color }}>{cat}</span>
+                    <span className="dash-cat-total">${total.toFixed(2)}</span>
+                  </div>
+                  <div className="dash-cat-track">
+                    <div className="dash-cat-fill" style={{ width: `${(inPantry / maxTotal) * 100}%`, background: 'rgba(100,116,139,0.45)' }} />
+                    <div className="dash-cat-fill" style={{ width: `${(saved   / maxTotal) * 100}%`, background: 'rgba(22,163,74,0.75)' }} />
+                    <div className="dash-cat-fill" style={{ width: `${(wasted  / maxTotal) * 100}%`, background: 'rgba(239,68,68,0.75)' }} />
+                  </div>
+                  <div className="dash-cat-breakdown">
+                    {inPantry > 0 && <span className="dash-cat-chip dash-cat-chip--pantry">🧺 ${inPantry.toFixed(2)} in pantry</span>}
+                    {saved    > 0 && <span className="dash-cat-chip dash-cat-chip--saved">✅ ${saved.toFixed(2)} saved</span>}
+                    {wasted   > 0 && <span className="dash-cat-chip dash-cat-chip--wasted">🗑 ${wasted.toFixed(2)} wasted</span>}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="dash-empty-state">
+            <span className="dash-empty-icon">🏷️</span>
+            <p className="dash-empty-msg">No category data yet — scan a receipt to see your breakdown.</p>
+          </div>
+        )}
+      </motion.div>
+      )}
+
     </motion.div>
   );
 };

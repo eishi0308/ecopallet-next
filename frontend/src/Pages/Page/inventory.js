@@ -60,15 +60,20 @@ export function Maininventory() {
     const items = JSON.parse(stored);
     // Fix any duplicate IDs from old data
     const seenIds = new Set();
-    return items.map((item, i) => {
-      if (seenIds.has(item.id)) {
+    const migrated = items.map((item, i) => {
+      const m = (item.category === 'Cooking' || item.foodCategory === 'Cooking')
+        ? { ...item, category: item.category === 'Cooking' ? 'Condiments' : item.category, foodCategory: item.foodCategory === 'Cooking' ? 'Condiments' : item.foodCategory }
+        : item;
+      if (seenIds.has(m.id)) {
         const newId = Date.now() + i + Math.random();
         seenIds.add(newId);
-        return { ...item, id: newId };
+        return { ...m, id: newId };
       }
-      seenIds.add(item.id);
-      return item;
+      seenIds.add(m.id);
+      return m;
     });
+    localStorage.setItem('inventory', JSON.stringify(migrated));
+    return migrated;
   });
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [showScanProducePopup, setShowScanProducePopup] = useState(false);
@@ -119,9 +124,15 @@ export function Maininventory() {
   const currentInventory = filteredInventory.slice(startIndex, endIndex);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [confirmationShown, setConfirmationShown] = useState(false);
-  const [deletionHistory, setDeletionHistory] = useState(() =>
-    JSON.parse(localStorage.getItem('deletionHistory') || '[]')
-  );
+  const [deletionHistory, setDeletionHistory] = useState(() => {
+    const history = JSON.parse(localStorage.getItem('deletionHistory') || '[]').map(item =>
+      (item.foodCategory === 'Cooking' || item.category === 'Cooking')
+        ? { ...item, foodCategory: item.foodCategory === 'Cooking' ? 'Condiments' : item.foodCategory, category: item.category === 'Cooking' ? 'Condiments' : item.category }
+        : item
+    );
+    localStorage.setItem('deletionHistory', JSON.stringify(history));
+    return history;
+  });
   const [editingItem, setEditingItem] = useState(null);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showExpiredModal, setShowExpiredModal] = useState(false);
@@ -200,7 +211,7 @@ export function Maininventory() {
     const newEntries = zeroQtyItems.map(item => {
       const status = calculateStatus(item.expiryDate);
       const category = status.color === 'red' ? 'wasted' : 'saved';
-      return { id: Date.now() + Math.random(), name: item.name.split(' - ')[0], amount: item.amount, spent: parseFloat(item.spent) || 0, category, foodCategory: item.foodCategory || 'Other', deletedAt: new Date().toISOString() };
+      return { id: Date.now() + Math.random(), name: item.name.split(' - ')[0], amount: item.amount, spent: parseFloat(item.spent) || 0, category, foodCategory: item.foodCategory || item.category || 'Other', deletedAt: new Date().toISOString() };
     });
     const newHistory = [...deletionHistory, ...newEntries];
     setDeletionHistory(newHistory);
@@ -236,7 +247,7 @@ export function Maininventory() {
       amount: item.amount,
       spent: parseFloat(item.spent) || 0,
       category: 'wasted',
-      foodCategory: item.foodCategory || 'Other',
+      foodCategory: item.foodCategory || item.category || 'Other',
       deletedAt: new Date().toISOString(),
     }));
     const newHistory = [...deletionHistory, ...newEntries];
@@ -265,7 +276,7 @@ export function Maininventory() {
       amount: item.amount,
       spent: parseFloat(item.spent) || 0,
       category: resolvedCategory,
-      foodCategory: item.foodCategory || 'Other',
+      foodCategory: item.foodCategory || item.category || 'Other',
       deletedAt: new Date().toISOString(),
     };
     const newHistory = [...deletionHistory, entry];
@@ -302,7 +313,7 @@ export function Maininventory() {
         amount: item.amount,
         spent: parseFloat(item.spent) || 0,
         category,
-        foodCategory: item.foodCategory || 'Other',
+        foodCategory: item.foodCategory || item.category || 'Other',
         deletedAt: new Date().toISOString(),
       };
     });
@@ -919,7 +930,7 @@ export function Maininventory() {
                         'Vegetable':  { bg: '#F0FDF4', color: '#15803D', emoji: '🥦', accent: '#22C55E' },
                         'Bakery':     { bg: '#FFFBEB', color: '#B45309', emoji: '🍞', accent: '#F59E0B' },
                         'Pantry':     { bg: '#FFF7ED', color: '#C2410C', emoji: '🏺', accent: '#F97316' },
-                        'Cooking':    { bg: '#FFF7ED', color: '#C2410C', emoji: '🍳', accent: '#F97316' },
+                        'Condiments':    { bg: '#FFF7ED', color: '#C2410C', emoji: '🍳', accent: '#F97316' },
                         'Drinks':     { bg: '#F5F3FF', color: '#6D28D9', emoji: '🥤', accent: '#8B5CF6' },
                         'Health':     { bg: '#F0FDF4', color: '#166534', emoji: '💊', accent: '#16A34A' },
                         'Toiletries': { bg: '#FAF5FF', color: '#7E22CE', emoji: '🧴', accent: '#A855F7' },
