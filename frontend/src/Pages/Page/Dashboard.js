@@ -118,8 +118,10 @@ function computeCategoryBreakdown(inventory, deletionHistory) {
     map[cat].inPantry += parseFloat(item.spent) || 0;
   });
   // Include history (wasted / saved)
+  const STATUS_LABELS = new Set(['wasted', 'saved']);
   deletionHistory.forEach(item => {
-    const cat = item.foodCategory || item.category || 'Other';
+    const fallback = STATUS_LABELS.has(item.category) ? 'Other' : (item.category || 'Other');
+    const cat = item.foodCategory || fallback;
     if (!map[cat]) map[cat] = { wasted: 0, saved: 0, inPantry: 0 };
     if (item.category === 'wasted') map[cat].wasted += parseFloat(item.spent) || 0;
     else map[cat].saved += parseFloat(item.spent) || 0;
