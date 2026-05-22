@@ -707,7 +707,6 @@
 }
 .dash-cat-fill {
   height: 100%;
-  border-radius: 99px;
   transition: width 0.5s ease;
 }
 .dash-cat-breakdown {
