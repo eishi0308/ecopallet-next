@@ -416,9 +416,9 @@ const Dashboard = ({ inventory, deletionHistory, hideCategorySpending }) => {
                     <span className="dash-cat-total">${total.toFixed(2)}</span>
                   </div>
                   <div className="dash-cat-track">
-                    <div className="dash-cat-fill" style={{ width: `${(inPantry / maxTotal) * 100}%`, background: 'rgba(100,116,139,0.45)' }} />
-                    <div className="dash-cat-fill" style={{ width: `${(saved   / maxTotal) * 100}%`, background: 'rgba(22,163,74,0.75)' }} />
-                    <div className="dash-cat-fill" style={{ width: `${(wasted  / maxTotal) * 100}%`, background: 'rgba(239,68,68,0.75)' }} />
+                    <div className="dash-cat-fill" style={{ width: `${(inPantry / maxTotal) * 100}%`, background: `${color}BB` }} />
+                    <div className="dash-cat-fill" style={{ width: `${(saved   / maxTotal) * 100}%`, background: `${color}DD` }} />
+                    <div className="dash-cat-fill" style={{ width: `${(wasted  / maxTotal) * 100}%`, background: color }} />
                   </div>
                   <div className="dash-cat-breakdown">
                     {inPantry > 0 && <span className="dash-cat-chip dash-cat-chip--pantry">🧺 ${inPantry.toFixed(2)} in pantry</span>}

@@ -599,6 +599,132 @@
 .dash-metric--risk  .dash-metric-pct { color: #92400E; }
 .dash-metric-pct--saved { color: #166534; }
 
+/* ── Trend chart panel ── */
+.dash-trend-panel {
+  margin-top: 20px;
+}
+
+.dash-trend-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.dash-trend-legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dash-trend-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.dash-trend-legend-dot--wasted { background: rgba(239,68,68,0.82); }
+.dash-trend-legend-dot--saved  { background: rgba(22,163,74,0.82); }
+
+.dash-trend-legend-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748B;
+  margin-right: 6px;
+  font-family: 'Inter', sans-serif;
+}
+
+.dash-toggle {
+  display: flex;
+  background: #F1F5F9;
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.dash-toggle-btn {
+  padding: 5px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  background: transparent;
+  color: #94A3B8;
+  transition: all 150ms ease;
+  letter-spacing: 0.04em;
+}
+.dash-toggle-btn--active {
+  background: #fff;
+  color: #0F172A;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+}
+.dash-toggle-btn:not(.dash-toggle-btn--active):hover { color: #475569; }
+
+.dash-trend-chart {
+  height: 240px;
+  position: relative;
+}
+
+/* ── Category Breakdown ── */
+.dash-cat-panel {
+  margin-top: 20px;
+}
+.dash-cat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.dash-cat-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dash-cat-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dash-cat-name {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.dash-cat-total {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+.dash-cat-track {
+  height: 14px;
+  background: #F1F5F9;
+  border-radius: 99px;
+  overflow: hidden;
+  display: flex;
+}
+.dash-cat-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.5s ease;
+}
+.dash-cat-breakdown {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.dash-cat-chip {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+.dash-cat-chip--pantry { background: #F1F5F9; color: #475569; }
+.dash-cat-chip--saved  { background: #F0FDF4; color: #16A34A; }
+.dash-cat-chip--wasted { background: #FEF2F2; color: #DC2626; }
+
 /* ══════════════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════════════ */
