@@ -528,6 +528,7 @@ export function Maininventory() {
       spent: item.unit_price.toFixed(2),
       expiryDate: item.expiryDate,
       status: calculateStatus(item.expiryDate),
+      category: item.category,
       foodCategory: item.category,
     }));
     const updated = [...inventory, ...newItems];
