@@ -134,7 +134,7 @@ function computeCategoryBreakdown(inventory, deletionHistory) {
       inPantry: +vals.inPantry.toFixed(2),
       total:    +(vals.wasted + vals.saved + vals.inPantry).toFixed(2),
     }))
-    .filter(d => d.total > 0)
+    .filter(d => d.total > 0 && d.cat !== 'Other')
     .sort((a, b) => b.total - a.total);
 }
 
