@@ -4,6 +4,7 @@ import { Doughnut, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 import { calculateStatus } from './inventory';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
@@ -139,6 +140,7 @@ function computeCategoryBreakdown(inventory, deletionHistory) {
 }
 
 const Dashboard = ({ inventory, deletionHistory, hideCategorySpending }) => {
+  const navigate = useNavigate();
   const [trendPeriod, setTrendPeriod] = useState('weekly');
 
   const m = useMemo(
@@ -343,22 +345,31 @@ const Dashboard = ({ inventory, deletionHistory, hideCategorySpending }) => {
           <h3 className="dash-panel-title">Most Wasted Foods</h3>
           <p className="dash-panel-sub">Your repeat offenders — buy less or use faster</p>
           {m.top5.length > 0 ? (
-            <div className="dash-top5-list">
-              {m.top5.map(({ name, qty }, i) => (
-                <div key={name} className="dash-top5-row">
-                  <span className="dash-top5-rank">#{i + 1}</span>
-                  <div className="dash-top5-body">
-                    <div className="dash-top5-meta">
-                      <span className="dash-top5-name">{name}</span>
-                      <span className="dash-top5-qty">×{qty}</span>
-                    </div>
-                    <div className="dash-top5-track">
-                      <div className="dash-top5-fill" style={{ width: `${(qty / maxQty) * 100}%` }} />
+            <>
+              <div className="dash-top5-list">
+                {m.top5.map(({ name, qty }, i) => (
+                  <div key={name} className="dash-top5-row">
+                    <span className="dash-top5-rank">#{i + 1}</span>
+                    <div className="dash-top5-body">
+                      <div className="dash-top5-meta">
+                        <span className="dash-top5-name">{name}</span>
+                        <span className="dash-top5-qty">×{qty}</span>
+                      </div>
+                      <div className="dash-top5-track">
+                        <div className="dash-top5-fill" style={{ width: `${(qty / maxQty) * 100}%` }} />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+              <button
+                className="dash-top5-tips-btn"
+                onClick={() => navigate(`/tips?search=${encodeURIComponent(m.top5[0].name)}`)}
+              >
+                <span className="dash-top5-tips-btn-text">🌿 Learn preservation tips</span>
+                <span className="dash-top5-tips-btn-arrow">→</span>
+              </button>
+            </>
           ) : (
             <div className="dash-empty-state">
               <span className="dash-empty-icon">🌿</span>

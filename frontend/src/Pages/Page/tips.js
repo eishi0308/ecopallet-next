@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './tips.css';
 import tipsdata from './tips-data.json';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { calculateStatus } from './calculateStatus';
 import Fuse from 'fuse.js';
 
@@ -123,6 +123,7 @@ const TipsContent = ({ selectedResult }) => {
 
 
 export const Tips = () => {
+  const location = useLocation();
   const [showInitialContent, setShowInitialContent] = useState(true);
   const searchResultsRef = useRef(null);
 
@@ -232,6 +233,12 @@ export const Tips = () => {
       setSearchPerformed(false);
     }
   }, [searchPerformed, searchResultsRef]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const query = params.get('search');
+    if (query) handleSearch(query);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 
   function generateCombinations(keywords) {
