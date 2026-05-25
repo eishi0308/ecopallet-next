@@ -11,6 +11,9 @@
   margin-top: 40px;
   padding-bottom: 64px;
   font-family: 'Inter', -apple-system, sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 /* ── Dashboard header ── */
@@ -135,6 +138,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .dash-panel {
@@ -143,6 +148,8 @@
   border-radius: 20px;
   box-shadow: 0 4px 24px rgba(15,23,42,0.07), 0 1px 4px rgba(15,23,42,0.04);
   padding: 32px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .dash-panel-title {
@@ -171,7 +178,9 @@
   position: relative;
   width: 300px;
   height: 300px;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .dash-donut-center {
@@ -217,6 +226,9 @@
   padding: 14px 16px;
   border: 1px solid rgba(0,0,0,0.04);
   transition: transform 150ms ease, box-shadow 150ms ease;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 .dash-legend-row:hover {
   transform: translateX(3px);
@@ -272,7 +284,7 @@
   letter-spacing: 0.02em;
 }
 
-.dash-top5-body { flex: 1; min-width: 0; }
+.dash-top5-body { flex: 1; min-width: 0; overflow: hidden; }
 
 .dash-top5-meta {
   display: flex;
@@ -525,6 +537,7 @@
   position: relative;
   overflow: hidden;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
+  min-width: 0;
 }
 .dash-metric-card:hover {
   transform: translateY(-3px);
@@ -779,12 +792,10 @@
 }
 
 @media (max-width: 900px) {
-  #dashboard-section { padding: 0 20px; }
   .dash { margin-top: 32px; }
 }
 
 @media (max-width: 640px) {
-  #dashboard-section { padding: 0 20px; }
   .dash { margin-top: 24px; padding-bottom: 32px; }
   .dash-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .dash-header { flex-direction: column; }
@@ -794,6 +805,53 @@
   .dash-hero-stat { flex: 1; padding: 14px 16px; }
   .dash-hero-divider { width: 1px; height: auto; }
   .dash-two-by-two { grid-template-columns: 1fr; }
-  .dash-metric-card { padding: 20px; }
-  .dash-metric-amount { font-size: 2rem; }
+
+  /* Panels — reduce padding so content fits within mobile viewport */
+  .dash-panel { padding: 20px 14px; box-sizing: border-box; width: 100%; }
+  .dash-metric-card { padding: 18px 14px; }
+  .dash-metric-amount { font-size: 1.8rem; }
+  .dash-metric-pct { font-size: 1.8rem; }
+
+  /* Spending Breakdown donut — scale to available width */
+  /* Available width = 100vw - App padding (40px) - panel padding (28px) */
+  .dash-donut-canvas {
+    width: min(240px, calc(100vw - 68px));
+    height: min(240px, calc(100vw - 68px));
+  }
+  .dash-donut-pct { font-size: 2.2rem; }
+  .dash-donut-wrap { width: 100%; }
+
+  /* Legend rows — compact on mobile */
+  .dash-legend { width: 100%; }
+  .dash-legend-row { padding: 10px 12px; gap: 8px; }
+  .dash-legend-val { font-size: 14px; }
+
+  /* Most Wasted Foods */
+  .dash-top5-tips-btn { padding: 12px 14px; font-size: 13px; }
+  .dash-top5-name { font-size: 13px; }
+
+  /* Category chips — wrap tightly */
+  .dash-cat-chip { font-size: 10px; padding: 2px 6px; }
+
+  /* Trend header — stack on very small screens */
+  .dash-trend-header { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 390px) {
+  /* Extra-small phones (iPhone SE 320px, older Androids) */
+  .dash-panel { padding: 16px 10px; }
+  .dash-metric-card { padding: 14px 10px; }
+  .dash-metric-amount { font-size: 1.5rem; }
+  .dash-metric-pct { font-size: 1.5rem; }
+  .dash-panel-title { font-size: 15px; }
+
+  /* Donut canvas: 100vw - App padding (40px) - panel padding (20px) = 100vw - 60px */
+  .dash-donut-canvas {
+    width: calc(100vw - 60px);
+    height: calc(100vw - 60px);
+  }
+  .dash-donut-pct { font-size: 1.8rem; }
+  .dash-legend-row { padding: 8px 10px; }
+  .dash-legend-val { font-size: 13px; }
+  .dash-cat-breakdown { gap: 4px; }
 }
