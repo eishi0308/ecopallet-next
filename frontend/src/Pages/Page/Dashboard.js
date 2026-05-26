@@ -366,7 +366,7 @@ const Dashboard = ({ inventory, deletionHistory, hideCategorySpending }) => {
                 className="dash-top5-tips-btn"
                 onClick={() => navigate(`/tips?search=${encodeURIComponent(m.top5[0].name)}`)}
               >
-                <span className="dash-top5-tips-btn-text">🌿 Learn preservation tips</span>
+                <span className="dash-top5-tips-btn-text">🌿 Get tips for these foods</span>
                 <span className="dash-top5-tips-btn-arrow">→</span>
               </button>
             </>
