@@ -1735,7 +1735,7 @@
   .recipes-container { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 760px) {
-  .recipe-page { padding: 20px 16px 40px; }
+  .recipe-page { padding: 16px 16px 40px; }
   .recipe-hero { padding: 16px 16px; margin-bottom: 12px; border-radius: 14px; }
   .recipe-hero-eyebrow { font-size: 10px; margin-bottom: 6px; }
   .recipe-hero-title { font-size: 1.2rem; margin-bottom: 6px; }

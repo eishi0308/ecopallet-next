@@ -318,8 +318,9 @@ export const Tips = () => {
   };
 
   return (
+    <>
+    <Toaster position="top-center" richColors />
     <div className="tips-whole-page">
-      <Toaster position="top-center" richColors />
 
       {/* ── Hero ── */}
       <motion.div
@@ -510,5 +511,6 @@ export const Tips = () => {
         )}
       </AnimatePresence>
     </div>
+    </>
   );
 };

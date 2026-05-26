@@ -2132,7 +2132,7 @@ header { display: none; }
   .inventory-table-container table td:nth-child(n) { width: auto; }
 }
 @media (max-width: 640px) {
-  .App { padding: 40px 20px 32px !important; }
+  .App { padding: 16px 20px 32px !important; }
 
   /* Tabs — full width on mobile */
   .inv-tabs { width: 100%; }
@@ -2146,7 +2146,7 @@ header { display: none; }
     flex-direction: column;
     align-items: flex-start;
     padding: 16px 16px;
-    margin-top: 12px;
+    margin-top: 0;
     margin-bottom: 12px;
     border-radius: 14px;
     gap: 8px;

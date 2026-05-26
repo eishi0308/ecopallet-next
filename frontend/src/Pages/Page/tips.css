@@ -904,7 +904,7 @@
   .tips-search-area input[type="text"] { width: 100%; }
   .tips-panel-header { flex-direction: column; }
 }
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .tips-whole-page { padding: 16px 12px 48px; gap: 16px; }
   .category-tips-container { grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .category-tip-item { aspect-ratio: 1/1; border-radius: 12px; }
