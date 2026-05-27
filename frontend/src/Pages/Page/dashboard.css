@@ -804,7 +804,11 @@
   .dash-waste-hero-badge { flex-direction: row; min-width: unset; width: 100%; }
   .dash-hero-stat { flex: 1; padding: 14px 16px; }
   .dash-hero-divider { width: 1px; height: auto; }
-  .dash-two-by-two { grid-template-columns: 1fr; }
+  .dash-two-by-two { grid-template-columns: 1fr 1fr; }
+  .dash-two-by-two > :nth-child(1),
+  .dash-two-by-two > :nth-child(2) { grid-column: span 2; }
+  .dash-two-by-two > :nth-child(3),
+  .dash-two-by-two > :nth-child(4) { grid-column: span 1; }
 
   /* Panels — reduce padding so content fits within mobile viewport */
   .dash-panel { padding: 20px 14px; box-sizing: border-box; width: 100%; }
