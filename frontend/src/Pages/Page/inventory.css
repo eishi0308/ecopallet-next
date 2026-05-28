@@ -442,8 +442,6 @@ header { display: none; }
   gap: 8px;
 }
 
-/* Hide Scan Produce on desktop — kept in mobile layout */
-.inv-toolbar-group > button:nth-child(3) { display: none; }
 
 /* Scan Receipt — dominant wide CTA */
 .inv-scan-cta { min-width: 280px; justify-content: center; height: 58px; font-size: 17px !important; }
@@ -2169,7 +2167,6 @@ header { display: none; }
 
   /* Left group: Scan Receipt full width, Add Item full width below */
   .inv-toolbar-group { flex-direction: column; gap: 8px; }
-  .inv-toolbar-group > button:nth-child(3) { display: none; } /* Hide Scan Produce on mobile */
   .inv-scan-cta { width: 100%; justify-content: center; font-size: 16px !important; font-weight: 800 !important; padding: 0 20px !important; height: 48px; }
   .inv-toolbar-group .inv-action-btn:not(.inv-scan-cta) { width: 100%; justify-content: center; font-size: 15px; font-weight: 800; padding: 0 16px; height: 44px; }
 

@@ -5,7 +5,6 @@ import './inventory.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Dashboard from './Dashboard';
-import samimg2 from "./2.jpeg";
 import samplePdf from "./woolworth_sample_ereceipt.pdf";
 import { motion } from 'framer-motion';
 
@@ -76,7 +75,6 @@ export function Maininventory() {
     return migrated;
   });
   const [showAddPopup, setShowAddPopup] = useState(false);
-  const [showScanProducePopup, setShowScanProducePopup] = useState(false);
   const [showScanPackagePopup, setShowScanPackagePopup] = useState(false);
   const [showPdfReceiptPopup, setShowPdfReceiptPopup] = useState(false);
   const [pdfFiles, setPdfFiles] = useState([]);
@@ -90,10 +88,6 @@ export function Maininventory() {
   const NON_PANTRY_CATEGORIES = new Set(['Toiletries', 'Household', 'Baby', 'Pet']);
   const [expiryPlaceholder, setExpiryPlaceholder] = useState(new Date());
   const [newItem, setNewItem] = useState({ name: '', amount: '', spent: '', expiryDate: '', status: '' });
-  const [msg1, setMsg1] = useState('');
-  const [file1, setFile1] = useState(null);
-  const [imgSrc1, setImgSrc1] = useState('');
-  const [extractedText1, setExtractedText1] = useState('');
   const [msg2, setMsg2] = useState('');
   const [file2, setFile2] = useState(null);
   const [imgSrc2, setImgSrc2] = useState('');
@@ -122,7 +116,6 @@ export function Maininventory() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, filteredInventory.length);
   const currentInventory = filteredInventory.slice(startIndex, endIndex);
-  const [uploadingImage, setUploadingImage] = useState(false);
   const [confirmationShown, setConfirmationShown] = useState(false);
   const [deletionHistory, setDeletionHistory] = useState(() => {
     const history = JSON.parse(localStorage.getItem('deletionHistory') || '[]').map(item =>
@@ -326,10 +319,9 @@ export function Maininventory() {
     showToast(`${ids.length} item${ids.length !== 1 ? 's' : ''} deleted.`, 'danger');
   };
 
-  const isPopupActive = showAddPopup || showScanProducePopup || showScanPackagePopup || showPdfReceiptPopup;
+  const isPopupActive = showAddPopup || showScanPackagePopup || showPdfReceiptPopup;
   const closeAllPopups = () => {
     setShowAddPopup(false);
-    setShowScanProducePopup(false);
     setShowScanPackagePopup(false);
     setShowPdfReceiptPopup(false);
     setPdfItems([]);
@@ -365,7 +357,6 @@ export function Maininventory() {
 
   const togglePopup = (popupType) => {
     setShowAddPopup(false);
-    setShowScanProducePopup(false);
     setShowScanPackagePopup(false);
     setShowStatusModal(false);
     switch (popupType) {
@@ -379,7 +370,6 @@ export function Maininventory() {
         }
         setShowAddPopup(!showAddPopup);
         break;
-      case 'produce':  setShowScanProducePopup(!showScanProducePopup);  break;
       case 'package':  setShowScanPackagePopup(!showScanPackagePopup);  break;
       case 'statusInfo': setShowStatusModal(!showStatusModal); break;
       default: break;
@@ -394,13 +384,13 @@ export function Maininventory() {
   const handleAddItem = () => {
     const specialCharsRegex = /[!@#$%^&*(),.?":{}|<>]/;
     const specialCharsExceptDot = /[!@#$%^&*(),?":{}|<>]/;
-    if (!newItem.name || !newItem.amount || !newItem.spent) { alert('Please fill in all the fields'); return; }
-    if (specialCharsRegex.test(newItem.name) || specialCharsRegex.test(newItem.amount)) { alert('Special characters are not allowed.'); return; }
-    if (specialCharsExceptDot.test(newItem.spent)) { alert('Special characters except decimal are not allowed.'); return; }
+    if (!newItem.name || !newItem.amount || !newItem.spent) { showToast('Please fill in all the fields.', 'warning'); return; }
+    if (specialCharsRegex.test(newItem.name) || specialCharsRegex.test(newItem.amount)) { showToast('Special characters are not allowed.', 'warning'); return; }
+    if (specialCharsExceptDot.test(newItem.spent)) { showToast('Special characters except decimal are not allowed.', 'warning'); return; }
     const amount = parseFloat(newItem.amount);
-    if (isNaN(amount) || amount <= 0) { alert('Please enter a valid quantity'); return; }
+    if (isNaN(amount) || amount <= 0) { showToast('Please enter a valid quantity.', 'warning'); return; }
     const spent = parseFloat(newItem.spent);
-    if (isNaN(spent) || spent <= 0) { alert('Please enter a valid price'); return; }
+    if (isNaN(spent) || spent <= 0) { showToast('Please enter a valid price.', 'warning'); return; }
     let expiryDate = newItem.expiryDate || new Date().toLocaleDateString('en-GB');
     const formattedSpent = parseFloat(newItem.spent).toFixed(2);
     const status = calculateStatus(expiryDate);
@@ -426,37 +416,7 @@ export function Maininventory() {
     setInventory(prev => [...prev, newInventoryItem]);
   };
 
-  const handleFileChange1 = (e) => setFile1(e.target.files[0]);
   const handleFileChange2 = (e) => setFile2(e.target.files[0]);
-
-  const handleUpload2 = async (e) => {
-    e.preventDefault();
-    setUploadingImage(true);
-    if (!file1) { alert('Please select a file.'); return; }
-    const formData = new FormData();
-    formData.append('file1', file1);
-    try {
-      const response = await fetch('https://rohan2101new.pythonanywhere.com/pred', { method: 'POST', body: formData });
-      setUploadingImage(true);
-      const data = await response.json();
-      setImgSrc1(data.imgSrc1); setExtractedText1(data.extracted_text1); setMsg1(data.msg1);
-      const daysToAdd = parseInt(data.msg1, 10);
-      const currentDate = new Date();
-      currentDate.setDate(currentDate.getDate() + daysToAdd);
-      const formattedDate = `${currentDate.getDate()} ${new Intl.DateTimeFormat('en', { month: 'long' }).format(currentDate)} ${currentDate.getFullYear()}`;
-      setNewItem(prev => ({ ...prev, name: '', amount: '', spent: '', expiryDate: data.extracted_text2, status: '' }));
-      if (extractedText1 !== '' || msg1 !== '') {
-        populateItems(data.extracted_text1, '', '', formattedDate, '');
-        setShowScanProducePopup(false);
-        setUploadingImage(false);
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      alert('Error reading image data, try another image.');
-      setMsg1('Failed to upload image');
-      setUploadingImage(false);
-    }
-  };
 
   const handleUpload3 = async (e) => {
     e.preventDefault();
@@ -473,12 +433,12 @@ export function Maininventory() {
         if (isNaN(date.getTime())) { console.error("Invalid date format"); return; }
         const formattedDate = date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
         populateItems('', '', '', formattedDate, '');
-        alert("Successfully scanned the image!");
+        showToast('Image scanned successfully!', 'success');
         togglePopup('package');
       }
     } catch (error) {
       console.error('Error uploading image:', error);
-      alert('Failed to upload image');
+      showToast('Failed to upload image — please try again.', 'danger');
     }
   };
 
@@ -652,9 +612,6 @@ export function Maininventory() {
               </button>
               <button className="inv-action-btn" onClick={() => togglePopup('add')} disabled={editingItem !== null}>
                 + Add Item
-              </button>
-              <button className="inv-action-btn" onClick={() => togglePopup('produce')} disabled={editingItem !== null}>
-                🌿 Scan Produce
               </button>
             </div>
 
@@ -1166,23 +1123,6 @@ export function Maininventory() {
             </>
           )}
 
-          {/* ── Scan Produce Popup ── */}
-          {showScanProducePopup && (
-            <div className="popup">
-              <h2>Scan Produce</h2>
-              {uploadingImage && <div className="loading-overlay">Loading…</div>}
-              <div className="scan-options">
-                <form id="uploadFormProduce" onSubmit={handleUpload2} encType="multipart/form-data">
-                  <input type="file" name="file1" onChange={handleFileChange1} />
-                  <input type="submit" value="Upload" />
-                </form>
-                {imgSrc1 && <img src={imgSrc1} alt="Uploaded" />}
-                <img src={samimg2} alt="Sample" width="25" height="25" />
-                <a href={samimg2} download> Download Sample Image</a>
-              </div>
-              <button className="popup-cancel-btn" onClick={() => togglePopup('produce')}>Cancel</button>
-            </div>
-          )}
 
           {/* ── Pagination ── */}
           {totalPages > 1 && (
