@@ -61,7 +61,6 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
   const [uploadingImage, setUploadingImage] = useState(false);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
-  const [validationError, setValidationError] = useState(null);
 
   const toggleSortingOrder = () => setSortingOrder(o => o === 'asc' ? 'desc' : 'asc');
 
@@ -179,18 +178,18 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
     const specialCharsRegex = /[!@#$%^&*(),.?":{}|<>]/;
     const specialCharsExceptDot = /[!@#$%^&*(),?":{}|<>]/;
     if (!updatedValues.name || !updatedValues.amount || !updatedValues.spent || !updatedValues.expiryDate) {
-      setValidationError('Please fill in all the fields.'); return;
+      alert('Please fill in all the fields'); return;
     }
     if (specialCharsRegex.test(updatedValues.name) || specialCharsRegex.test(updatedValues.amount)) {
-      setValidationError('Special characters are not allowed.'); return;
+      alert('Special characters are not allowed.'); return;
     }
     if (specialCharsExceptDot.test(updatedValues.spent)) {
-      setValidationError('Only numbers and a decimal point are allowed for price.'); return;
+      alert('Special characters except decimal are not allowed.'); return;
     }
     const amount = parseFloat(updatedValues.amount);
-    if (isNaN(amount) || amount <= 0) { setValidationError('Please enter a valid quantity.'); return; }
+    if (isNaN(amount) || amount <= 0) { alert('Please enter a valid amount'); return; }
     const spent = parseFloat(updatedValues.spent);
-    if (isNaN(spent) || spent <= 0) { setValidationError('Please enter a valid price.'); return; }
+    if (isNaN(spent) || spent <= 0) { alert('Please enter a valid spent amount'); return; }
     const formattedSpent = parseFloat(updatedValues.spent).toFixed(2);
     const formattedExpiryDate = `${updatedValues.expiryDate.getDate()} ${getMonthName(updatedValues.expiryDate.getMonth())} ${updatedValues.expiryDate.getFullYear()}`;
     onEdit(id, { ...updatedValues, amount, spent: formattedSpent, expiryDate: formattedExpiryDate });
@@ -204,8 +203,8 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
     setItemToDelete(id);
   };
 
-  const handleDelete = (category) => {
-    onDelete(itemToDelete, category);
+  const handleDelete = () => {
+    onDelete(itemToDelete);
     setShowDeleteConfirmation(false);
     setItemToDelete(null);
   };
@@ -270,13 +269,7 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
                 <div className="inv-card-field inv-card-field--expiry">
                   <span className="inv-card-field-label">Expiry</span>
                   {isEditing
-                    ? <DatePicker selected={updatedValues.expiryDate} onChange={handleDateChange} dateFormat="dd MMM yyyy" className="date-picker edit-date-picker" popperPlacement="bottom-start" portalId="root" fixedHeight renderCustomHeader={({ date, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
-                        <div className="dp-header">
-                          <button className="dp-nav-btn" onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>‹</button>
-                          <span className="dp-header-label">{date.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
-                          <button className="dp-nav-btn" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>›</button>
-                        </div>
-                      )} />
+                    ? <DatePicker selected={updatedValues.expiryDate} onChange={handleDateChange} dateFormat="dd MMM yyyy" className="date-picker edit-date-picker" popperPlacement="bottom-start" portalId="root" />
                     : <span className="inv-card-field-value">{item.expiryDate}</span>
                   }
                 </div>
@@ -327,19 +320,17 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
                 aria-label="Select all"
               />
             </th>
-            <th>🏷️ Name</th>
-            <th>🔢 Qty</th>
+            <th>Name</th>
+            <th>Qty</th>
             <th>
-              <span className="th-status-wrap">
-                🚦 Status
-                <button onClick={toggleSortingOrder} className="sort-button">
-                  {sortingOrder === 'asc' ? '↑' : '↓'}
-                </button>
-              </span>
+              Status
+              <button onClick={toggleSortingOrder} className="sort-button">
+                {sortingOrder === 'asc' ? '↑' : '↓'}
+              </button>
             </th>
-            <th>📅 Expiry Date</th>
-            <th>💰 Price</th>
-            <th>⚙️ Actions</th>
+            <th>Expiry Date</th>
+            <th>Price $</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -396,14 +387,6 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
                           className="date-picker edit-date-picker"
                           popperPlacement="bottom-start"
                           portalId="root"
-                          fixedHeight
-                          renderCustomHeader={({ date, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
-                            <div className="dp-header">
-                              <button className="dp-nav-btn" onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>‹</button>
-                              <span className="dp-header-label">{date.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
-                              <button className="dp-nav-btn" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>›</button>
-                            </div>
-                          )}
                         />
                       : item.expiryDate}
                   </div>
@@ -485,34 +468,13 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
         <>
           <div className="modal-overlay" onClick={cancelDelete} />
           <div className="delete-confirmation-popup">
-            <div className="del-confirm-icon">🤔</div>
-            <h2 className="del-confirm-title">How did this item go?</h2>
-            <p className="del-confirm-sub">Helps track your food habits &amp; savings.</p>
-            <div className="del-confirm-choice">
-              <button className="del-choice-btn del-choice-saved" onClick={() => handleDelete('saved')}>
-                <span className="del-choice-emoji">✅</span>
-                <span className="del-choice-label">Used it up</span>
-                <span className="del-choice-hint">Counts as saved</span>
-              </button>
-              <button className="del-choice-btn del-choice-wasted" onClick={() => handleDelete('wasted')}>
-                <span className="del-choice-emoji">🗑</span>
-                <span className="del-choice-label">Went to waste</span>
-                <span className="del-choice-hint">Counts as wasted</span>
-              </button>
+            <div className="del-confirm-icon">🗑️</div>
+            <h2 className="del-confirm-title">Delete this item?</h2>
+            <p className="del-confirm-sub">This action cannot be undone.</p>
+            <div className="del-confirm-actions">
+              <button className="del-confirm-btn-delete" onClick={handleDelete}>Yes, delete</button>
+              <button className="del-confirm-btn-cancel" onClick={cancelDelete}>Cancel</button>
             </div>
-            <button className="del-confirm-btn-cancel" onClick={cancelDelete}>Cancel</button>
-          </div>
-        </>
-      )}
-
-      {validationError && (
-        <>
-          <div className="modal-overlay" onClick={() => setValidationError(null)} />
-          <div className="validation-modal">
-            <div className="validation-modal-icon">⚠️</div>
-            <h2 className="validation-modal-title">Oops!</h2>
-            <p className="validation-modal-message">{validationError}</p>
-            <button className="validation-modal-btn" onClick={() => setValidationError(null)}>Got it</button>
           </div>
         </>
       )}
