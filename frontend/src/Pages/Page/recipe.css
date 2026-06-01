@@ -6,6 +6,38 @@
   padding: 0 0 40px;
 }
 
+/* ── No results empty state (generated recipes) ── */
+.no-recipes-generated-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 24px;
+  text-align: center;
+  width: 100%;
+}
+
+.no-recipes-generated-icon {
+  font-size: 48px;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.no-recipes-generated-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-1, #0F172A);
+}
+
+.no-recipes-generated-sub {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-2, #475569);
+  max-width: 320px;
+  line-height: 1.6;
+}
+
 /* ── Out-of-stock popup (matches delete-confirmation-popup design tokens) ── */
 @keyframes oosPopIn {
   from { opacity: 0; transform: translate(-50%, -50%) scale(0.88); }

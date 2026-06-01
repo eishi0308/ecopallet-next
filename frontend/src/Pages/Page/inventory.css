@@ -1409,6 +1409,18 @@ header { display: none; }
 
 .form-actions { display: flex; gap: 10px; margin-top: 8px; }
 
+.scan-error-msg {
+  margin: 8px 0 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--danger-light, #FEF2F2);
+  border: 1px solid rgba(239,68,68,0.25);
+  color: var(--danger, #EF4444);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
 .popup .scan-options {
   display: flex;
   flex-direction: column;

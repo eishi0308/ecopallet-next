@@ -110,6 +110,7 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
   const handleUpload = async (e) => {
     e.preventDefault();
     setUploadingImage(true);
+    setMsg2('');
     const formData = new FormData();
     formData.append('file2', file2);
     try {
@@ -117,11 +118,14 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
       const data = await response.json();
       setImgSrc2(data.imgSrc2);
       setExtractedText2(data.extracted_text2);
-      setMsg2('Image uploaded successfully!');
       let newExpiryDate;
       if (data.extracted_text2) {
         const date = new Date(data.extracted_text2);
-        if (isNaN(date.getTime())) { console.error("Invalid date format"); return; }
+        if (isNaN(date.getTime())) {
+          setMsg2('Could not read a valid date from the image. Please try another.');
+          setUploadingImage(false);
+          return;
+        }
         newExpiryDate = date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
       } else {
         newExpiryDate = '1 Jan 2025';
@@ -132,12 +136,12 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
         updatedInventory[index] = { ...updatedInventory[index], expiryDate: newExpiryDate };
         onEdit(scanningItemId, updatedInventory[index]);
       }
+      setShowScanExpiryPopup(false);
     } catch (error) {
       console.error('Error uploading image:', error);
-      setMsg2(error instanceof TypeError ? 'Could not read image, please try another' : 'Something went wrong, please try again');
+      setMsg2(error instanceof TypeError ? 'Could not read image, please try another.' : 'Something went wrong, please try again.');
     } finally {
       setUploadingImage(false);
-      setShowScanExpiryPopup(false);
     }
   };
 
@@ -460,6 +464,7 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
             <img src={samimg3} alt="Sample" width="25" height="25" />
             <a href={samimg3} download> Download Sample Image</a>
           </div>
+          {msg2 && <p className="scan-error-msg">{msg2}</p>}
           <button className="popup-cancel-btn" onClick={() => setShowScanExpiryPopup(false)}>Cancel</button>
         </div>
       )}

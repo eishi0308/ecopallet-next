@@ -8,6 +8,7 @@ import { RecipeCard } from './RecipeCard';
 import { SRecipeCard } from './SRecipeCard';
 import { calculateStatus } from './calculateStatus';
 import { motion } from 'framer-motion';
+import { toast, Toaster } from 'sonner';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
@@ -109,6 +110,7 @@ export const Recipes = () => {
       setRecipes(recipesWithIngredients);
     } catch (error) {
       console.error("Error fetching recipes:", error.message);
+      toast.error('Could not fetch recipes. Please check your connection and try again.');
     } finally {
       setIsGenerating(false);
     }
@@ -195,6 +197,7 @@ export const Recipes = () => {
         setsRecipes(recipesWithIngredients);
       } catch (error) {
         console.error("Error fetching inventory recipes:", error.message);
+        toast.error('Could not load recipe suggestions. Please try again later.');
       } finally {
         setSLoading(false);
       }
@@ -203,12 +206,15 @@ export const Recipes = () => {
     if (inventory.length > 0) fetchRecipesFromInventory();
   }, [inventory]);
 
+  const visibleRecipes = recipes.filter(r => r.image && r.analyzedInstructions?.length > 0);
+
   const expiringIngredients = srecipes.length > 0
     ? srecipes[0].searchedIngredients.split(',').map(s => s.trim()).filter(Boolean)
     : [];
 
   return (
     <div className="recipe-page">
+      <Toaster position="top-center" richColors />
 
       {/* ── Hero ── */}
       <motion.div className="recipe-hero" variants={fadeUp} initial="hidden" animate="visible">
@@ -371,13 +377,17 @@ export const Recipes = () => {
                 </div>
               </div>
             ))
-          ) : (
-            recipes.map((recipe, index) => (
-              recipe.image && recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0 && (
-                <RecipeCard key={index} recipe={recipe} finalizeInventory={finalizeInventory} />
-              )
+          ) : visibleRecipes.length > 0 ? (
+            visibleRecipes.map((recipe, index) => (
+              <RecipeCard key={index} recipe={recipe} finalizeInventory={finalizeInventory} />
             ))
-          )}
+          ) : recipes.length > 0 ? (
+            <div className="no-recipes-generated-empty">
+              <span className="no-recipes-generated-icon">🍽️</span>
+              <p className="no-recipes-generated-title">No complete recipes found</p>
+              <p className="no-recipes-generated-sub">Try different ingredients or a more general search term.</p>
+            </div>
+          ) : null}
         </div>
       </motion.div>
 

@@ -291,8 +291,8 @@ const AppMockup = () => (
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 3.0, ...EASE_SPRING }}
     >
-      <span className="mock-badge-icon">💰</span>
-      <span className="mock-badge-text">Saved $24 this week</span>
+      <span className="mock-badge-icon">✅</span>
+      <span className="mock-badge-text">Nothing expired!</span>
     </motion.div>
   </motion.div>
 );
@@ -324,9 +324,9 @@ const HOW_STEPS = [
     num: "03",
     icon: "🍽",
     title: "Cook & Save Money",
-    desc: "Recipes matched to your soonest-expiring items. Cook it, don't trash it — save $1,500 a year.",
+    desc: "Recipes matched to your soonest-expiring items. Cook it before it expires — make better use of what you already buy.",
     accentColor: "#7C3AED",
-    tag: "$1,500/yr average",
+    tag: "Reduce food waste",
     extra: "spin",
   },
 ];
@@ -572,7 +572,7 @@ const FeaturesSection = () => {
               <span className="bento-eyebrow">Insights</span>
               <h3 className="bento-title">Waste Analytics</h3>
               <p className="bento-body">
-                See exactly how much you're saving each week. Watch your waste trend downward.
+                Know what's in your pantry at a glance. See what's expiring soon and plan ahead.
               </p>
               <div className="bento-chart">
                 {[42, 56, 35, 68, 52, 80, 95].map((h, i) => (
@@ -600,18 +600,29 @@ const FeaturesSection = () => {
           {/* ── E · Savings ── */}
           <motion.div className="bento-slot bento-slot--savings" variants={cardReveal} transition={{ delay: 0.4 }}>
             <TiltCard className="bento-card bento-card--savings">
-              <span className="bento-eyebrow">💰 Money</span>
-              <h3 className="bento-title">Real Savings</h3>
+              <span className="bento-eyebrow">Storage Know-How</span>
+              <h3 className="bento-title">Preservation Tips</h3>
               <p className="bento-body">
-                Average household saves $125/month using Fridgely.
+                Learn the best way to store every ingredient so it lasts longer and stays fresh.
               </p>
-              <motion.div
-                className="bento-savings-big"
-                animate={{ scale: [1, 1.04, 1] }}
-                transition={{ duration: 3.5, repeat: Infinity }}
-              >
-                $1,500<span>/yr</span>
-              </motion.div>
+              <div className="bento-tips-list">
+                {[
+                  { icon: "🥬", tip: "Wrap leafy greens in a damp paper towel" },
+                  { icon: "🍋", tip: "Store citrus at room temp, not the fridge" },
+                  { icon: "🧄", tip: "Keep garlic in a cool, dry, dark place" },
+                ].map((t, i) => (
+                  <motion.div
+                    key={i}
+                    className="bento-tip-row"
+                    initial={{ opacity: 0, x: -14 }}
+                    animate={inView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: 0.5 + i * 0.15 }}
+                  >
+                    <span className="bento-tip-icon">{t.icon}</span>
+                    <span className="bento-tip-text">{t.tip}</span>
+                  </motion.div>
+                ))}
+              </div>
             </TiltCard>
           </motion.div>
 
@@ -626,9 +637,9 @@ const FeaturesSection = () => {
 ───────────────────────────────────────────────────── */
 
 const STATS = [
-  { to: 2400,  prefix: "",  suffix: "+",  label: "Households Saving",  sub: "and growing every day"        },
-  { to: 1500,  prefix: "$", suffix: "",   label: "Saved Per Year",      sub: "average per family"           },
-  { to: 31,    prefix: "",  suffix: "%",  label: "Less Food Waste",     sub: "after 30 days of use"         },
+  { to: 2500, prefix: "$", suffix: "",  label: "Wasted per household/yr", sub: "up to — End Food Waste Australia"      },
+  { to: 2100, prefix: "$", suffix: "",  label: "NSW household waste/yr",  sub: "on average — NSW Govt Love Food Hate Waste" },
+  { to: 33,   prefix: "",  suffix: "%", label: "Of all food wasted",      sub: "globally, still edible — FAO"          },
 ];
 
 const ImpactSection = () => {
@@ -645,6 +656,14 @@ const ImpactSection = () => {
       />
 
       <div className="lp-container">
+        <motion.div
+          className="lp-impact-eyebrow"
+          variants={fadeUp}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+        >
+          The scale of the problem
+        </motion.div>
         <motion.div
           className="lp-impact-grid"
           variants={stagger}
@@ -664,6 +683,15 @@ const ImpactSection = () => {
             </motion.div>
           ))}
         </motion.div>
+        <motion.p
+          className="lp-impact-cite"
+          variants={fadeUp}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          transition={{ delay: 0.5 }}
+        >
+          Sources: End Food Waste Australia · NSW Government Love Food Hate Waste · FAO
+        </motion.p>
       </div>
     </section>
   );
@@ -755,7 +783,7 @@ const FinalCTASection = ({ isReturning, itemCount }) => {
 
           {/* Trust line */}
           <motion.p className="lp-finalcta-trust" variants={fadeUp} transition={{ delay: 0.4 }}>
-            Trusted by 2,400+ households · Built with ♻️ sustainability in mind
+            Built with ♻️ sustainability in mind · No signup required · Free forever
           </motion.p>
         </motion.div>
       </div>
@@ -852,7 +880,7 @@ export const Landing = () => {
                 animate={{ scale: [1, 1.7, 1], opacity: [1, 0.25, 1] }}
                 transition={{ duration: 1.8, repeat: Infinity }}
               />
-              🌱 Smart Pantry Tracker · Free Forever
+              🌱 Smart Pantry Tracker for Australian Households
             </motion.div>
 
             {/* Headline — per-word staggered reveal with perspective */}
@@ -891,9 +919,9 @@ export const Landing = () => {
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ delay: 0.76, duration: 0.82, ease: EASE }}
             >
-              Scan grocery receipts, track expiry dates automatically, and cook
-              recipes from what's about to go bad. The average family saves{" "}
-              <strong>$1,500 a year</strong>.
+              Scan grocery receipts, track expiry dates automatically, and
+              discover recipes from what's already in your kitchen — so less
+              food ends up in the bin.
             </motion.p>
 
             {/* CTA buttons */}
@@ -968,7 +996,7 @@ export const Landing = () => {
                 ))}
               </div>
               <span className="lp-social-text">
-                <strong>2,400+</strong> families saving money
+                Track ingredients, expiry dates &amp; recipes in one place
               </span>
             </motion.div>
 
@@ -1021,12 +1049,12 @@ export const Landing = () => {
           >
             {[...Array(2)].map((_, set) =>
               [
-                { icon: "♻️", text: "1 in 3 food items is wasted globally" },
-                { icon: "💸", text: "Average family wastes $1,500/yr on expired food" },
-                { icon: "🌍", text: "8% of global greenhouse gases come from food waste" },
-                { icon: "🥗", text: "Save money · Eat better · Waste less" },
-                { icon: "📱", text: "Scan once. Track forever. Save always." },
-                { icon: "⚡", text: "2,400+ households already saving with Fridgely" },
+                { icon: "🧾", text: "Scan a receipt in seconds" },
+                { icon: "⏰", text: "Get alerts before anything expires" },
+                { icon: "🍽", text: "Cook from what's already in your kitchen" },
+                { icon: "♻️", text: "Less food in the bin" },
+                { icon: "🌿", text: "Free forever · No account needed" },
+                { icon: "📦", text: "Know exactly what's in your pantry" },
               ].map((item, i) => (
                 <span key={`${set}-${i}`} className="lp-tick-item">
                   <span className="lp-tick-icon">{item.icon}</span>
