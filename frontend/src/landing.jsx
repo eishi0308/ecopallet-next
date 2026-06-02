@@ -637,9 +637,24 @@ const FeaturesSection = () => {
 ───────────────────────────────────────────────────── */
 
 const STATS = [
-  { to: 2500, prefix: "$", suffix: "",  label: "Wasted per household/yr", sub: "up to — End Food Waste Australia"      },
-  { to: 2100, prefix: "$", suffix: "",  label: "NSW household waste/yr",  sub: "on average — NSW Govt Love Food Hate Waste" },
-  { to: 33,   prefix: "",  suffix: "%", label: "Of all food wasted",      sub: "globally, still edible — FAO"          },
+  {
+    to: 2500, prefix: "$", suffix: "",
+    label: "Wasted per household/yr",
+    sub: "up to — End Food Waste Australia",
+    solution: "Fridgely helps you use food before it expires",
+  },
+  {
+    to: 2100, prefix: "$", suffix: "",
+    label: "NSW household waste/yr",
+    sub: "on average — NSW Govt Love Food Hate Waste",
+    solution: "Track what's in your kitchen so nothing is forgotten",
+  },
+  {
+    to: 33, prefix: "", suffix: "%",
+    label: "Of all food wasted",
+    sub: "globally, still edible — FAO",
+    solution: "Discover recipes from ingredients already in your pantry",
+  },
 ];
 
 const ImpactSection = () => {
@@ -656,14 +671,15 @@ const ImpactSection = () => {
       />
 
       <div className="lp-container">
-        <motion.div
-          className="lp-impact-eyebrow"
+        <motion.h2
+          className="lp-impact-heading"
           variants={fadeUp}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          The scale of the problem
-        </motion.div>
+          The problem <span className="lp-impact-heading--accent">we solve.</span>
+        </motion.h2>
+
         <motion.div
           className="lp-impact-grid"
           variants={stagger}
@@ -672,13 +688,18 @@ const ImpactSection = () => {
         >
           {STATS.map((s, i) => (
             <motion.div key={i} className="lp-impact-item" variants={fadeUp} transition={{ delay: i * 0.14 }}>
-              <div className="lp-impact-num">
+              <div className="lp-impact-num lp-impact-num--amber">
                 {inView
                   ? <CountUp to={s.to} prefix={s.prefix} suffix={s.suffix} />
                   : `${s.prefix}0${s.suffix}`}
               </div>
               <div className="lp-impact-label">{s.label}</div>
               <div className="lp-impact-sub">{s.sub}</div>
+              <div className="lp-impact-divider" />
+              <div className="lp-impact-solution">
+                <span className="lp-impact-solution-icon">✓</span>
+                <span>{s.solution}</span>
+              </div>
               {i < STATS.length - 1 && <div className="lp-impact-sep" />}
             </motion.div>
           ))}
