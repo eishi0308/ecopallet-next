@@ -250,7 +250,7 @@
   background: var(--surface, #fff);
   border: 1.5px solid var(--border, #E2E8F0);
   border-radius: var(--radius-full, 9999px);
-  padding: 13px 20px;
+  padding: 13px 20px 13px 44px;
   width: 400px;
   max-width: 100%;
   outline: none;
@@ -287,6 +287,39 @@
   background: var(--accent-dark, #15803D);
   transform: translateY(-1px);
   box-shadow: 0 4px 14px rgba(22,163,74,0.4);
+}
+
+.tips-search-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.tips-search-icon {
+  position: absolute;
+  left: 16px;
+  color: var(--text-3, #94A3B8);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.tips-search-clear {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-3, #94A3B8);
+  padding: 4px;
+  border-radius: 50%;
+  transition: color 150ms, background-color 150ms;
+}
+.tips-search-clear:hover {
+  color: var(--text-1, #0F172A);
+  background: var(--border, #E2E8F0);
 }
 
 /* ══════════════════════════════════════════
@@ -726,7 +759,7 @@
 .tips-search-area input[type="text"] {
   width: 480px;
   font-size: 16px;
-  padding: 15px 22px;
+  padding: 15px 22px 15px 48px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   border-radius: 14px;
 }
