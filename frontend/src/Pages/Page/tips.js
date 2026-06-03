@@ -135,6 +135,7 @@ export const Tips = () => {
       if (storedInventory) {
         const parsedInventory = JSON.parse(storedInventory);
         const validItems = parsedInventory.filter(item => {
+          if (!item.expiryDate) return false;
           const status = calculateStatus(item.expiryDate);
           return status.color === 'green' || status.color === '#DAA520';
         });
