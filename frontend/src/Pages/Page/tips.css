@@ -118,6 +118,7 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 16px;
+  margin-top: 28px;
 }
 
 .category-tip-wrap {
