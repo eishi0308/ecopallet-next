@@ -262,7 +262,7 @@ export const Tips = () => {
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    const itemsPerPage = 10;
+    const itemsPerPage = 20;
     if (validInventoryNames.length > 0) {
       const totalPages = Math.ceil(validInventoryNames.length / itemsPerPage);
       setTotalPages(totalPages);
@@ -390,7 +390,7 @@ export const Tips = () => {
         >
           {validInventoryNames.length > 0 ? (
             validInventoryNames
-              .slice((currentPage - 1) * 10, currentPage * 10)
+              .slice((currentPage - 1) * 20, currentPage * 20)
               .map((name, index) => (
                 <motion.button
                   key={index}
