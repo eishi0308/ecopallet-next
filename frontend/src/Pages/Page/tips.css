@@ -190,7 +190,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  min-height: 60px;
+  min-height: 200px;
+  align-content: flex-start;
 }
 
 .inventory-item-button {
