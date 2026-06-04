@@ -397,6 +397,7 @@ export const Tips = () => {
                   variants={pillVariant}
                   className={`inventory-item-button ${searchValue === name ? 'selected' : ''}`}
                   onClick={() => handleSearch(name)}
+                  title={name}
                 >
                   <span className="item-text">{name}</span>
                 </motion.button>

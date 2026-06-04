@@ -200,7 +200,9 @@
   font-family: 'Inter', -apple-system, sans-serif;
   font-size: 13px;
   font-weight: 500;
-  padding: 8px 16px;
+  padding: 0 18px;
+  height: 38px;
+  max-width: 220px;
   background: var(--surface-2, #F1F5F9);
   color: var(--text-2, #475569);
   border: 1px solid var(--border, #E2E8F0);
@@ -222,9 +224,10 @@
 }
 
 .item-text {
-  white-space: normal;
-  word-break: break-word;
-  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 /* ══════════════════════════════════════════
