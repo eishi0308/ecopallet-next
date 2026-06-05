@@ -62,6 +62,21 @@ const pillVariant = {
   visible: { opacity: 1, scale: 1, transition: { duration: 0.22, ease: 'easeOut' } },
 };
 
+const wordReveal = {
+  hidden:  { opacity: 0, y: 36, filter: 'blur(5px)' },
+  visible: { opacity: 1, y: 0,  filter: 'blur(0px)', transition: { duration: 0.62, ease: [0.25, 0.46, 0.45, 0.94] } },
+};
+const EASE = [0.25, 0.46, 0.45, 0.94];
+
+const FloatingOrb = ({ size, color, style, delay = 0, dur = 10 }) => (
+  <motion.div
+    className="tips-orb"
+    style={{ width: size, height: size, background: color, ...style }}
+    animate={{ y: [0, -38, -8, -30, 0], x: [0, 12, 3, -10, 0], scale: [1, 1.05, 0.97, 1.03, 1] }}
+    transition={{ duration: dur, repeat: Infinity, ease: 'easeInOut', delay }}
+  />
+);
+
 
 
 const TipsContent = ({ selectedResult }) => {
@@ -322,6 +337,7 @@ export const Tips = () => {
     <>
     <Toaster position="top-center" richColors />
     <div className="tips-whole-page">
+      <div className="tips-noise" aria-hidden="true" />
 
       {/* ── Hero ── */}
       <motion.div
@@ -330,9 +346,35 @@ export const Tips = () => {
         initial="hidden"
         animate="visible"
       >
-        <span className="tips-eyebrow">🌿 Food Storage Guide</span>
-        <h1 className="tips-hero-title">Store smarter, waste less</h1>
-        <p className="tips-hero-sub">Discover the best ways to store your food and extend shelf life — organised by category and tailored to your pantry.</p>
+        <FloatingOrb size={300} color="radial-gradient(circle, rgba(22,163,74,0.26) 0%, transparent 70%)" style={{ right: '-3%', top: '-40%' }} delay={0} dur={9} />
+        <FloatingOrb size={160} color="radial-gradient(circle, rgba(134,239,172,0.15) 0%, transparent 70%)" style={{ right: '30%', bottom: '-35%' }} delay={2} dur={12} />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <span className="tips-eyebrow">
+            <motion.span
+              className="tips-pill-dot"
+              animate={{ scale: [1, 1.7, 1], opacity: [1, 0.2, 1] }}
+              transition={{ duration: 1.8, repeat: Infinity }}
+            />
+            🌿 Food Storage Guide
+          </span>
+          <motion.h1
+            className="tips-hero-title"
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.12 } } }}
+            style={{ perspective: 800 }}
+          >
+            {['Store smarter,', 'waste less'].map((w, i) => (
+              <motion.span key={i} variants={wordReveal} style={{ display: 'inline-block', marginRight: '0.28em' }}>{w}</motion.span>
+            ))}
+          </motion.h1>
+          <motion.p
+            className="tips-hero-sub"
+            initial={{ opacity: 0, y: 14, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ delay: 0.52, duration: 0.6, ease: EASE }}
+          >
+            Discover the best ways to store your food and extend shelf life — organised by category and tailored to your pantry.
+          </motion.p>
+        </div>
       </motion.div>
 
       {/* ── Quick Category Cards ── */}

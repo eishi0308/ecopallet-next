@@ -6,7 +6,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Dashboard from './Dashboard';
 import samplePdf from "./woolworth_sample_ereceipt.pdf";
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
@@ -19,6 +19,74 @@ const stagger = {
 const cardFadeUp = {
   hidden: { opacity: 0, y: 14 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
+};
+
+const wordReveal = {
+  hidden:  { opacity: 0, y: 36, filter: 'blur(5px)' },
+  visible: { opacity: 1, y: 0,  filter: 'blur(0px)', transition: { duration: 0.62, ease: [0.25, 0.46, 0.45, 0.94] } },
+};
+
+const EASE = [0.25, 0.46, 0.45, 0.94];
+
+/* ── Floating ambient orb ── */
+const FloatingOrb = ({ size, color, style, delay = 0, dur = 10 }) => (
+  <motion.div
+    className="inv-orb"
+    style={{ width: size, height: size, background: color, ...style }}
+    animate={{ y: [0, -40, -8, -32, 0], x: [0, 12, 3, -10, 0], scale: [1, 1.05, 0.97, 1.03, 1] }}
+    transition={{ duration: dur, repeat: Infinity, ease: 'easeInOut', delay }}
+  />
+);
+
+/* ── Animated count-up number ── */
+const CountUp = ({ to }) => {
+  const [val, setVal] = React.useState(0);
+  const prevTo = React.useRef(0);
+  React.useEffect(() => {
+    const from = prevTo.current;
+    prevTo.current = to;
+    const t0 = Date.now();
+    const dur = 900;
+    const tick = () => {
+      const p = Math.min((Date.now() - t0) / dur, 1);
+      const e = 1 - Math.pow(1 - p, 3);
+      setVal(Math.round(from + (to - from) * e));
+      if (p < 1) requestAnimationFrame(tick); else setVal(to);
+    };
+    requestAnimationFrame(tick);
+  }, [to]);
+  return <span>{val}</span>;
+};
+
+/* ── 3-D perspective tilt card ── */
+const TiltCard = ({ children, className, onClick, variants, intensity = 9 }) => {
+  const ref = useRef(null);
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  const srx = useSpring(rx, { stiffness: 170, damping: 24 });
+  const sry = useSpring(ry, { stiffness: 170, damping: 24 });
+
+  const onMove = (e) => {
+    if (!ref.current) return;
+    const r = ref.current.getBoundingClientRect();
+    rx.set(((e.clientY - (r.top  + r.height / 2)) / r.height) * -intensity);
+    ry.set(((e.clientX - (r.left + r.width  / 2)) / r.width)  *  intensity);
+  };
+  const onLeave = () => { rx.set(0); ry.set(0); };
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      style={{ rotateX: srx, rotateY: sry, transformStyle: 'preserve-3d' }}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      variants={variants}
+      onClick={onClick}
+    >
+      {children}
+    </motion.div>
+  );
 };
 
 
@@ -533,13 +601,39 @@ export function Maininventory() {
 
       <div className="main-content">
         <div className="App">
+          <div className="inv-noise" aria-hidden="true" />
 
           {/* ── Page Header ── */}
           <motion.div className="inv-page-header" variants={fadeUp} initial="hidden" animate="visible">
-            <div>
-              <span className="inv-eyebrow">🥦 Pantry Manager</span>
-              <h1 className="inv-header-text">My Pantry</h1>
-              <p className="inv-header-sub">Track what you have, reduce what you waste</p>
+            {/* Antigravity ambient orbs */}
+            <FloatingOrb size={320} color="radial-gradient(circle, rgba(22,163,74,0.25) 0%, transparent 70%)" style={{ right: '-4%', top: '-40%' }} delay={0} dur={8} />
+            <FloatingOrb size={180} color="radial-gradient(circle, rgba(134,239,172,0.16) 0%, transparent 70%)" style={{ right: '28%', bottom: '-30%' }} delay={1.8} dur={11} />
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <span className="inv-eyebrow">
+                <motion.span
+                  className="inv-pill-dot"
+                  animate={{ scale: [1, 1.7, 1], opacity: [1, 0.2, 1] }}
+                  transition={{ duration: 1.8, repeat: Infinity }}
+                />
+                🥦 Pantry Manager
+              </span>
+              <motion.h1
+                className="inv-header-text"
+                variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.15 } } }}
+                style={{ perspective: 800 }}
+              >
+                {['My', 'Pantry'].map((w, i) => (
+                  <motion.span key={i} variants={wordReveal} style={{ display: 'inline-block', marginRight: '0.28em' }}>{w}</motion.span>
+                ))}
+              </motion.h1>
+              <motion.p
+                className="inv-header-sub"
+                initial={{ opacity: 0, y: 14, filter: 'blur(4px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                transition={{ delay: 0.55, duration: 0.6, ease: EASE }}
+              >
+                Track what you have, reduce what you waste
+              </motion.p>
             </div>
           </motion.div>
 
@@ -563,39 +657,39 @@ export function Maininventory() {
 
           {/* ── Stats Row ── */}
           <motion.div className="inv-stats-row" variants={stagger} initial="hidden" animate="visible">
-            <motion.div
+            <TiltCard
               variants={cardFadeUp}
               className={`inv-stat-card inv-stat-total inv-stat-card--clickable${filterStatus === 'all' ? ' inv-stat-card--active-filter' : ''}`}
               onClick={() => setFilterStatus('all')}
             >
-              <span className="inv-stat-num">{inventory.length}</span>
+              <span className="inv-stat-num"><CountUp to={inventory.length} /></span>
               <span className="inv-stat-label">Total items</span>
-            </motion.div>
-            <motion.div
+            </TiltCard>
+            <TiltCard
               variants={cardFadeUp}
               className={`inv-stat-card inv-stat-fresh inv-stat-card--clickable${filterStatus === 'green' ? ' inv-stat-card--active-filter' : ''}`}
               onClick={() => setFilterStatus(filterStatus === 'green' ? 'all' : 'green')}
             >
-              <span className="inv-stat-num">{freshCount}</span>
+              <span className="inv-stat-num"><CountUp to={freshCount} /></span>
               <span className="inv-stat-label">Fresh</span>
-            </motion.div>
-            <motion.div
+            </TiltCard>
+            <TiltCard
               variants={cardFadeUp}
               className={`inv-stat-card inv-stat-warning inv-stat-card--clickable${filterStatus === 'warning' ? ' inv-stat-card--active-filter' : ''}`}
               onClick={() => setFilterStatus(filterStatus === 'warning' ? 'all' : 'warning')}
             >
-              <span className="inv-stat-num">{expiringCount}</span>
+              <span className="inv-stat-num"><CountUp to={expiringCount} /></span>
               <span className="inv-stat-label">Expiring soon</span>
               <span className="inv-stat-sublabel">within 3 days</span>
-            </motion.div>
-            <motion.div
+            </TiltCard>
+            <TiltCard
               variants={cardFadeUp}
               className={`inv-stat-card inv-stat-danger inv-stat-card--clickable${filterStatus === 'red' ? ' inv-stat-card--active-filter' : ''}`}
               onClick={() => setFilterStatus(filterStatus === 'red' ? 'all' : 'red')}
             >
-              <span className="inv-stat-num">{expiredCount}</span>
+              <span className="inv-stat-num"><CountUp to={expiredCount} /></span>
               <span className="inv-stat-label">Expired</span>
-            </motion.div>
+            </TiltCard>
           </motion.div>
 
           {/* ── Toolbar ── */}
@@ -656,10 +750,14 @@ export function Maininventory() {
           {/* ── Empty State ── */}
           {inventory.length === 0 && (
             <div className="inv-empty-state">
-              <div className="inv-empty-icon-wrap">
+              <motion.div
+                className="inv-empty-icon-wrap"
+                animate={{ y: [0, -14, 0], rotate: [-1.2, 1.2, -1.2] }}
+                transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
+              >
                 <span className="inv-empty-scan-line" />
                 <span className="inv-empty-icon">🧾</span>
-              </div>
+              </motion.div>
               <h2 className="inv-empty-title">Start by uploading a receipt</h2>
               <p className="inv-empty-sub">Upload your Woolworths e-receipt PDF and we'll fill in the rest</p>
               <button
