@@ -917,7 +917,7 @@ export function Maininventory() {
                       </div>
                       <input
                         type="file" accept=".pdf" multiple style={{ display: 'none' }}
-                        onChange={e => { setPdfFiles(prev => [...prev, ...Array.from(e.target.files)]); setPdfError(''); e.target.value = ''; }}
+                        onChange={e => { const files = Array.from(e.target.files); e.target.value = ''; setPdfFiles(prev => [...prev, ...files]); setPdfError(''); }}
                       />
                     </label>
                     {pdfError && <p style={{ color: '#DC2626', margin: 0, fontSize: 13, fontWeight: 600, fontFamily: 'Inter, sans-serif' }}>⚠️ {pdfError}</p>}
