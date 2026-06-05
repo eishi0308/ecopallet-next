@@ -618,10 +618,11 @@
 .dash-metric--saved .dash-metric-eyebrow { color: #15803D; }
 .dash-metric--risk  .dash-metric-eyebrow { color: #B45309; }
 .dash-metric-amount {
-  font-size: 2.6rem;
+  font-size: clamp(1.4rem, 2.6vw, 2.6rem);
   font-weight: 900;
   letter-spacing: -1.5px;
   line-height: 1;
+  white-space: nowrap;
 }
 .dash-metric--saved .dash-metric-amount { color: #166534; text-shadow: 0 2px 16px rgba(22,163,74,0.18); }
 .dash-metric--risk  .dash-metric-amount { color: #92400E; text-shadow: 0 2px 16px rgba(217,119,6,0.18); }
@@ -649,10 +650,11 @@
   flex-shrink: 0;
 }
 .dash-metric-pct {
-  font-size: 2.2rem;
+  font-size: clamp(1.2rem, 2.2vw, 2.2rem);
   font-weight: 900;
   letter-spacing: -1px;
   line-height: 1;
+  white-space: nowrap;
 }
 .dash-metric--saved .dash-metric-pct { color: #166534; }
 .dash-metric--risk  .dash-metric-pct { color: #92400E; }
