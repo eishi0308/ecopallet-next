@@ -1071,12 +1071,26 @@ header { display: none; }
   padding: 0;
   margin: 0;
   width: 100%;
+  height: 22px;
+  line-height: 20px;
   box-sizing: border-box;
   outline: none;
   transition: border-color 150ms;
   display: block;
 }
 .edit-cell-input--sm { width: 100%; }
+
+/* Display value in table cells — same total height as edit-cell-input so row never shifts */
+.cell-display-val {
+  display: block;
+  height: 20px;
+  line-height: 20px;
+  border-bottom: 2px solid transparent;
+  box-sizing: content-box;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-1, #0F172A);
+}
 
 /* DatePicker in edit mode — same height as inputs */
 .react-datepicker-wrapper { width: 100%; display: block; }
@@ -2257,8 +2271,10 @@ header { display: none; }
     overflow: visible !important;
     text-overflow: unset !important;
     word-break: break-word !important;
-    line-height: 1.4 !important;
+    line-height: 22px !important;
     padding: 0 !important;
+    border-bottom: 2px solid transparent !important;
+    box-sizing: content-box !important;
   }
   /* ── Name input in edit mode: single line, fixed height ── */
   .inv-card .inv-card-name-block .edit-cell-input {
@@ -2275,6 +2291,20 @@ header { display: none; }
     overflow: hidden !important;
     padding: 0 !important;
     box-sizing: content-box !important;
+  }
+  .inv-card .inv-card-meta {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .inv-card .inv-card-field--expiry {
+    flex: none;
+  }
+  .inv-card .inv-card-meta-sub {
+    display: flex;
+    gap: 24px;
+  }
+  .inv-card .inv-card-meta-sub .inv-card-field {
+    flex: 1;
   }
   .inv-card .inv-card-field-label { font-size: 12px; }
   .inv-card .inv-card-field-value,
@@ -2293,11 +2323,24 @@ header { display: none; }
     white-space: nowrap !important;
     overflow: hidden !important;
     box-sizing: content-box !important;
+    border-bottom: 2px solid transparent !important;
+  }
+  .inv-card .inv-card-field .edit-cell-input,
+  .inv-card .inv-card-field .date-picker.edit-date-picker {
+    border-bottom-color: #3B82F6 !important;
+  }
+  .inv-card .inv-card-meta-sub .inv-card-field-value,
+  .inv-card .inv-card-meta-sub .inv-card-field .edit-cell-input {
+    font-size: 16px !important;
+    height: 22px !important;
+    min-height: 22px !important;
+    max-height: 22px !important;
+    line-height: 22px !important;
   }
   .inv-card .inv-card-field .react-datepicker-wrapper,
   .inv-card .inv-card-field .react-datepicker__input-container {
-    height: 20px !important;
-    max-height: 20px !important;
+    height: 22px !important;
+    max-height: 22px !important;
     display: block !important;
     overflow: hidden !important;
   }

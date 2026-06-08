@@ -277,19 +277,21 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
                     : <span className="inv-card-field-value">{item.expiryDate}</span>
                   }
                 </div>
-                <div className="inv-card-field">
-                  <span className="inv-card-field-label">Qty</span>
-                  {isEditing
-                    ? <input className="edit-cell-input edit-cell-input--sm" type="text" value={updatedValues.amount} onChange={(e) => handleInputChange(e, 'amount')} />
-                    : <span className="inv-card-field-value">{item.amount}</span>
-                  }
-                </div>
-                <div className="inv-card-field">
-                  <span className="inv-card-field-label">Price</span>
-                  {isEditing
-                    ? <input className="edit-cell-input edit-cell-input--sm" type="text" value={updatedValues.spent} onChange={(e) => handleInputChange(e, 'spent')} />
-                    : <span className="inv-card-field-value">${item.spent}</span>
-                  }
+                <div className="inv-card-meta-sub">
+                  <div className="inv-card-field">
+                    <span className="inv-card-field-label">Qty</span>
+                    {isEditing
+                      ? <input className="edit-cell-input edit-cell-input--sm" type="text" value={updatedValues.amount} onChange={(e) => handleInputChange(e, 'amount')} />
+                      : <span className="inv-card-field-value">{item.amount}</span>
+                    }
+                  </div>
+                  <div className="inv-card-field">
+                    <span className="inv-card-field-label">Price</span>
+                    {isEditing
+                      ? <input className="edit-cell-input edit-cell-input--sm" type="text" value={updatedValues.spent} onChange={(e) => handleInputChange(e, 'spent')} />
+                      : <span className="inv-card-field-value">${item.spent}</span>
+                    }
+                  </div>
                 </div>
               </div>
               <div className="inv-card-actions">
@@ -371,7 +373,7 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
                   <div className="cell-inner">
                     {isEditing
                       ? <input className="edit-cell-input edit-cell-input--sm" type="text" value={updatedValues.amount} onChange={(e) => handleInputChange(e, 'amount')} />
-                      : item.amount}
+                      : <span className="cell-display-val">{item.amount}</span>}
                   </div>
                 </td>
                 <td>
@@ -392,14 +394,14 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
                           popperPlacement="bottom-start"
                           portalId="root"
                         />
-                      : item.expiryDate}
+                      : <span className="cell-display-val">{item.expiryDate}</span>}
                   </div>
                 </td>
                 <td>
                   <div className="cell-inner">
                     {isEditing
                       ? <input className="edit-cell-input edit-cell-input--sm" type="text" value={updatedValues.spent} onChange={(e) => handleInputChange(e, 'spent')} />
-                      : `$${item.spent}`}
+                      : <span className="cell-display-val">${item.spent}</span>}
                   </div>
                 </td>
                 <td>
