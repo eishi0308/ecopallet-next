@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { calculateStatus, parseExpiryDate } from './inventory';
@@ -45,7 +45,7 @@ const CategoryBadge = ({ category }) => {
   );
 };
 
-const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup, onEditingItemChange }) => {
+const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup, onEditingItemChange, sortingOrder, onToggleSortingOrder }) => {
   const [editingItem, setEditingItem] = useState(null);
   const [updatedValues, setUpdatedValues] = useState({});
   const [originalValues, setOriginalValues] = useState({});
@@ -57,20 +57,11 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
   const [msg2, setMsg2] = useState('');
   const [showScanExpiryPopup, setShowScanExpiryPopup] = useState(false);
   const [scanningItemId, setScanningItemId] = useState(null);
-  const [sortingOrder, setSortingOrder] = useState('asc');
   const [uploadingImage, setUploadingImage] = useState(false);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
 
-  const toggleSortingOrder = () => setSortingOrder(o => o === 'asc' ? 'desc' : 'asc');
-
-  const sortedInventory = useMemo(() => {
-    return [...inventory].sort((a, b) => {
-      const dateA = new Date(a.expiryDate);
-      const dateB = new Date(b.expiryDate);
-      return sortingOrder === 'asc' ? dateA - dateB : dateB - dateA;
-    });
-  }, [inventory, sortingOrder]);
+  const sortedInventory = inventory;
 
   const allSelected = sortedInventory.length > 0 && selectedIds.size === sortedInventory.length;
   const someSelected = selectedIds.size > 0 && !allSelected;
@@ -234,7 +225,7 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
       {/* ── Mobile sort bar (card view only) ── */}
       <div className="inv-mobile-sort-bar">
         <span className="inv-mobile-sort-label">Sort by expiry</span>
-        <button className="inv-mobile-sort-btn" onClick={toggleSortingOrder}>
+        <button className="inv-mobile-sort-btn" onClick={onToggleSortingOrder}>
           {sortingOrder === 'asc' ? '↑ Soonest first' : '↓ Latest first'}
         </button>
       </div>
@@ -330,7 +321,7 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
             <th>Qty</th>
             <th>
               Status
-              <button onClick={toggleSortingOrder} className="sort-button">
+              <button onClick={onToggleSortingOrder} className="sort-button">
                 {sortingOrder === 'asc' ? '↑' : '↓'}
               </button>
             </th>

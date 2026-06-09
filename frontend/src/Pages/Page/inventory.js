@@ -167,6 +167,7 @@ export function Maininventory() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterText, setFilterText] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [sortingOrder, setSortingOrder] = useState('asc');
 
   const filteredInventory = inventory.filter(i => {
     const matchesText = i.name.toLowerCase().includes(filterText.toLowerCase());
@@ -179,11 +180,17 @@ export function Maininventory() {
     return matchesText && matchesStatus;
   });
 
+  const sortedFilteredInventory = [...filteredInventory].sort((a, b) => {
+    const dateA = new Date(a.expiryDate);
+    const dateB = new Date(b.expiryDate);
+    return sortingOrder === 'asc' ? dateA - dateB : dateB - dateA;
+  });
+
   const itemsPerPage = 8;
-  const totalPages = Math.ceil(filteredInventory.length / itemsPerPage);
+  const totalPages = Math.ceil(sortedFilteredInventory.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, filteredInventory.length);
-  const currentInventory = filteredInventory.slice(startIndex, endIndex);
+  const endIndex = Math.min(startIndex + itemsPerPage, sortedFilteredInventory.length);
+  const currentInventory = sortedFilteredInventory.slice(startIndex, endIndex);
   const [confirmationShown, setConfirmationShown] = useState(false);
   const [deletionHistory, setDeletionHistory] = useState(() => {
     const history = JSON.parse(localStorage.getItem('deletionHistory') || '[]').map(item =>
@@ -235,7 +242,7 @@ export function Maininventory() {
 
   useEffect(() => { if (!showCongratsTimer) setShowCongratsPopup(false); }, [showCongratsTimer]);
 
-  useEffect(() => { setCurrentPage(1); }, [filterText, filterStatus]);
+  useEffect(() => { setCurrentPage(1); }, [filterText, filterStatus, sortingOrder]);
 
   useEffect(() => {
     const hasNoExpired = !inventory.some(i => calculateStatus(i.expiryDate).color === 'red');
@@ -778,6 +785,8 @@ export function Maininventory() {
               onBulkDelete={handleBulkDeleteItems}
               togglePopup={togglePopup}
               onEditingItemChange={handleEditingItemChange}
+              sortingOrder={sortingOrder}
+              onToggleSortingOrder={() => setSortingOrder(o => o === 'asc' ? 'desc' : 'asc')}
             />
           </div>
 
