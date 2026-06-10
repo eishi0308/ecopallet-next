@@ -325,7 +325,12 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
                 {sortingOrder === 'asc' ? '↑' : '↓'}
               </button>
             </th>
-            <th>Expiry Date</th>
+            <th>
+              Expiry Date
+              <button onClick={onToggleSortingOrder} className="sort-button">
+                {sortingOrder === 'asc' ? '↑' : '↓'}
+              </button>
+            </th>
             <th>Price $</th>
             <th>Actions</th>
           </tr>
