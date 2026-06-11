@@ -168,6 +168,7 @@ export function Maininventory() {
   const [filterText, setFilterText] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [sortingOrder, setSortingOrder] = useState('asc');
+  const [nameSortOrder, setNameSortOrder] = useState(null);
 
   const filteredInventory = inventory.filter(i => {
     const matchesText = i.name.toLowerCase().includes(filterText.toLowerCase());
@@ -181,6 +182,11 @@ export function Maininventory() {
   });
 
   const sortedFilteredInventory = [...filteredInventory].sort((a, b) => {
+    if (nameSortOrder !== null) {
+      return nameSortOrder === 'asc'
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name);
+    }
     const dateA = new Date(a.expiryDate);
     const dateB = new Date(b.expiryDate);
     return sortingOrder === 'asc' ? dateA - dateB : dateB - dateA;
@@ -242,7 +248,7 @@ export function Maininventory() {
 
   useEffect(() => { if (!showCongratsTimer) setShowCongratsPopup(false); }, [showCongratsTimer]);
 
-  useEffect(() => { setCurrentPage(1); }, [filterText, filterStatus, sortingOrder]);
+  useEffect(() => { setCurrentPage(1); }, [filterText, filterStatus, sortingOrder, nameSortOrder]);
 
   useEffect(() => {
     const hasNoExpired = !inventory.some(i => calculateStatus(i.expiryDate).color === 'red');
@@ -786,7 +792,9 @@ export function Maininventory() {
               togglePopup={togglePopup}
               onEditingItemChange={handleEditingItemChange}
               sortingOrder={sortingOrder}
-              onToggleSortingOrder={() => setSortingOrder(o => o === 'asc' ? 'desc' : 'asc')}
+              onToggleSortingOrder={() => { setNameSortOrder(null); setSortingOrder(o => o === 'asc' ? 'desc' : 'asc'); }}
+              nameSortOrder={nameSortOrder}
+              onToggleNameSortOrder={() => setNameSortOrder(o => o === null ? 'asc' : o === 'asc' ? 'desc' : null)}
             />
           </div>
 

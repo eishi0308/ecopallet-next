@@ -45,7 +45,7 @@ const CategoryBadge = ({ category }) => {
   );
 };
 
-const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup, onEditingItemChange, sortingOrder, onToggleSortingOrder }) => {
+const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup, onEditingItemChange, sortingOrder, onToggleSortingOrder, nameSortOrder, onToggleNameSortOrder }) => {
   const [editingItem, setEditingItem] = useState(null);
   const [updatedValues, setUpdatedValues] = useState({});
   const [originalValues, setOriginalValues] = useState({});
@@ -317,7 +317,12 @@ const InventoryList = ({ inventory, onEdit, onDelete, onBulkDelete, togglePopup,
                 aria-label="Select all"
               />
             </th>
-            <th>Name</th>
+            <th>
+              Name
+              <button onClick={onToggleNameSortOrder} className="sort-button">
+                {nameSortOrder === 'asc' ? 'A↑' : nameSortOrder === 'desc' ? 'Z↓' : 'A↕'}
+              </button>
+            </th>
             <th>Qty</th>
             <th>
               Status
