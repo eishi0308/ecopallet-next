@@ -1563,8 +1563,14 @@
   border-color: rgba(22, 163, 74, 0.40);
 }
 .bento-card--dark {
-  background: #F1F5F9;
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.09);
 }
+.bento-card--dark .bento-eyebrow     { color: #15803D; font-weight: 800; }
+.bento-card--dark .bento-title       { color: #060D1F; }
+.bento-card--dark .bento-body        { color: rgba(6, 13, 31, 0.62); }
+.bento-card--dark .bento-chart-label { color: #15803D; font-weight: 800; }
+.bento-card--dark .bento-bar         { background: rgba(22, 163, 74, 0.65); }
 .bento-card--savings {
   background: #FFFBEB;
   border-color: rgba(245, 158, 11, 0.24);
