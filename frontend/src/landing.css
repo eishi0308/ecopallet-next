@@ -10,14 +10,16 @@
    DESIGN TOKENS
 ───────────────────────────────────────────────────── */
 :root {
-  --lp-bg:           #030712;
-  --lp-surface:      rgba(255, 255, 255, 0.035);
-  --lp-surface-2:    rgba(255, 255, 255, 0.06);
-  --lp-border:       rgba(255, 255, 255, 0.085);
-  --lp-border-2:     rgba(255, 255, 255, 0.13);
-  --lp-text-1:       #F8FAFC;
-  --lp-text-2:       rgba(248, 250, 252, 0.58);
-  --lp-text-3:       rgba(248, 250, 252, 0.35);
+  --lp-bg:           #EBF0F7;
+  --lp-surface:      #FFFFFF;
+  --lp-surface-2:    #F2F6FB;
+  --lp-border:       rgba(0, 0, 0, 0.11);
+  --lp-border-2:     rgba(0, 0, 0, 0.20);
+  --lp-text-1:       #060D1F;
+  --lp-text-2:       rgba(6, 13, 31, 0.62);
+  --lp-text-3:       rgba(6, 13, 31, 0.48);
+  /* green-3 overridden dark for light bg readability */
+  --lp-green-3:      #15803D;
   --lp-green:        #16A34A;
   --lp-green-2:      #22C55E;
   --lp-green-3:      #86EFAC;
@@ -1377,3 +1379,277 @@
 
   .lp-ticker-section { display: none; }
 }
+
+/* =====================================================================
+   LIGHT THEME — complete override block
+   Design philosophy:
+   · Pure white cards with strong shadows = clear elevation
+   · SOLID coloured badges (not translucent) = instant readability
+   · Section colour blocking (including one bold dark band) = メリハリ
+   · Green → #16A34A as accent, NOT pale mint
+   ===================================================================== */
+
+/* ── Dot grid ── */
+.lp-dot-grid {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.10) 1px, transparent 1px);
+}
+
+/* ── Noise ── */
+.lp-noise {
+  opacity: 0.015;
+  mix-blend-mode: multiply;
+}
+
+/* ── Section divider line ── */
+.lp-section::before {
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.08), transparent);
+}
+
+/* ────────────────────────────────────────────
+   SECTION COLOUR BLOCKING
+   Hero      → white (bright open start)
+   Ticker    → subtle strip
+   How Works → very light grey
+   Features  → white
+   Impact    → DARK (dramatic contrast band)
+   Final CTA → white + soft green tint bottom
+─────────────────────────────────────────── */
+.lp-root    { background: #F8FAFC; }
+.lp-hero    { background: linear-gradient(150deg, #FFFFFF 0%, #F0FDF4 60%, #EFF6FF 100%); }
+.lp-hiw     { background: #F1F5F9; }
+.lp-features { background: #FFFFFF; }
+
+/* Impact: BOLD DARK section for maximum メリハリ */
+.lp-impact {
+  background: #050D1E;
+  border-top: none;
+  border-bottom: none;
+}
+.lp-impact .lp-impact-heading   { color: #F8FAFC; }
+.lp-impact .lp-impact-heading--accent { color: #F59E0B; }
+.lp-impact .lp-impact-num {
+  background: linear-gradient(135deg, #FFFFFF 30%, #22C55E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.lp-impact .lp-impact-label  { color: #F8FAFC; }
+.lp-impact .lp-impact-sub    { color: rgba(248, 250, 252, 0.52); }
+.lp-impact .lp-impact-cite   { color: rgba(248, 250, 252, 0.38); }
+.lp-impact .lp-impact-glow   { background: radial-gradient(ellipse, rgba(22,163,74,0.22) 0%, transparent 65%); }
+.lp-impact .lp-impact-sep    { background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.14) 30%, rgba(255,255,255,0.14) 70%, transparent); }
+.lp-impact .lp-impact-divider { background: linear-gradient(to right, transparent, #22C55E, transparent); }
+.lp-impact .lp-impact-solution { color: #86EFAC; }
+.lp-impact .lp-impact-solution-icon { color: #86EFAC; }
+
+.lp-finalcta { background: linear-gradient(180deg, #FFFFFF 0%, #F0FDF4 100%); }
+
+/* ────────────────────────────────────────────
+   BADGES / PILLS — SOLID, NOT TRANSLUCENT
+─────────────────────────────────────────── */
+.lp-hero-pill {
+  background: #16A34A;
+  border-color: #16A34A;
+  color: #FFFFFF;
+  box-shadow: 0 2px 12px rgba(22, 163, 74, 0.30);
+}
+.lp-section-eyebrow {
+  background: #16A34A;
+  border-color: #16A34A;
+  color: #FFFFFF;
+  box-shadow: 0 2px 10px rgba(22, 163, 74, 0.25);
+}
+.lp-finalcta-badge {
+  background: #16A34A;
+  border-color: #16A34A;
+  color: #FFFFFF;
+  box-shadow: 0 2px 10px rgba(22, 163, 74, 0.25);
+}
+.lp-pill-dot {
+  background: #FFFFFF;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+}
+
+/* ────────────────────────────────────────────
+   TYPOGRAPHY ACCENTS
+─────────────────────────────────────────── */
+.lp-hw--accent        { color: #16A34A; }
+.lp-social-text strong { color: #15803D; }
+.bento-eyebrow         { color: #15803D; }
+
+/* Animated CTA gradient text */
+.lp-gradient-text {
+  background: linear-gradient(135deg, #16A34A 0%, #22C55E 50%, #16A34A 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ────────────────────────────────────────────
+   GHOST BUTTON
+─────────────────────────────────────────── */
+.lp-btn--ghost {
+  color: rgba(5, 13, 30, 0.84);
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.16);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.lp-btn--ghost:hover {
+  color: #050D1E;
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.26);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Scroll indicator */
+.lp-scroll-mouse { border-color: rgba(0, 0, 0, 0.22); }
+
+/* ────────────────────────────────────────────
+   STEP CARDS — WHITE ELEVATED
+─────────────────────────────────────────── */
+.lp-step-card {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 8px 32px rgba(0, 0, 0, 0.10);
+}
+.lp-step-card:hover {
+  border-color: rgba(22, 163, 74, 0.35);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 16px 48px rgba(0, 0, 0, 0.14),
+    0 0 0 1px rgba(22, 163, 74, 0.18);
+}
+.lp-scan-line {
+  background: linear-gradient(90deg, transparent, #16A34A 50%, transparent);
+}
+
+/* ────────────────────────────────────────────
+   TICKER STRIP
+─────────────────────────────────────────── */
+.lp-ticker-section {
+  background: #FFFFFF;
+  border-top-color: rgba(0, 0, 0, 0.09);
+  border-bottom-color: rgba(0, 0, 0, 0.09);
+}
+.lp-tick-item { color: rgba(5, 13, 30, 0.62); }
+.lp-tick-sep  { color: #16A34A; }
+
+/* ────────────────────────────────────────────
+   BENTO CARDS — WHITE ELEVATED + COLOUR VARIANTS
+─────────────────────────────────────────── */
+.bento-card {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 6px 24px rgba(0, 0, 0, 0.08);
+}
+.bento-card:hover {
+  border-color: rgba(22, 163, 74, 0.28);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 12px 36px rgba(0, 0, 0, 0.12);
+}
+.bento-card--green {
+  background: #F0FDF4;
+  border-color: rgba(22, 163, 74, 0.24);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 6px 24px rgba(22,163,74,0.10);
+}
+.bento-card--green:hover {
+  background: #F0FDF4;
+  border-color: rgba(22, 163, 74, 0.40);
+}
+.bento-card--dark {
+  background: #F1F5F9;
+}
+.bento-card--savings {
+  background: #FFFBEB;
+  border-color: rgba(245, 158, 11, 0.24);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 6px 24px rgba(245,158,11,0.08);
+}
+
+/* Bento sub-elements */
+.bento-exp-row {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.09);
+}
+.bento-mini-track { background: rgba(0, 0, 0, 0.10); }
+.bento-notif-row {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.09);
+  color: rgba(5, 13, 30, 0.70);
+}
+.bento-bar          { background: rgba(22, 163, 74, 0.20); }
+.bento-eyebrow      { color: #15803D; }
+.bento-exp--safe    { color: #15803D; }
+.bento-exp--warn    { color: #B45309; }
+
+/* Savings / amber */
+.bento-savings-big      { color: #92400E; }
+.bento-savings-big span { color: rgba(146, 64, 14, 0.58); }
+.lp-impact-heading--accent { color: #F59E0B; }
+
+/* ────────────────────────────────────────────
+   FLOATING BADGES — WHITE GLASS
+─────────────────────────────────────────── */
+.mock-float-badge {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(0, 0, 0, 0.10) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.16),
+    0 0 0 1px rgba(0, 0, 0, 0.06) !important;
+  backdrop-filter: blur(16px);
+}
+.mock-float-badge--alert   { border-color: rgba(239, 68, 68, 0.28) !important; }
+.mock-float-badge--recipe  { border-color: rgba(22, 163, 74, 0.28) !important; }
+.mock-float-badge--savings { border-color: rgba(245, 158, 11, 0.28) !important; }
+.mock-badge-title { color: #050D1E; }
+.mock-badge-sub   { color: rgba(5, 13, 30, 0.58); }
+.mock-badge-text  { color: #050D1E; }
+
+/* ────────────────────────────────────────────
+   PHONE MOCKUP — INTENTIONALLY DARK
+   (Apple-style: dark device on light bg)
+─────────────────────────────────────────── */
+.mock-phone {
+  background: #0B0F1D;
+  border-color: rgba(22, 163, 74, 0.38);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 40px 100px rgba(0, 0, 0, 0.28),
+    0 8px 24px rgba(22, 163, 74, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+.mock-screen-title { color: #EFF6FF; }
+.mock-row {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.10);
+}
+.mock-row--danger  { border-color: rgba(239, 68, 68, 0.32); }
+.mock-row--warning { border-color: rgba(245, 158, 11, 0.32); }
+.mock-row--safe    { border-color: rgba(34, 197, 94, 0.32); }
+.mock-row-name     { color: #EFF6FF; }
+.mock-bar-track    { background: rgba(255, 255, 255, 0.10); }
+.mock-alert-bar {
+  background: rgba(239, 68, 68, 0.16);
+  border-color: rgba(239, 68, 68, 0.32);
+}
+.mock-scan-btn {
+  background: rgba(22, 163, 74, 0.16);
+  border-color: rgba(22, 163, 74, 0.32);
+}
+
+/* ── Final CTA text ── */
+.lp-finalcta-h2    { color: #050D1E; }
+.lp-finalcta-sub   { color: rgba(5, 13, 30, 0.62); }
+.lp-finalcta-trust { color: rgba(5, 13, 30, 0.48); }
+
+/* ── Phone internal elements: keep light inside dark phone ── */
+.mock-screen-count { color: #86EFAC; }
+.mock-scan-btn     { color: #86EFAC; }
+
+/* ── Bento danger: darker red for white card contrast ── */
+.bento-exp--danger { color: #DC2626; }

@@ -757,17 +757,6 @@ const FinalCTASection = ({ isReturning, itemCount }) => {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          {/* Badge */}
-          <motion.div className="lp-finalcta-badge" variants={fadeUp}>
-            <motion.span
-              animate={{ rotate: [0, 12, -12, 0] }}
-              transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 2.5 }}
-            >
-              🌱
-            </motion.span>
-            No signup required · Free forever
-          </motion.div>
-
           {/* Headline */}
           <motion.h2 className="lp-finalcta-h2" variants={fadeUp} transition={{ delay: 0.1 }}>
             Your pantry is waiting.<br />
@@ -804,7 +793,7 @@ const FinalCTASection = ({ isReturning, itemCount }) => {
 
           {/* Trust line */}
           <motion.p className="lp-finalcta-trust" variants={fadeUp} transition={{ delay: 0.4 }}>
-            Built with ♻️ sustainability in mind · No signup required · Free forever
+            Built with ♻️ sustainability in mind
           </motion.p>
         </motion.div>
       </div>
