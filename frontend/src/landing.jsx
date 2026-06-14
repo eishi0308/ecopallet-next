@@ -360,7 +360,7 @@ const HowItWorksSection = () => {
         >
           {HOW_STEPS.map((s, i) => (
             <motion.div key={s.num} variants={cardReveal} transition={{ delay: i * 0.13 }}>
-              <TiltCard className="lp-step-card">
+              <TiltCard className={`lp-step-card lp-step-card--${s.extra}`}>
                 {/* Step number */}
                 <span
                   className="lp-step-num"

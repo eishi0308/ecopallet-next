@@ -671,7 +671,24 @@
    HOW IT WORKS
 ───────────────────────────────────────────────────── */
 
-.lp-hiw { background: transparent; }
+.lp-hiw {
+  background: linear-gradient(155deg, #f0fdf4 0%, #e8f5f0 25%, #EBF0F7 55%, #f5f0ff 100%);
+  position: relative;
+}
+
+.lp-hiw::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 900px;
+  height: 520px;
+  background:
+    radial-gradient(ellipse 40% 60% at 20% 50%, rgba(22,163,74,0.09) 0%, transparent 65%),
+    radial-gradient(ellipse 35% 55% at 80% 50%, rgba(124,58,237,0.08) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 50% at 50% 50%, rgba(217,119,6,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
 
 .lp-steps-grid {
   display: grid;
@@ -680,22 +697,101 @@
 }
 
 .lp-step-card {
-  background: var(--lp-surface);
-  border: 1px solid var(--lp-border);
+  background: #ffffff;
+  border: 1.5px solid var(--lp-border);
   border-radius: var(--lp-radius-xl);
   padding: 32px 28px;
   display: flex;
   flex-direction: column;
   gap: 0;
   cursor: default;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
   will-change: transform;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.05), 0 1px 4px rgba(0,0,0,0.04);
 }
 
-.lp-step-card:hover {
-  background: var(--lp-surface-2);
-  border-color: var(--lp-border-2);
+/* ── Scan / Green card ── */
+.lp-step-card--scan {
+  background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%);
+  border-color: rgba(22, 163, 74, 0.38);
+  box-shadow:
+    0 0 0 1px rgba(22,163,74,0.12),
+    0 8px 40px rgba(22,163,74,0.18),
+    0 2px 8px rgba(0,0,0,0.05);
 }
+.lp-step-card--scan::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #15803D, #22C55E, #86EFAC);
+  border-radius: 2px 2px 0 0;
+}
+.lp-step-card--scan:hover {
+  background: linear-gradient(145deg, #dcfce7 0%, #bbf7d0 100%);
+  border-color: rgba(22, 163, 74, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(22,163,74,0.2),
+    0 14px 56px rgba(22,163,74,0.28),
+    0 2px 8px rgba(0,0,0,0.06);
+}
+.lp-step-card--scan .lp-step-desc { color: rgba(6, 50, 22, 0.72); }
+
+/* ── Pulse / Amber card ── */
+.lp-step-card--pulse {
+  background: linear-gradient(145deg, #fffbeb 0%, #fef3c7 100%);
+  border-color: rgba(217, 119, 6, 0.38);
+  box-shadow:
+    0 0 0 1px rgba(217,119,6,0.12),
+    0 8px 40px rgba(245,158,11,0.18),
+    0 2px 8px rgba(0,0,0,0.05);
+}
+.lp-step-card--pulse::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #B45309, #F59E0B, #FCD34D);
+  border-radius: 2px 2px 0 0;
+}
+.lp-step-card--pulse:hover {
+  background: linear-gradient(145deg, #fef3c7 0%, #fde68a 100%);
+  border-color: rgba(217, 119, 6, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(217,119,6,0.2),
+    0 14px 56px rgba(245,158,11,0.28),
+    0 2px 8px rgba(0,0,0,0.06);
+}
+.lp-step-card--pulse .lp-step-desc { color: rgba(67, 30, 0, 0.72); }
+
+/* ── Spin / Purple card ── */
+.lp-step-card--spin {
+  background: linear-gradient(145deg, #faf5ff 0%, #ede9fe 100%);
+  border-color: rgba(124, 58, 237, 0.32);
+  box-shadow:
+    0 0 0 1px rgba(124,58,237,0.1),
+    0 8px 40px rgba(124,58,237,0.15),
+    0 2px 8px rgba(0,0,0,0.05);
+}
+.lp-step-card--spin::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #5B21B6, #7C3AED, #C4B5FD);
+  border-radius: 2px 2px 0 0;
+}
+.lp-step-card--spin:hover {
+  background: linear-gradient(145deg, #ede9fe 0%, #ddd6fe 100%);
+  border-color: rgba(124, 58, 237, 0.5);
+  box-shadow:
+    0 0 0 1px rgba(124,58,237,0.18),
+    0 14px 56px rgba(124,58,237,0.25),
+    0 2px 8px rgba(0,0,0,0.06);
+}
+.lp-step-card--spin .lp-step-desc { color: rgba(30, 10, 70, 0.7); }
 
 .lp-step-num {
   font-size: 11px;
@@ -775,7 +871,7 @@
 ───────────────────────────────────────────────────── */
 
 .lp-features {
-  background: rgba(255, 255, 255, 0.01);
+  background: linear-gradient(155deg, #f5f0ff 0%, #EBF0F7 50%, #f0fdf4 100%);
 }
 
 /* Grid: 3 columns, explicit area placement */
@@ -807,44 +903,184 @@
   flex-direction: column;
   gap: 0;
   cursor: default;
-  transition: border-color 0.3s, background 0.3s;
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
   overflow: hidden;
   will-change: transform;
   position: relative;
 }
 
+/* Base hover — background intentionally not changed; each themed variant handles its own glow */
 .bento-card:hover {
-  background: var(--lp-surface-2);
   border-color: var(--lp-border-2);
 }
 
-/* Green accent card (large) */
+/* ── Green accent card — Smart Expiry Tracking ── */
 .bento-card--green {
-  background: rgba(22, 163, 74, 0.06);
-  border-color: rgba(22, 163, 74, 0.25);
+  background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 60%, #bbf7d0 100%);
+  border-color: rgba(22, 163, 74, 0.42);
+  box-shadow:
+    0 0 0 1px rgba(22,163,74,0.14),
+    0 10px 48px rgba(22,163,74,0.2),
+    0 2px 8px rgba(0,0,0,0.05);
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
 }
 .bento-card--green:hover {
-  background: rgba(22, 163, 74, 0.09);
-  border-color: rgba(22, 163, 74, 0.38);
+  border-color: rgba(22, 163, 74, 0.65);
+  box-shadow:
+    0 0 0 1px rgba(22,163,74,0.24),
+    0 20px 72px rgba(22,163,74,0.34),
+    0 4px 14px rgba(0,0,0,0.07);
 }
 .bento-card--green::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(22, 163, 74, 0.5), transparent);
+  height: 3px;
+  background: linear-gradient(90deg, #15803D, #22C55E, #86EFAC);
+  border-radius: 2px 2px 0 0;
 }
+.bento-card--green .bento-eyebrow { color: #15803D; }
+.bento-card--green .bento-title   { color: #14532D; }
+.bento-card--green .bento-body    { color: rgba(20, 83, 45, 0.75); }
+.bento-card--green .bento-exp-row {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(22, 163, 74, 0.22);
+  box-shadow: 0 1px 4px rgba(22,163,74,0.08);
+}
+.bento-card--green .bento-exp-label   { color: #14532D; font-weight: 700; }
+.bento-card--green .bento-exp--danger { color: #DC2626; }
+.bento-card--green .bento-exp--warn   { color: #D97706; }
+.bento-card--green .bento-exp--safe   { color: #16A34A; }
 
-/* Dark card */
+/* ── Indigo card — Waste Analytics (light, consistent with page system) ── */
 .bento-card--dark {
-  background: rgba(255, 255, 255, 0.025);
+  background: linear-gradient(145deg, #eef2ff 0%, #e0e7ff 60%, #c7d2fe 100%);
+  border-color: rgba(99, 102, 241, 0.38);
+  box-shadow:
+    0 0 0 1px rgba(99,102,241,0.14),
+    0 10px 48px rgba(99,102,241,0.18),
+    0 2px 8px rgba(0,0,0,0.05);
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+.bento-card--dark:hover {
+  border-color: rgba(99, 102, 241, 0.62);
+  box-shadow:
+    0 0 0 1px rgba(99,102,241,0.24),
+    0 20px 72px rgba(99,102,241,0.34),
+    0 4px 14px rgba(0,0,0,0.07);
+}
+.bento-card--dark::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3730A3, #6366F1, #A5B4FC);
+  border-radius: 2px 2px 0 0;
+}
+.bento-card--dark .bento-eyebrow    { color: #3730A3; }
+.bento-card--dark .bento-title      { color: #1e1b4b; }
+.bento-card--dark .bento-body       { color: rgba(30, 27, 75, 0.65); }
+.bento-card--dark .bento-chart-label{ color: #3730A3; font-weight: 700; }
+.bento-card--dark .bento-bar        { background: rgba(99, 102, 241, 0.22); }
+.bento-card--dark .bento-bar--accent {
+  background: linear-gradient(180deg, #818CF8 0%, #4F46E5 100%);
+  box-shadow: 0 0 14px rgba(99,102,241,0.45);
 }
 
-/* Savings card */
+/* ── Savings card — Preservation Tips ── */
 .bento-card--savings {
-  background: rgba(245, 158, 11, 0.06);
-  border-color: rgba(245, 158, 11, 0.2);
+  background: linear-gradient(145deg, #fffbeb 0%, #fef3c7 60%, #fde68a 100%);
+  border-color: rgba(217, 119, 6, 0.38);
+  box-shadow:
+    0 0 0 1px rgba(217,119,6,0.12),
+    0 10px 40px rgba(245,158,11,0.18),
+    0 2px 8px rgba(0,0,0,0.05);
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
 }
+.bento-card--savings:hover {
+  border-color: rgba(217, 119, 6, 0.65);
+  box-shadow:
+    0 0 0 1px rgba(217,119,6,0.24),
+    0 20px 72px rgba(245,158,11,0.34),
+    0 4px 14px rgba(0,0,0,0.07);
+}
+.bento-card--savings::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #B45309, #F59E0B, #FCD34D);
+  border-radius: 2px 2px 0 0;
+}
+.bento-card--savings .bento-eyebrow { color: #B45309; }
+.bento-card--savings .bento-title   { color: #451A03; }
+.bento-card--savings .bento-body    { color: rgba(69, 26, 3, 0.72); }
+.bento-card--savings .bento-tip-row { background: rgba(255,255,255,0.5); border-radius: 10px; padding: 8px 10px; }
+.bento-card--savings .bento-tip-text { color: rgba(69, 26, 3, 0.78); font-weight: 500; }
+
+/* ── Alerts bento card — warm orange/red treatment ── */
+.bento-slot--alerts .bento-card {
+  background: linear-gradient(145deg, #fff7ed 0%, #ffedd5 100%);
+  border-color: rgba(234, 88, 12, 0.35);
+  box-shadow:
+    0 0 0 1px rgba(234,88,12,0.1),
+    0 8px 32px rgba(234,88,12,0.14);
+  position: relative;
+  overflow: hidden;
+}
+.bento-slot--alerts .bento-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #C2410C, #EA580C, #FB923C);
+  border-radius: 2px 2px 0 0;
+}
+.bento-slot--alerts .bento-card:hover {
+  border-color: rgba(234, 88, 12, 0.62);
+  box-shadow:
+    0 0 0 1px rgba(234,88,12,0.22),
+    0 20px 72px rgba(234,88,12,0.3),
+    0 4px 14px rgba(0,0,0,0.06);
+}
+.bento-slot--alerts .bento-eyebrow { color: #C2410C; }
+.bento-slot--alerts .bento-title   { color: #7C2D12; }
+.bento-slot--alerts .bento-body    { color: rgba(124, 45, 18, 0.72); }
+.bento-slot--alerts .bento-notif-row {
+  background: rgba(255,255,255,0.72);
+  border-color: rgba(234,88,12,0.22);
+  color: #7C2D12;
+  font-weight: 600;
+}
+
+/* ── Recipe bento card — rich violet/purple treatment ── */
+.bento-slot--recipes .bento-card {
+  background: linear-gradient(145deg, #faf5ff 0%, #ede9fe 100%);
+  border-color: rgba(109, 40, 217, 0.32);
+  box-shadow:
+    0 0 0 1px rgba(109,40,217,0.1),
+    0 8px 32px rgba(109,40,217,0.15);
+  position: relative;
+  overflow: hidden;
+}
+.bento-slot--recipes .bento-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #5B21B6, #7C3AED, #C4B5FD);
+  border-radius: 2px 2px 0 0;
+}
+.bento-slot--recipes .bento-card:hover {
+  border-color: rgba(109, 40, 217, 0.6);
+  box-shadow:
+    0 0 0 1px rgba(109,40,217,0.22),
+    0 20px 72px rgba(109,40,217,0.3),
+    0 4px 14px rgba(0,0,0,0.06);
+}
+.bento-slot--recipes .bento-eyebrow { color: #6D28D9; }
+.bento-slot--recipes .bento-title   { color: #3B0764; }
+.bento-slot--recipes .bento-body    { color: rgba(59, 7, 100, 0.65); }
 
 .bento-eyebrow {
   display: inline-block;
@@ -883,92 +1119,114 @@
 .bento-exp-row {
   display: flex;
   align-items: center;
-  gap: 9px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--lp-border);
-  border-radius: var(--lp-radius-sm);
-  padding: 9px 12px;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 10px 14px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
 
-.bento-exp-icon  { font-size: 17px; flex-shrink: 0; }
+.bento-exp-icon  { font-size: 18px; flex-shrink: 0; }
 
 .bento-exp-label {
   flex: 1;
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 600;
   color: var(--lp-text-1);
   white-space: nowrap;
 }
 
 .bento-mini-track {
-  width: 70px;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.07);
-  border-radius: 2px;
+  width: 72px;
+  height: 5px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
   overflow: hidden;
   flex-shrink: 0;
 }
 
 .bento-mini-fill {
   height: 100%;
-  border-radius: 2px;
+  border-radius: 3px;
 }
-.bento-mini--danger { background: linear-gradient(90deg, #EF4444, #F87171); }
-.bento-mini--warn   { background: linear-gradient(90deg, #F59E0B, #FCD34D); }
-.bento-mini--safe   { background: linear-gradient(90deg, #16A34A, #22C55E); }
+.bento-mini--danger { background: linear-gradient(90deg, #DC2626, #EF4444); }
+.bento-mini--warn   { background: linear-gradient(90deg, #D97706, #F59E0B); }
+.bento-mini--safe   { background: linear-gradient(90deg, #15803D, #22C55E); }
 
-.bento-exp-days       { font-size: 11px; font-weight: 700; flex-shrink: 0; }
-.bento-exp--danger    { color: #F87171; }
-.bento-exp--warn      { color: #FCD34D; }
-.bento-exp--safe      { color: #86EFAC; }
+.bento-exp-days       { font-size: 11.5px; font-weight: 800; flex-shrink: 0; letter-spacing: -0.02em; }
+.bento-exp--danger    { color: #DC2626; }
+.bento-exp--warn      { color: #D97706; }
+.bento-exp--safe      { color: #16A34A; }
+
 
 /* Alerts card elements */
 .bento-bell {
-  font-size: 38px;
-  margin: 8px 0 16px;
+  font-size: 42px;
+  margin: 4px 0 14px;
   display: block;
+  filter: drop-shadow(0 2px 8px rgba(234,88,12,0.35));
 }
 
 .bento-notif-stack {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 9px;
 }
 
 .bento-notif-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 12.5px;
-  font-weight: 500;
-  color: var(--lp-text-2);
-  background: var(--lp-surface);
-  border: 1px solid var(--lp-border);
-  padding: 8px 12px;
-  border-radius: var(--lp-radius-sm);
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--lp-text-1);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 11px 14px;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
 
 .bento-notif-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   background: #EF4444;
   border-radius: 50%;
   flex-shrink: 0;
-  box-shadow: 0 0 6px #EF4444;
+  box-shadow: 0 0 8px rgba(239,68,68,0.7);
+}
+
+/* Alerts card notif row — contextual override */
+.bento-slot--alerts .bento-notif-row {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(234, 88, 12, 0.2);
+  color: #7C2D12;
+}
+.bento-slot--alerts .bento-notif-dot {
+  background: #EA580C;
+  box-shadow: 0 0 8px rgba(234,88,12,0.65);
 }
 
 /* Recipe card */
 .bento-recipe-float-grid {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   margin-top: auto;
-  padding-top: 12px;
+  padding: 16px 14px;
+  background: rgba(109, 40, 217, 0.08);
+  border: 1px solid rgba(109, 40, 217, 0.15);
+  border-radius: 16px;
+  justify-content: center;
 }
 
 .bento-recipe-emoji {
-  font-size: 32px;
+  font-size: 36px;
   display: inline-block;
   will-change: transform;
+  filter: drop-shadow(0 2px 8px rgba(109,40,217,0.25));
 }
 
 /* Analytics chart */
@@ -976,31 +1234,34 @@
   position: relative;
   display: flex;
   align-items: flex-end;
-  gap: 6px;
-  height: 80px;
+  gap: 5px;
+  height: 90px;
   margin-top: auto;
-  padding-top: 12px;
+  padding: 16px 0 0;
+  border-top: 1px solid rgba(99,102,241,0.15);
 }
 
 .bento-bar {
   flex: 1;
-  background: rgba(22, 163, 74, 0.25);
-  border-radius: 4px 4px 0 0;
+  background: rgba(99, 102, 241, 0.2);
+  border-radius: 5px 5px 0 0;
   will-change: transform;
+  min-height: 4px;
 }
 
 .bento-bar--accent {
-  background: linear-gradient(180deg, #22C55E, #16A34A);
-  box-shadow: 0 0 12px rgba(22, 163, 74, 0.5);
+  background: linear-gradient(180deg, #818CF8 0%, #4F46E5 100%);
+  box-shadow: 0 0 14px rgba(99,102,241,0.45);
 }
 
 .bento-chart-label {
   position: absolute;
   top: 0;
   right: 0;
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 700;
-  color: var(--lp-green-3);
+  color: #3730A3;
+  letter-spacing: -0.01em;
 }
 
 /* Savings big number */
