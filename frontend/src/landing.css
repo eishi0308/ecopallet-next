@@ -676,6 +676,11 @@
   position: relative;
 }
 
+.lp-hiw .lp-section-h2 {
+  white-space: nowrap;
+  max-width: none;
+}
+
 .lp-hiw::after {
   content: '';
   position: absolute;

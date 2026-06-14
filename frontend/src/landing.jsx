@@ -349,7 +349,7 @@ const HowItWorksSection = () => {
           variants={fadeUp} initial="hidden" animate={inView ? "visible" : "hidden"}
           transition={{ delay: 0.1 }}
         >
-          Three steps to a smarter pantry
+          3 steps to a smarter pantry
         </motion.h2>
 
         <motion.div
