@@ -1220,10 +1220,7 @@
   display: flex;
   gap: 12px;
   margin-top: auto;
-  padding: 16px 14px;
-  background: rgba(109, 40, 217, 0.08);
-  border: 1px solid rgba(109, 40, 217, 0.15);
-  border-radius: 16px;
+  padding-top: 12px;
   justify-content: center;
 }
 
