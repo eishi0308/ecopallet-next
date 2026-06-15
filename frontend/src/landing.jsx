@@ -463,12 +463,36 @@ const FeaturesSection = () => {
           {/* ── A · Expiry Tracking (large, 2×2) ── */}
           <motion.div className="bento-slot bento-slot--large" variants={cardReveal}>
             <TiltCard className="bento-card bento-card--green">
-              <span className="bento-eyebrow">Core Feature</span>
-              <h3 className="bento-title">Smart Expiry Tracking</h3>
-              <p className="bento-body">
-                Intelligent shelf-life estimates based on food category, storage
-                method, and your personal usage patterns.
-              </p>
+              <div className="bento-text-block">
+                <span className="bento-eyebrow">Core Feature</span>
+                <h3 className="bento-title">Smart Expiry Tracking</h3>
+                <p className="bento-body">
+                  Intelligent shelf-life estimates based on food category, storage
+                  method, and your personal usage patterns.
+                </p>
+              </div>
+              {/* ── Urgency summary pills ── */}
+              <div className="bento-urgency-wrap">
+                <div className="bento-urgency-pills">
+                  {[
+                    { label: "Fresh",         count: 8, mod: "safe"   },
+                    { label: "Expiring Soon", count: 3, mod: "warn"   },
+                    { label: "Expired",       count: 1, mod: "danger" },
+                  ].map((p, i) => (
+                    <motion.div
+                      key={p.label}
+                      className={`bento-urgency-pill bento-urgency-pill--${p.mod}`}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={inView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ delay: 0.4 + i * 0.1 }}
+                    >
+                      <span className="bento-urgency-count">{p.count}</span>
+                      <span className="bento-urgency-label">{p.label}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+
               <div className="bento-expiry-list">
                 {[
                   { icon: "🥩", label: "Beef Steak",      days: 2,  pct: 20 },
@@ -480,7 +504,7 @@ const FeaturesSection = () => {
                     className="bento-exp-row"
                     initial={{ opacity: 0, x: -18 }}
                     animate={inView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ delay: 0.5 + i * 0.14 }}
+                    transition={{ delay: 0.65 + i * 0.14 }}
                   >
                     <span className="bento-exp-icon">{item.icon}</span>
                     <span className="bento-exp-label">{item.label}</span>
@@ -491,7 +515,7 @@ const FeaturesSection = () => {
                         }`}
                         initial={{ width: 0 }}
                         animate={inView ? { width: `${item.pct}%` } : {}}
-                        transition={{ delay: 0.85 + i * 0.14, duration: 0.9, ease: "easeOut" }}
+                        transition={{ delay: 1.0 + i * 0.14, duration: 0.9, ease: "easeOut" }}
                       />
                     </div>
                     <span
