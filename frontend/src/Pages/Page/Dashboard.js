@@ -1,10 +1,28 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import './dashboard.css';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 import { calculateStatus } from './inventory';
-import { motion } from 'framer-motion';
+import { motion, animate, useInView } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+
+function AnimatedNumber({ value, format }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+  const [display, setDisplay] = useState(format(0));
+
+  useEffect(() => {
+    if (!inView) return;
+    const ctrl = animate(0, value, {
+      duration: 1.4,
+      ease: [0.16, 1, 0.3, 1],
+      onUpdate: v => setDisplay(format(v)),
+    });
+    return ctrl.stop;
+  }, [inView, value]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return <span ref={ref}>{display}</span>;
+}
 
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
@@ -268,14 +286,14 @@ const Dashboard = ({ inventory, deletionHistory, hideCategorySpending }) => {
           <span className="dash-metric-eyebrow">🗑 Gone to waste</span>
           <div className="dash-metric-row">
             <div className="dash-metric-col">
-              <div className="dash-metric-amount">${m.wastedCost.toFixed(2)}</div>
-              <p className="dash-metric-sub">{m.wastedCount} item{m.wastedCount !== 1 ? 's' : ''} gone to waste</p>
+              <div className="dash-metric-amount">$<AnimatedNumber value={m.wastedCost} format={v => v.toFixed(2)} /></div>
+              <p className="dash-metric-sub"><AnimatedNumber value={m.wastedCount} format={v => Math.round(v).toString()} /> item{m.wastedCount !== 1 ? 's' : ''} gone to waste</p>
             </div>
             {m.wasteRate > 0 && (
               <>
                 <div className="dash-metric-divider" />
                 <div className="dash-metric-col">
-                  <div className="dash-metric-pct">{m.wasteRate}%</div>
+                  <div className="dash-metric-pct"><AnimatedNumber value={m.wasteRate} format={v => Math.round(v).toString()} />%</div>
                   <p className="dash-metric-sub">of total spend</p>
                 </div>
               </>
@@ -286,14 +304,14 @@ const Dashboard = ({ inventory, deletionHistory, hideCategorySpending }) => {
           <span className="dash-metric-eyebrow">✅ Saved</span>
           <div className="dash-metric-row">
             <div className="dash-metric-col">
-              <div className="dash-metric-amount">${m.savedCost.toFixed(2)}</div>
-              <p className="dash-metric-sub">{m.savedCount} item{m.savedCount !== 1 ? 's' : ''} consumed in time</p>
+              <div className="dash-metric-amount">$<AnimatedNumber value={m.savedCost} format={v => v.toFixed(2)} /></div>
+              <p className="dash-metric-sub"><AnimatedNumber value={m.savedCount} format={v => Math.round(v).toString()} /> item{m.savedCount !== 1 ? 's' : ''} consumed in time</p>
             </div>
             {m.saveRate > 0 && (
               <>
                 <div className="dash-metric-divider" />
                 <div className="dash-metric-col">
-                  <div className="dash-metric-pct dash-metric-pct--saved">{m.saveRate}%</div>
+                  <div className="dash-metric-pct dash-metric-pct--saved"><AnimatedNumber value={m.saveRate} format={v => Math.round(v).toString()} />%</div>
                   <p className="dash-metric-sub">saved</p>
                 </div>
               </>
@@ -302,14 +320,14 @@ const Dashboard = ({ inventory, deletionHistory, hideCategorySpending }) => {
         </motion.div>
         <motion.div variants={cardFadeUp} className="dash-metric-card dash-metric--total">
           <span className="dash-metric-eyebrow">💰 Total Tracked</span>
-          <div className="dash-metric-amount">${m.totalCost.toFixed(2)}</div>
+          <div className="dash-metric-amount">$<AnimatedNumber value={m.totalCost} format={v => v.toFixed(2)} /></div>
           <p className="dash-metric-sub">all spending tracked</p>
         </motion.div>
         <motion.div variants={cardFadeUp} className="dash-metric-card dash-metric--risk">
           <span className="dash-metric-eyebrow">⚠️ Still at risk</span>
-          <div className="dash-metric-amount">${m.aboutToExpireCost.toFixed(2)}</div>
+          <div className="dash-metric-amount">$<AnimatedNumber value={m.aboutToExpireCost} format={v => v.toFixed(2)} /></div>
           <p className="dash-metric-sub">
-            {m.aboutToExpireCount} item{m.aboutToExpireCount !== 1 ? 's' : ''} not yet expired
+            <AnimatedNumber value={m.aboutToExpireCount} format={v => Math.round(v).toString()} /> item{m.aboutToExpireCount !== 1 ? 's' : ''} not yet expired
           </p>
         </motion.div>
       </motion.div>
