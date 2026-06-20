@@ -464,70 +464,89 @@ const FeaturesSection = () => {
           <motion.div className="bento-slot bento-slot--large" variants={cardReveal}>
             <TiltCard className="bento-card bento-card--green">
               <div className="bento-text-block">
-                <span className="bento-eyebrow">Core Feature</span>
+                <span className="bento-eyebrow">See it in action</span>
                 <h3 className="bento-title">Smart Expiry Tracking</h3>
                 <p className="bento-body">
                   Intelligent shelf-life estimates based on food category, storage
                   method, and your personal usage patterns.
                 </p>
               </div>
-              {/* ── Urgency summary pills ── */}
-              <div className="bento-urgency-wrap">
-                <div className="bento-urgency-pills">
-                  {[
-                    { label: "Fresh",         count: 8, mod: "safe"   },
-                    { label: "Expiring Soon", count: 3, mod: "warn"   },
-                    { label: "Expired",       count: 1, mod: "danger" },
-                  ].map((p, i) => (
-                    <motion.div
-                      key={p.label}
-                      className={`bento-urgency-pill bento-urgency-pill--${p.mod}`}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={inView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ delay: 0.4 + i * 0.1 }}
-                    >
-                      <span className="bento-urgency-count">{p.count}</span>
-                      <span className="bento-urgency-label">{p.label}</span>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
 
-              <div className="bento-expiry-list">
-                {[
-                  { icon: "🥩", label: "Beef Steak",      days: 2,  pct: 20 },
-                  { icon: "🧃", label: "Apple Juice",      days: 14, pct: 70 },
-                  { icon: "🥚", label: "Free-range Eggs",  days: 21, pct: 90 },
-                ].map((item, i) => (
-                  <motion.div
-                    key={item.label}
-                    className="bento-exp-row"
-                    initial={{ opacity: 0, x: -18 }}
-                    animate={inView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ delay: 0.65 + i * 0.14 }}
-                  >
-                    <span className="bento-exp-icon">{item.icon}</span>
-                    <span className="bento-exp-label">{item.label}</span>
-                    <div className="bento-mini-track">
-                      <motion.div
-                        className={`bento-mini-fill bento-mini--${
-                          item.pct < 30 ? "danger" : item.pct < 60 ? "warn" : "safe"
-                        }`}
-                        initial={{ width: 0 }}
-                        animate={inView ? { width: `${item.pct}%` } : {}}
-                        transition={{ delay: 1.0 + i * 0.14, duration: 0.9, ease: "easeOut" }}
-                      />
+              {/* ── Mini app window preview ── */}
+              <motion.div
+                className="bento-app-frame"
+                initial={{ opacity: 0, y: 16 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.3, duration: 0.6, ease: [0.25,0.46,0.45,0.94] }}
+              >
+                <div className="bento-app-frame-bar">
+                  <div className="bento-app-frame-dots">
+                    <span className="bento-dot--red" />
+                    <span className="bento-dot--yellow" />
+                    <span className="bento-dot--green" />
+                  </div>
+                  <span className="bento-app-frame-title">My Inventory · Fridgely</span>
+                </div>
+
+                <div className="bento-app-frame-body">
+                  <div className="bento-urgency-wrap">
+                    <div className="bento-urgency-pills">
+                      {[
+                        { label: "Fresh",         count: 8, mod: "safe"   },
+                        { label: "Expiring Soon", count: 3, mod: "warn"   },
+                        { label: "Expired",       count: 1, mod: "danger" },
+                      ].map((p, i) => (
+                        <motion.div
+                          key={p.label}
+                          className={`bento-urgency-pill bento-urgency-pill--${p.mod}`}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={inView ? { opacity: 1, y: 0 } : {}}
+                          transition={{ delay: 0.5 + i * 0.1 }}
+                        >
+                          <span className="bento-urgency-count">{p.count}</span>
+                          <span className="bento-urgency-label">{p.label}</span>
+                        </motion.div>
+                      ))}
                     </div>
-                    <span
-                      className={`bento-exp-days ${
-                        item.pct < 30 ? "bento-exp--danger" : item.pct < 60 ? "bento-exp--warn" : "bento-exp--safe"
-                      }`}
-                    >
-                      {item.days}d
-                    </span>
-                  </motion.div>
-                ))}
-              </div>
+                  </div>
+
+                  <div className="bento-expiry-list">
+                    {[
+                      { icon: "🥩", label: "Beef Steak",      days: 2,  pct: 20 },
+                      { icon: "🧃", label: "Apple Juice",      days: 14, pct: 70 },
+                      { icon: "🥚", label: "Free-range Eggs",  days: 21, pct: 90 },
+                    ].map((item, i) => (
+                      <motion.div
+                        key={item.label}
+                        className="bento-exp-row"
+                        initial={{ opacity: 0, x: -18 }}
+                        animate={inView ? { opacity: 1, x: 0 } : {}}
+                        transition={{ delay: 0.75 + i * 0.14 }}
+                      >
+                        <span className="bento-exp-icon">{item.icon}</span>
+                        <span className="bento-exp-label">{item.label}</span>
+                        <div className="bento-mini-track">
+                          <motion.div
+                            className={`bento-mini-fill bento-mini--${
+                              item.pct < 30 ? "danger" : item.pct < 60 ? "warn" : "safe"
+                            }`}
+                            initial={{ width: 0 }}
+                            animate={inView ? { width: `${item.pct}%` } : {}}
+                            transition={{ delay: 1.1 + i * 0.14, duration: 0.9, ease: "easeOut" }}
+                          />
+                        </div>
+                        <span
+                          className={`bento-exp-days ${
+                            item.pct < 30 ? "bento-exp--danger" : item.pct < 60 ? "bento-exp--warn" : "bento-exp--safe"
+                          }`}
+                        >
+                          {item.days}d
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
             </TiltCard>
           </motion.div>
 

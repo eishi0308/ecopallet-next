@@ -1277,6 +1277,61 @@
 .bento-exp--warn      { color: #D97706; }
 .bento-exp--safe      { color: #16A34A; }
 
+/* ── Mini app window frame ── */
+.bento-app-frame {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(22, 163, 74, 0.18);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.06),
+    0 8px 32px rgba(0,0,0,0.08),
+    inset 0 1px 0 rgba(255,255,255,1);
+}
+
+.bento-app-frame-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(248, 250, 252, 0.95);
+  border-bottom: 1px solid rgba(22,163,74,0.1);
+}
+
+.bento-app-frame-dots {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.bento-app-frame-dots span {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: block;
+}
+.bento-dot--red    { background: #FF5F57; }
+.bento-dot--yellow { background: #FEBC2E; }
+.bento-dot--green  { background: #28C840; }
+
+.bento-app-frame-title {
+  flex: 1;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(20, 83, 45, 0.45);
+  letter-spacing: 0.02em;
+}
+
+.bento-app-frame-body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bento-app-frame .bento-urgency-wrap { margin-top: 0; }
+.bento-app-frame .bento-card--green .bento-expiry-list { margin-top: 0; }
+
 /* ── Urgency summary pills + smart tip ── */
 .bento-urgency-wrap {
   display: flex;
