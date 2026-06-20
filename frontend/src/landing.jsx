@@ -500,8 +500,23 @@ const FeaturesSection = () => {
                           key={p.label}
                           className={`bento-urgency-pill bento-urgency-pill--${p.mod}`}
                           initial={{ opacity: 0, y: 10 }}
-                          animate={inView ? { opacity: 1, y: 0 } : {}}
-                          transition={{ delay: 0.5 + i * 0.1 }}
+                          animate={inView ? {
+                            opacity: 1, y: 0,
+                            ...(p.mod === "danger" ? {
+                              scale: [1, 1.05, 1],
+                              boxShadow: [
+                                "0 0 0px rgba(239,68,68,0)",
+                                "0 0 12px rgba(239,68,68,0.55)",
+                                "0 0 0px rgba(239,68,68,0)",
+                              ],
+                            } : {}),
+                          } : {}}
+                          transition={p.mod === "danger" ? {
+                            opacity: { delay: 0.7, duration: 0.35 },
+                            y:       { delay: 0.7, duration: 0.35 },
+                            scale:     { delay: 1.6, duration: 2.2, repeat: Infinity, repeatDelay: 2.5, ease: "easeInOut" },
+                            boxShadow: { delay: 1.6, duration: 2.2, repeat: Infinity, repeatDelay: 2.5, ease: "easeInOut" },
+                          } : { delay: 0.5 + i * 0.1 }}
                         >
                           <span className="bento-urgency-count">{p.count}</span>
                           <span className="bento-urgency-label">{p.label}</span>
@@ -523,7 +538,13 @@ const FeaturesSection = () => {
                         animate={inView ? { opacity: 1, x: 0 } : {}}
                         transition={{ delay: 0.75 + i * 0.14 }}
                       >
-                        <span className="bento-exp-icon">{item.icon}</span>
+                        <motion.span
+                          className="bento-exp-icon"
+                          animate={inView ? { y: [0, -5, 0] } : {}}
+                          transition={{ delay: 1.8 + i * 0.35, duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          {item.icon}
+                        </motion.span>
                         <span className="bento-exp-label">{item.label}</span>
                         <div className="bento-mini-track">
                           <motion.div
