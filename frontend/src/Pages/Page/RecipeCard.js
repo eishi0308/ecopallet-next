@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
+import { RecipeDrawer } from './RecipeDrawer';
 
 export const RecipeCard = ({ recipe, finalizeInventory }) => {
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
-  const handleCardFlip = () => {
-    setIsFlipped(!isFlipped);
-  };
-
   const handleCookingClick = (event) => {
-    event.stopPropagation(); // Prevent card flip when button is clicked
+    event.stopPropagation();
 
     // Show the custom popup
     setShowPopup(true);
@@ -30,11 +27,23 @@ export const RecipeCard = ({ recipe, finalizeInventory }) => {
 
   };
 
-  return (
-    <div className={`recipe-card ${isFlipped ? 'is-flipped' : ''}`} onClick={handleCardFlip}>
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      setIsOpen(true);
+    }
+  };
 
-      {/* ── Front face ── */}
-      <div className="card-front">
+  return (
+    <>
+      <div
+        className="recipe-card"
+        role="button"
+        tabIndex={0}
+        aria-label={`View recipe: ${recipe.title}`}
+        onClick={() => setIsOpen(true)}
+        onKeyDown={handleKeyDown}
+      >
         <div className="recipe-image-placeholder">
           <img src={recipe.image} alt="Recipe" />
           {/* Prep time badge over image */}
@@ -44,43 +53,22 @@ export const RecipeCard = ({ recipe, finalizeInventory }) => {
         </div>
         <div className="card-front-body">
           <h2 className="recipe-title">{recipe.title}</h2>
-          <span className="card-flip-hint">Tap to see recipe →</span>
+          <span className="card-open-hint">View recipe →</span>
         </div>
       </div>
 
-      {/* ── Back face ── */}
-      <div className="card-back">
-        <div className="card-back-header">
-          <p className="card-back-title">{recipe.title}</p>
-          <div className="card-back-meta">
-            {recipe.searchedIngredients && (
-              <span className="card-back-tag">🌿 {recipe.searchedIngredients}</span>
-            )}
-            {recipe.preparationMinutes !== -1 && (
-              <span className="card-back-tag card-back-tag--time">⏱ {recipe.preparationMinutes} min</span>
-            )}
-          </div>
-        </div>
-
-        <div className="card-back-scroll">
-          <div className="recipe-instructions">Instructions</div>
-          <div className="recipe-ingredients">
-            <ol>
-              {recipe.analyzedInstructions.length > 0
-                ? recipe.analyzedInstructions[0].steps.map((step, index) => (
-                    <li key={index}>{step.step}</li>
-                  ))
-                : <li>No instructions available</li>}
-            </ol>
-          </div>
-        </div>
-
-        <div className="card-back-footer">
-          <button className="cooking-button" onClick={handleCookingClick}>
-            I'm cooking this
-          </button>
-        </div>
-      </div>
+      {/* ── Recipe detail drawer ── */}
+      {isOpen && (
+        <RecipeDrawer
+          recipe={recipe}
+          onClose={() => setIsOpen(false)}
+          footer={
+            <button className="cooking-button" onClick={handleCookingClick}>
+              I'm cooking this
+            </button>
+          }
+        />
+      )}
 
       {/* ── Confirm popup ── */}
       {showPopup && (
@@ -94,6 +82,6 @@ export const RecipeCard = ({ recipe, finalizeInventory }) => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
