@@ -377,36 +377,94 @@ export const Tips = () => {
         </div>
       </motion.div>
 
-      {/* ── Quick Category Cards ── */}
+      {/* ── Search ── */}
       <motion.section
-        className="tips-panel tips-category-panel"
+        className="tips-panel tips-search-panel"
         variants={fadeUp}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-60px' }}
       >
-        <div className="tips-category-header">
-          <span className="tips-eyebrow">Quick Reference</span>
-          <h2 className="tips-panel-title">Storage Tips by Category</h2>
+        <div className="tips-panel-header tips-panel-header--centered">
+          <span className="tips-eyebrow">Deep Dive</span>
+          <h2 className="tips-panel-title">Search for Storage Tips</h2>
+          <p className="tips-panel-sub">Enter any ingredient or food name to find detailed storage guidance</p>
         </div>
-        <motion.div
-          className="category-tips-container"
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          {categoryTips.map((item, index) => (
-            <motion.div key={index} className="category-tip-wrap" variants={cardFadeUp}>
-              <CategoryTipItem
-                frontLogo={item.frontLogo}
-                backLogo={item.backLogo}
-                category={item.category}
-              />
-            </motion.div>
-          ))}
-        </motion.div>
+        <div className="tips-search-area">
+          <div className="tips-search-input-wrap">
+            <Search className="tips-search-icon" size={18} />
+            <input
+              type="text"
+              value={searchValue}
+              onChange={e => setSearchValue(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSearch(searchValue)}
+              placeholder="e.g. milk, chicken, olive oil…"
+            />
+            <AnimatePresence>
+              {searchValue && (
+                <motion.button
+                  className="tips-search-clear"
+                  onClick={() => handleSearch('')}
+                  initial={{ opacity: 0, scale: 0.7 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.15 }}
+                  aria-label="Clear search"
+                >
+                  <X size={15} />
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </div>
+          <button className="tips-search-button" onClick={() => handleSearch(searchValue)}>
+            Search
+          </button>
+        </div>
       </motion.section>
+
+      <AnimatePresence>
+        {searchResults.length > 0 && (
+          <motion.div
+            key="results"
+            className="result-tips-container"
+            ref={searchResultsRef}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+          >
+            <motion.div
+              className="tips-results-area"
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+            >
+              {searchResults.map((result, index) => (
+                <motion.div
+                  key={index}
+                  variants={cardFadeUp}
+                  className={`tips-result-item ${selectedResult === result ? 'selected' : ''}`}
+                  onClick={() => handleResultSelection(result)}
+                >
+                  <span className="tips-result-category">{result.Category_Name}</span>
+                  <span className="tips-result-name">{result.Name}</span>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {!selectedResult && (
+              <div className="tips-initial-placeholder">
+                <span className="tips-placeholder-icon">👆</span>
+                <p>Select a result to view storage tips</p>
+              </div>
+            )}
+
+            {selectedResult && (
+              <TipsContent selectedResult={selectedResult} />
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Your Inventory ── */}
       <motion.section
@@ -460,49 +518,35 @@ export const Tips = () => {
         )}
       </motion.section>
 
-      {/* ── Search ── */}
+      {/* ── Quick Category Cards ── */}
       <motion.section
-        className="tips-panel tips-search-panel"
+        className="tips-panel tips-category-panel"
         variants={fadeUp}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-60px' }}
       >
-        <div className="tips-panel-header tips-panel-header--centered">
-          <span className="tips-eyebrow">Deep Dive</span>
-          <h2 className="tips-panel-title">Search for Storage Tips</h2>
-          <p className="tips-panel-sub">Enter any ingredient or food name to find detailed storage guidance</p>
+        <div className="tips-category-header">
+          <span className="tips-eyebrow">Quick Reference</span>
+          <h2 className="tips-panel-title">Storage Tips by Category</h2>
         </div>
-        <div className="tips-search-area">
-          <div className="tips-search-input-wrap">
-            <Search className="tips-search-icon" size={18} />
-            <input
-              type="text"
-              value={searchValue}
-              onChange={e => setSearchValue(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleSearch(searchValue)}
-              placeholder="e.g. milk, chicken, olive oil…"
-            />
-            <AnimatePresence>
-              {searchValue && (
-                <motion.button
-                  className="tips-search-clear"
-                  onClick={() => handleSearch('')}
-                  initial={{ opacity: 0, scale: 0.7 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.7 }}
-                  transition={{ duration: 0.15 }}
-                  aria-label="Clear search"
-                >
-                  <X size={15} />
-                </motion.button>
-              )}
-            </AnimatePresence>
-          </div>
-          <button className="tips-search-button" onClick={() => handleSearch(searchValue)}>
-            Search
-          </button>
-        </div>
+        <motion.div
+          className="category-tips-container"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          {categoryTips.map((item, index) => (
+            <motion.div key={index} className="category-tip-wrap" variants={cardFadeUp}>
+              <CategoryTipItem
+                frontLogo={item.frontLogo}
+                backLogo={item.backLogo}
+                category={item.category}
+              />
+            </motion.div>
+          ))}
+        </motion.div>
       </motion.section>
 
       {searchResults.length === 0 && showInitialContent && (
@@ -510,50 +554,6 @@ export const Tips = () => {
           <img src={footer} alt="Footer" />
         </div>
       )}
-
-      <AnimatePresence>
-        {searchResults.length > 0 && (
-          <motion.div
-            key="results"
-            className="result-tips-container"
-            ref={searchResultsRef}
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.35, ease: 'easeOut' }}
-          >
-            <motion.div
-              className="tips-results-area"
-              variants={staggerContainer}
-              initial="hidden"
-              animate="visible"
-            >
-              {searchResults.map((result, index) => (
-                <motion.div
-                  key={index}
-                  variants={cardFadeUp}
-                  className={`tips-result-item ${selectedResult === result ? 'selected' : ''}`}
-                  onClick={() => handleResultSelection(result)}
-                >
-                  <span className="tips-result-category">{result.Category_Name}</span>
-                  <span className="tips-result-name">{result.Name}</span>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {!selectedResult && (
-              <div className="tips-initial-placeholder">
-                <span className="tips-placeholder-icon">👆</span>
-                <p>Select a result to view storage tips</p>
-              </div>
-            )}
-
-            {selectedResult && (
-              <TipsContent selectedResult={selectedResult} />
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
     </>
   );
