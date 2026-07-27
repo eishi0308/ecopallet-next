@@ -960,3 +960,115 @@
   .tips-hero-title { font-size: 1.5rem; }
   .tips-panel { padding: 20px; }
 }
+
+/* ══════════════════════════════════════════
+   SITUATIONAL ADVICE + AI FALLBACK
+   Advice keyed to the user's own item, and the
+   state shown while tips are being written for
+   a food the curated guide doesn't cover.
+══════════════════════════════════════════ */
+.tips-advice,
+.tips-generating {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 22px;
+  border-radius: 16px;
+  border: 1px solid var(--accent-border, #BBF7D0);
+  background: linear-gradient(135deg, #F0FDF4 0%, #ECFEFF 100%);
+}
+
+.tips-advice-mark {
+  flex-shrink: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--accent, #16A34A);
+}
+
+.tips-advice-label {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 5px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-dark, #15803D);
+}
+
+.tips-advice-days {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--text-2, #475569);
+  background: #fff;
+  border: 1px solid var(--border, #E2E8F0);
+  border-radius: 999px;
+  padding: 2px 9px;
+}
+.tips-advice-days--urgent {
+  color: #B91C1C;
+  background: #FEF2F2;
+  border-color: #FCA5A5;
+}
+
+.tips-advice-text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-1, #0F172A);
+  font-weight: 500;
+}
+.tips-advice-text--loading { color: var(--text-2, #475569); font-weight: 400; }
+
+/* ── generating state ── */
+.tips-generating {
+  align-items: center;
+  border-color: var(--border, #E2E8F0);
+  background: var(--surface, #fff);
+}
+.tips-generating-spinner {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-border, #BBF7D0);
+  border-top-color: var(--accent, #16A34A);
+  animation: tipsSpin 700ms linear infinite;
+}
+@keyframes tipsSpin { to { transform: rotate(360deg); } }
+
+.tips-generating-title {
+  margin: 0 0 3px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-1, #0F172A);
+  line-height: 1.5;
+}
+.tips-generating-sub {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--text-3, #94A3B8);
+  line-height: 1.5;
+}
+
+/* ── badge marking a result as generated rather than curated ── */
+.tips-generated-badge {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #7C3AED;
+  background: #F5F3FF;
+  border: 1px solid #DDD6FE;
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .tips-advice, .tips-generating { padding: 16px; gap: 10px; }
+  .tips-advice-text { font-size: 14px; }
+}

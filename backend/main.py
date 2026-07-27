@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import Optional
 import httpx
 import os
 import json
@@ -14,7 +16,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://fridely.netlify.app"],
+    allow_origins=["http://localhost:3000", "http://localhost:3001", "https://fridely.netlify.app"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -147,3 +149,140 @@ Items:
         })
 
     return {"items": result}
+
+
+# ──────────────────────────────────────────────────────────────
+# Storage tips (Tips page only)
+#
+# The 423-entry curated dataset stays the fast, free, deterministic
+# path in the frontend. These endpoints only run where that dataset
+# has nothing to say.
+# ──────────────────────────────────────────────────────────────
+
+TIP_SECTIONS = ["Pantry", "Refrigerator", "Freezer", "Additional Tips"]
+
+
+@app.get("/storage-tips")
+async def storage_tips(name: str):
+    """
+    Fallback for foods missing from the curated dataset. Returns the same
+    shape as a tips-data.json entry so the UI renders it identically.
+    Refuses to invent advice for things that are not food.
+    """
+    food = name.strip()
+    if not food:
+        raise HTTPException(status_code=400, detail="A food name is required")
+    if len(food) > 60:
+        raise HTTPException(status_code=400, detail="That food name is too long")
+
+    prompt = f"""You are a food storage expert. The user searched for: "{food}"
+
+First decide whether this is actually a food, drink, or grocery item.
+If it is NOT (gibberish, an object, a person, a place), reply with exactly:
+{{"is_food": false}}
+
+If it IS, reply with a JSON object with these keys:
+- "name": the tidy display name (e.g. "Halloumi", "Kombucha")
+- "category": the single best fit from this list ONLY: Produce (Fresh Fruits),
+  Produce (Fresh Vegetables), Dairy Products & Eggs, Meat & Seafood,
+  Baked Goods (Bakery), Shelf Stable Foods, Condiments, Sauces & Canned Goods,
+  Beverages, Frozen Foods, Deli & Prepared Foods, Vegetarian Proteins,
+  Grains, Beans & Pasta, Herbs & Spices, Snacks & Confectionery
+- "pantry": how it keeps at room temperature, or why that is not advised
+- "refrigerator": how to store it in the fridge, including where and how long
+- "freezer": whether it freezes well, how to do it, and for how long
+- "additional": one genuinely useful, non-obvious tip
+
+Each of the four text fields must be one or two plain sentences. Give concrete
+timeframes wherever you can. No markdown, no bullet points, no preamble.
+Reply with the JSON object and nothing else."""
+
+    try:
+        response = openai_client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0,
+            response_format={"type": "json_object"},
+        )
+        data = json.loads(response.choices[0].message.content.strip())
+    except Exception:
+        raise HTTPException(status_code=502, detail="Could not generate storage tips right now")
+
+    if not data.get("is_food", True) or not data.get("refrigerator"):
+        raise HTTPException(status_code=404, detail=f'"{food}" does not look like a food item')
+
+    sections = [
+        f"Pantry: {data.get('pantry', '').strip()}",
+        f"Refrigerator: {data.get('refrigerator', '').strip()}",
+        f"Freezer: {data.get('freezer', '').strip()}",
+        f"Additional Tips: {data.get('additional', '').strip()}",
+    ]
+
+    return {
+        "ID": f"ai-{food.lower()}",
+        "Name": data.get("name", food).strip(),
+        "Category_Name": data.get("category", "Shelf Stable Foods").strip(),
+        "Keywords": food.lower(),
+        "Tips": "\n".join(sections),
+        "generated": True,
+    }
+
+
+class AdviceRequest(BaseModel):
+    name: str
+    amount: Optional[float] = None
+    days_left: Optional[int] = None
+    spent: Optional[float] = None
+
+
+@app.post("/storage-advice")
+async def storage_advice(req: AdviceRequest):
+    """
+    Situational advice for one pantry item. A static table cannot say
+    "yours expires in 2 days" — this can, because it knows the quantity,
+    the days remaining and what was paid.
+    """
+    food = req.name.strip()
+    if not food:
+        raise HTTPException(status_code=400, detail="A food name is required")
+
+    facts = [f"item: {food}"]
+    if req.amount is not None:
+        facts.append(f"quantity on hand: {req.amount}")
+    if req.days_left is not None:
+        facts.append(
+            "already past its expiry date" if req.days_left < 0
+            else f"days until expiry: {req.days_left}"
+        )
+    if req.spent is not None:
+        facts.append(f"amount paid: ${req.spent:.2f}")
+
+    prompt = f"""You are a food waste expert advising someone about one item in their kitchen.
+
+{chr(10).join(facts)}
+
+Give ONE piece of advice for what they should do about this specific item today.
+Be concrete and act on the numbers above — reference the days remaining and the
+quantity where they matter. If it is close to expiring, say what to do right now
+(freeze in portions, cook it tonight, and so on). If there is plenty of time, give
+the single best thing to do to make it last.
+
+Two sentences maximum, under 200 characters, plain text, no markdown, no preamble.
+Reply with a JSON object: {{"advice": "..."}}"""
+
+    try:
+        response = openai_client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3,
+            response_format={"type": "json_object"},
+        )
+        data = json.loads(response.choices[0].message.content.strip())
+    except Exception:
+        raise HTTPException(status_code=502, detail="Could not generate advice right now")
+
+    advice = (data.get("advice") or "").strip()
+    if not advice:
+        raise HTTPException(status_code=502, detail="Could not generate advice right now")
+
+    return {"advice": advice}

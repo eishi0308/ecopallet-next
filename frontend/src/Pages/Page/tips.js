@@ -54,6 +54,40 @@ const wordReveal = {
 };
 const EASE = [0.25, 0.46, 0.45, 0.94];
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://ecopallet-next.onrender.com';
+
+// Generated entries are cached so a given food is only ever paid for once.
+const GENERATED_CACHE_KEY = 'tips-generated-cache';
+const loadGeneratedCache = () => {
+  try { return JSON.parse(localStorage.getItem(GENERATED_CACHE_KEY)) || {}; }
+  catch { return {}; }
+};
+const saveGeneratedCache = (cache) => {
+  try { localStorage.setItem(GENERATED_CACHE_KEY, JSON.stringify(cache)); }
+  catch { /* quota or private mode — the session cache still works */ }
+};
+
+// Mirrors the expiry formats calculateStatus accepts ("3 Aug 2026" and "dd/mm/yyyy").
+const MONTHS = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+const daysUntilExpiry = (expiryDate) => {
+  if (!expiryDate) return null;
+  let d;
+  if (expiryDate.includes('/')) {
+    const p = expiryDate.split('/');
+    d = new Date(Number(p[2]), Number(p[1]) - 1, Number(p[0]));
+  } else {
+    const p = expiryDate.split(' ');
+    d = (p.length === 3 && MONTHS[p[1]] !== undefined)
+      ? new Date(Number(p[2]), MONTHS[p[1]], Number(p[0]))
+      : new Date(expiryDate);
+  }
+  if (isNaN(d.getTime())) return null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  d.setHours(0, 0, 0, 0);
+  return Math.ceil((d - today) / 86400000);
+};
+
 const FloatingOrb = ({ size, color, style, delay = 0, dur = 10 }) => (
   <motion.div
     className="tips-orb"
@@ -83,6 +117,11 @@ const TipsContent = ({ selectedResult }) => {
       <div className="tips-result-header">
         <h3 className="tips-result-food-name">{selectedResult.Name}</h3>
         <span className="tips-result-food-category">{selectedResult.Category_Name}</span>
+        {selectedResult.generated && (
+          <span className="tips-generated-badge" title="Not in our curated guide — written for you just now">
+            ✦ AI-written
+          </span>
+        )}
       </div>
       <motion.div
         className="tips-cards-grid"
@@ -130,6 +169,7 @@ export const Tips = () => {
 
   // get not-expiry items name
   const [validInventoryNames, setValidInventoryNames] = useState([]);
+  const [inventoryItems, setInventoryItems] = useState([]);
   useEffect(() => {
     try {
       const storedInventory = localStorage.getItem('inventory');
@@ -142,6 +182,7 @@ export const Tips = () => {
         });
         const uniqueNames = [...new Set(validItems.map(item => item.name.toLowerCase()))];
         setValidInventoryNames(uniqueNames);
+        setInventoryItems(validItems);
       }
     } catch (error) {
       // silently ignore parse errors
@@ -224,9 +265,84 @@ export const Tips = () => {
       return;
     }
 
+    // Nothing curated matches. Instead of dead-ending, generate an entry.
     setShowInitialContent(false);
-    toast.error('The keyword you searched for is not in our database, please search again.');
     setSearchValue(name);
+    generateTips(processedName, name);
+  };
+
+  // ── AI fallback: only ever runs when the 423-entry dataset has no answer ──
+  const [isGenerating, setIsGenerating] = useState(false);
+  const generatedCache = useRef(loadGeneratedCache());
+
+  const generateTips = async (key, original) => {
+    const cached = generatedCache.current[key];
+    if (cached) {
+      setSearchResults([cached]);
+      setSelectedResult(cached);
+      setSearchPerformed(true);
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const res = await fetch(`${BACKEND_URL}/storage-tips?name=${encodeURIComponent(key)}`);
+
+      if (res.status === 404) {
+        toast.error(`We couldn't find "${original}" — try a different food name.`);
+        return;
+      }
+      if (!res.ok) throw new Error('generate failed');
+
+      const entry = await res.json();
+      generatedCache.current[key] = entry;
+      saveGeneratedCache(generatedCache.current);
+
+      setSearchResults([entry]);
+      setSelectedResult(entry);
+      setSearchPerformed(true);
+    } catch (error) {
+      toast.error('Could not reach the storage guide. Please try again.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  // ── Situational advice for one pantry item (quantity, days left, price) ──
+  const [advice, setAdvice] = useState(null);
+  const [adviceLoading, setAdviceLoading] = useState(false);
+
+  const handleInventoryClick = (name) => {
+    handleSearch(name);
+    fetchAdvice(name);
+  };
+
+  const fetchAdvice = async (name) => {
+    const item = inventoryItems.find(i => i.name.toLowerCase() === name.toLowerCase());
+    if (!item) { setAdvice(null); return; }
+
+    setAdvice(null);
+    setAdviceLoading(true);
+    try {
+      const daysLeft = daysUntilExpiry(item.expiryDate);
+      const res = await fetch(`${BACKEND_URL}/storage-advice`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: item.name,
+          amount: Number(item.amount) || null,
+          days_left: daysLeft,
+          spent: Number(item.spent) || null,
+        }),
+      });
+      if (!res.ok) throw new Error('advice failed');
+      const data = await res.json();
+      setAdvice({ text: data.advice, item: item.name, daysLeft });
+    } catch (error) {
+      setAdvice(null); // stay quiet — the curated tips below are still useful
+    } finally {
+      setAdviceLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -423,6 +539,65 @@ export const Tips = () => {
         </div>
       </motion.section>
 
+      {/* ── Situational advice — only possible because we know YOUR item ── */}
+      <AnimatePresence>
+        {(adviceLoading || advice) && (
+          <motion.div
+            key="advice"
+            className="tips-advice"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+          >
+            <span className="tips-advice-mark" aria-hidden="true">✦</span>
+            {adviceLoading ? (
+              <p className="tips-advice-text tips-advice-text--loading">
+                Looking at your {searchValue}…
+              </p>
+            ) : (
+              <div>
+                <p className="tips-advice-label">
+                  For your {advice.item}
+                  {typeof advice.daysLeft === 'number' && (
+                    <span className={`tips-advice-days${advice.daysLeft <= 3 ? ' tips-advice-days--urgent' : ''}`}>
+                      {advice.daysLeft < 0
+                        ? 'past expiry'
+                        : advice.daysLeft === 0
+                          ? 'expires today'
+                          : `${advice.daysLeft} ${advice.daysLeft === 1 ? 'day' : 'days'} left`}
+                    </span>
+                  )}
+                </p>
+                <p className="tips-advice-text">{advice.text}</p>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Writing tips for a food the curated guide doesn't cover ── */}
+      <AnimatePresence>
+        {isGenerating && (
+          <motion.div
+            key="generating"
+            className="tips-generating"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+          >
+            <span className="tips-generating-spinner" aria-hidden="true" />
+            <div>
+              <p className="tips-generating-title">
+                “{searchValue}” isn’t in our guide yet — writing storage tips for it now
+              </p>
+              <p className="tips-generating-sub">This happens once. We’ll remember it next time.</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {searchResults.length > 0 && (
           <motion.div
@@ -497,7 +672,7 @@ export const Tips = () => {
                   key={index}
                   variants={pillVariant}
                   className={`inventory-item-button ${searchValue === name ? 'selected' : ''}`}
-                  onClick={() => handleSearch(name)}
+                  onClick={() => handleInventoryClick(name)}
                   title={name}
                 >
                   <span className="item-text">{name}</span>
