@@ -1072,3 +1072,90 @@
   .tips-advice, .tips-generating { padding: 16px; gap: 10px; }
   .tips-advice-text { font-size: 14px; }
 }
+
+/* ══════════════════════════════════════════
+   UNCERTAIN MATCH — ask instead of assert
+══════════════════════════════════════════ */
+.tips-approx {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 22px;
+  border-radius: 16px;
+  border: 1px solid #FDE68A;
+  background: linear-gradient(135deg, #FFFBEB 0%, #FEF9F3 100%);
+}
+
+.tips-approx-mark {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: #F59E0B;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.tips-approx-body { flex: 1; min-width: 0; }
+
+.tips-approx-title {
+  margin: 0 0 4px;
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--text-1, #0F172A);
+  letter-spacing: -0.1px;
+}
+
+.tips-approx-sub {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-2, #475569);
+}
+.tips-approx-sub strong { color: var(--text-1, #0F172A); font-weight: 700; }
+
+.tips-approx-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tips-approx-btn {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 9px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+  white-space: nowrap;
+}
+.tips-approx-btn:hover { transform: translateY(-1px); }
+.tips-approx-btn:focus-visible { outline: 2px solid var(--accent, #16A34A); outline-offset: 2px; }
+
+.tips-approx-btn--ghost {
+  background: #fff;
+  color: var(--text-2, #475569);
+  border: 1px solid var(--border, #E2E8F0);
+}
+.tips-approx-btn--ghost:hover { background: var(--surface-2, #F1F5F9); }
+
+.tips-approx-btn--primary {
+  background: linear-gradient(135deg, #16A34A, #059669);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(22,163,74,0.3);
+}
+.tips-approx-btn--primary:hover { box-shadow: 0 6px 18px rgba(22,163,74,0.4); }
+
+@media (max-width: 600px) {
+  .tips-approx { padding: 16px; gap: 10px; }
+  .tips-approx-actions { flex-direction: column; }
+  .tips-approx-btn { width: 100%; text-align: center; }
+}

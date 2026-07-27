@@ -56,6 +56,12 @@ const EASE = [0.25, 0.46, 0.45, 0.94];
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://ecopallet-next.onrender.com';
 
+// Fuse scores overlap between real typos and unrelated look-alikes
+// ("harina"->Marinades scores 0.167, better than "choclate"->Chocolate at 0.23),
+// so no threshold separates them. Only near-certain matches are shown as the
+// answer; anything looser is offered as a question instead of asserted.
+const STRONG_MATCH_SCORE = 0.15;
+
 // Generated entries are cached so a given food is only ever paid for once.
 const GENERATED_CACHE_KEY = 'tips-generated-cache';
 const loadGeneratedCache = () => {
@@ -195,9 +201,11 @@ export const Tips = () => {
   const [selectedResult, setSelectedResult] = useState(null);
 
   const [searchPerformed, setSearchPerformed] = useState(false);
+  const [approxMatch, setApproxMatch] = useState(null);
   const handleSearch = (name) => {
     setSearchResults([]);
     setSelectedResult(null);
+    setApproxMatch(null);
 
     let processedName = name.trim();
 
@@ -233,8 +241,16 @@ export const Tips = () => {
         setSearchValue(name);
         setSearchPerformed(true);
 
-        if (results.length === 1) {
-          setSelectedResult(results[0]);
+        // Matching only part of a multi-word query is a guess, not an answer:
+        // "greek yogurt" hits the keyword "greek" and lands on Salad dressing,
+        // "fish sauce" hits "fish" and lands on Saltwater Fish. Offer, don't assert.
+        const isWholeQuery = combination.length === inputKeywords.length;
+        if (isWholeQuery) {
+          if (results.length === 1) {
+            setSelectedResult(results[0]);
+          }
+        } else {
+          setApproxMatch({ query: name, key: processedName, name: results[0].Name });
         }
         return;
       }
@@ -256,12 +272,18 @@ export const Tips = () => {
       }));
       matchedItems.sort((a, b) => a.score - b.score);
       const bestMatch = matchedItems[0].item;
+      const bestScore = matchedItems[0].score;
 
       setSearchResults([bestMatch]);
       setShowInitialContent(false);
       setSearchValue(name);
-      setSelectedResult(bestMatch);
       setSearchPerformed(true);
+
+      if (bestScore <= STRONG_MATCH_SCORE) {
+        setSelectedResult(bestMatch); // near-certain, e.g. "yoghurt" -> Yogurt
+      } else {
+        setApproxMatch({ query: name, key: processedName, name: bestMatch.Name });
+      }
       return;
     }
 
@@ -572,6 +594,45 @@ export const Tips = () => {
                 <p className="tips-advice-text">{advice.text}</p>
               </div>
             )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Uncertain match: ask, never assert ── */}
+      <AnimatePresence>
+        {approxMatch && !selectedResult && !isGenerating && (
+          <motion.div
+            key="approx"
+            className="tips-approx"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+          >
+            <span className="tips-approx-mark" aria-hidden="true">?</span>
+            <div className="tips-approx-body">
+              <p className="tips-approx-title">
+                No exact match for “{approxMatch.query}”
+              </p>
+              <p className="tips-approx-sub">
+                The closest entry in our guide is <strong>{approxMatch.name}</strong>, which may not be
+                the same thing. Pick whichever is right.
+              </p>
+              <div className="tips-approx-actions">
+                <button
+                  className="tips-approx-btn tips-approx-btn--ghost"
+                  onClick={() => { setSelectedResult(searchResults[0]); setApproxMatch(null); }}
+                >
+                  Show {approxMatch.name}
+                </button>
+                <button
+                  className="tips-approx-btn tips-approx-btn--primary"
+                  onClick={() => { const a = approxMatch; setApproxMatch(null); generateTips(a.key, a.query); }}
+                >
+                  ✦ Write tips for “{approxMatch.query}”
+                </button>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
