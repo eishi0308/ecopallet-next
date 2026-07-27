@@ -122,6 +122,12 @@
   align-items: center;
   text-align: center;
 }
+/* hint text belongs under the heading it describes, not floated to the far edge */
+.tips-panel-header--stacked .tips-panel-sub {
+  margin-top: 6px;
+  align-self: flex-start;
+  text-align: left;
+}
 
 .tips-panel-title {
   font-size: 1.25rem;
@@ -140,75 +146,141 @@
 }
 
 /* ══════════════════════════════════════════
-   CATEGORY FLIP CARDS
+   STORAGE ZONE GUIDE
+   Real text, coldest → warmest. Replaces the
+   raster poster cards that rendered at ~12% scale.
 ══════════════════════════════════════════ */
-.category-tips-container {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 16px;
-  margin-top: 28px;
+.zone-guide-sub {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-2, #475569);
+  max-width: 62ch;
 }
 
-.category-tip-wrap {
+.zone-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(208px, 1fr));
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.zone-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  padding: 18px 16px 16px;
+  border-radius: 16px;
+  background: var(--zone-bg);
+  border: 1px solid var(--zone-border);
+  overflow: hidden;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+/* temperature spine — the cold→warm ramp reads left to right */
+.zone-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: var(--zone-accent);
+}
+.zone-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.09);
 }
 
-.category-tip-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-2, #475569);
-  text-align: center;
+.zone-card--freezer { --zone-accent: #3B82F6; --zone-bg: #EFF6FF; --zone-border: #BFDBFE; }
+.zone-card--shelves { --zone-accent: #06B6D4; --zone-bg: #ECFEFF; --zone-border: #A5F3FC; }
+.zone-card--crisper { --zone-accent: #16A34A; --zone-bg: #F0FDF4; --zone-border: #BBF7D0; }
+.zone-card--door    { --zone-accent: #F59E0B; --zone-bg: #FFFBEB; --zone-border: #FDE68A; }
+.zone-card--pantry  { --zone-accent: #EA580C; --zone-bg: #FFF7ED; --zone-border: #FED7AA; }
+
+.zone-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.zone-card-name {
+  margin: 0;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.2px;
+  color: var(--text-1, #0F172A);
+}
+
+.zone-card-temp {
+  flex-shrink: 0;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--zone-accent);
+  background: #fff;
+  border: 1px solid var(--zone-border);
+  border-radius: 999px;
+  padding: 3px 9px;
+  white-space: nowrap;
   letter-spacing: 0.01em;
 }
 
-.category-tip-item {
-  width: 100%;
-  aspect-ratio: 3/4;
-  cursor: pointer;
-  border-radius: var(--radius-lg, 16px);
-  overflow: hidden;
-  transition: transform 200ms ease, box-shadow 200ms ease;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border, #E2E8F0);
-}
-.category-tip-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+.zone-card-label {
+  margin: 0 0 8px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-3, #94A3B8);
 }
 
-.category-logo-tip {
-  width: 100%;
-  height: 100%;
-  background: var(--surface-2, #F1F5F9);
-  position: relative;
-  overflow: hidden;
+.zone-card-chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 0;
+  margin: 0 0 14px;
 }
-.category-logo-tip img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: opacity 0.35s ease, transform 0.35s ease;
+.zone-card-chips li {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-2, #475569);
+  background: #fff;
+  border: 1px solid var(--zone-border);
+  border-radius: 7px;
+  padding: 4px 8px;
+  line-height: 1.3;
 }
-.category-logo-tip .logo-front {
-  opacity: 1;
-  transform: scale(1);
+
+/* Pinned to the bottom, with two lines reserved, so the dashed rule sits at
+   the same height on every card regardless of how the text wraps. */
+.zone-card-avoid {
+  display: flex;
+  gap: 7px;
+  align-items: flex-start;
+  margin: auto 0 0;
+  padding-top: 12px;
+  min-height: 47px;
+  box-sizing: border-box;
+  border-top: 1px dashed var(--zone-border);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-2, #475569);
 }
-.category-logo-tip .logo-back {
-  opacity: 0;
-  transform: scale(1.04);
+.zone-card-avoid-mark {
+  flex-shrink: 0;
+  font-weight: 800;
+  color: #DC2626;
+  line-height: 1.4;
 }
-.category-tip-item:hover .logo-front {
-  opacity: 0;
-  transform: scale(0.96);
-}
-.category-tip-item:hover .logo-back {
-  opacity: 1;
-  transform: scale(1);
+
+@media (max-width: 560px) {
+  .zone-grid { grid-template-columns: 1fr; gap: 10px; }
+  .zone-card { padding: 16px 14px 14px; }
 }
 
 /* ══════════════════════════════════════════
@@ -588,15 +660,17 @@
 /* ══════════════════════════════════════════
    INVENTORY EMPTY STATE
 ══════════════════════════════════════════ */
+/* Compact by design — an empty state should not outweigh real content */
 .inv-empty-state-tips {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 8px;
-  padding: 32px 20px;
+  gap: 4px;
+  padding: 18px 20px;
   width: 100%;
 }
+.inv-empty-state-tips .inv-empty-sub-tips { max-width: 46ch; }
 .inv-empty-icon-tips {
   font-size: 2rem;
   opacity: 0.45;
@@ -786,75 +860,6 @@
   pointer-events: none;
 }
 
-/* Category cards — color-coded per category */
-.category-tip-wrap:nth-child(1) .category-tip-item {
-  border-color: rgba(239,68,68,0.3);
-  box-shadow: 0 2px 12px rgba(239,68,68,0.1);
-}
-.category-tip-wrap:nth-child(1) .category-tip-item:hover {
-  box-shadow: 0 12px 32px rgba(239,68,68,0.2);
-  border-color: rgba(239,68,68,0.5);
-}
-.category-tip-wrap:nth-child(1) .category-tip-label { color: #DC2626; font-weight: 700; }
-
-.category-tip-wrap:nth-child(2) .category-tip-item {
-  border-color: rgba(251,146,60,0.3);
-  box-shadow: 0 2px 12px rgba(251,146,60,0.1);
-}
-.category-tip-wrap:nth-child(2) .category-tip-item:hover {
-  box-shadow: 0 12px 32px rgba(251,146,60,0.22);
-  border-color: rgba(251,146,60,0.5);
-}
-.category-tip-wrap:nth-child(2) .category-tip-label { color: #EA580C; font-weight: 700; }
-
-.category-tip-wrap:nth-child(3) .category-tip-item {
-  border-color: rgba(22,163,74,0.3);
-  box-shadow: 0 2px 12px rgba(22,163,74,0.1);
-}
-.category-tip-wrap:nth-child(3) .category-tip-item:hover {
-  box-shadow: 0 12px 32px rgba(22,163,74,0.22);
-  border-color: rgba(22,163,74,0.5);
-}
-.category-tip-wrap:nth-child(3) .category-tip-label { color: #15803D; font-weight: 700; }
-
-.category-tip-wrap:nth-child(4) .category-tip-item {
-  border-color: rgba(59,130,246,0.3);
-  box-shadow: 0 2px 12px rgba(59,130,246,0.1);
-}
-.category-tip-wrap:nth-child(4) .category-tip-item:hover {
-  box-shadow: 0 12px 32px rgba(59,130,246,0.22);
-  border-color: rgba(59,130,246,0.5);
-}
-.category-tip-wrap:nth-child(4) .category-tip-label { color: #1D4ED8; font-weight: 700; }
-
-.category-tip-wrap:nth-child(5) .category-tip-item {
-  border-color: rgba(234,179,8,0.3);
-  box-shadow: 0 2px 12px rgba(234,179,8,0.1);
-}
-.category-tip-wrap:nth-child(5) .category-tip-item:hover {
-  box-shadow: 0 12px 32px rgba(234,179,8,0.22);
-  border-color: rgba(234,179,8,0.5);
-}
-.category-tip-wrap:nth-child(5) .category-tip-label { color: #B45309; font-weight: 700; }
-
-.category-tip-wrap:nth-child(6) .category-tip-item {
-  border-color: rgba(139,92,246,0.3);
-  box-shadow: 0 2px 12px rgba(139,92,246,0.1);
-}
-.category-tip-wrap:nth-child(6) .category-tip-item:hover {
-  box-shadow: 0 12px 32px rgba(139,92,246,0.22);
-  border-color: rgba(139,92,246,0.5);
-}
-.category-tip-wrap:nth-child(6) .category-tip-label { color: #7C3AED; font-weight: 700; }
-
-/* Category cards — bigger, more impactful */
-.category-tip-item {
-  aspect-ratio: 2/3;
-  border-radius: 18px;
-}
-.category-tip-item:hover {
-  transform: translateY(-6px) scale(1.02);
-}
 
 /* Inventory pills — more visual depth */
 .inventory-item-button {
@@ -940,9 +945,6 @@
 /* ══════════════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════════════ */
-@media (max-width: 1024px) {
-  .category-tips-container { grid-template-columns: repeat(3, 1fr); }
-}
 @media (max-width: 900px) {
   .tips-whole-page { padding: 24px 20px 56px; gap: 32px; }
   .tips-hero { padding: 36px 24px; }
@@ -954,7 +956,6 @@
 }
 @media (max-width: 600px) {
   .tips-whole-page { padding: 16px 12px 48px; gap: 24px; }
-  .category-tips-container { grid-template-columns: repeat(2, 1fr); }
   .tips-hero { padding: 28px 20px; }
   .tips-hero-title { font-size: 1.5rem; }
   .tips-panel { padding: 20px; }

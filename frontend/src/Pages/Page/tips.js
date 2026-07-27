@@ -17,20 +17,6 @@ import { toast, Toaster } from 'sonner';
 
 
 // image resources
-// front images
-import cannedLogo from '../images/tips/canned-logo.png';
-import dairyLogo from '../images/tips/dairy-logo.png';
-import fruitLogo from '../images/tips/fruit-logo.png';
-import grainsLogo from '../images/tips/grains-logo.png';
-import meatLogo from '../images/tips/meat-logo.png';
-import vegeLogo from '../images/tips/vegie-logo.png';
-// back images
-import vegeTip from '../images/tips/vegie-tip.png';
-import meatTip from '../images/tips/meat-tip.png';
-import dairyTip from '../images/tips/dairy-tip.png';
-import grainsTip from '../images/tips/grains-tip.png';
-import cannedTip from '../images/tips/canned-tip.png';
-import fruitTip from '../images/tips/fruit-tip.png';
 // images for tips results
 import additionalLogo from '../images/tips/additional-logo.png';
 import pantryLogo from '../images/tips/pantry-logo.png';
@@ -308,30 +294,45 @@ export const Tips = () => {
     setSelectedResult(result);
   };
 
-  // quick tips
-  const categoryTips = [
-    { category: 'Meat',         frontLogo: meatLogo,   backLogo: meatTip   },
-    { category: 'Fruits',       frontLogo: fruitLogo,  backLogo: fruitTip  },
-    { category: 'Vegetables',   frontLogo: vegeLogo,   backLogo: vegeTip   },
-    { category: 'Dairy',        frontLogo: dairyLogo,  backLogo: dairyTip  },
-    { category: 'Grains',       frontLogo: grainsLogo, backLogo: grainsTip },
-    { category: 'Canned Foods', frontLogo: cannedLogo, backLogo: cannedTip },
+  // Where food actually belongs — ordered coldest to warmest.
+  // The "avoid" line is the part people get wrong, so it earns its own row.
+  const STORAGE_ZONES = [
+    {
+      zone: 'Freezer',
+      temp: '−18°C',
+      tone: 'freezer',
+      best: ['Bread', 'Meat & fish', 'Herbs', 'Milk', 'Cooked portions'],
+      avoid: 'Refreezing anything that has already thawed',
+    },
+    {
+      zone: 'Fridge — main shelves',
+      temp: '1–4°C',
+      tone: 'shelves',
+      best: ['Dairy', 'Eggs', 'Leftovers', 'Cooked food'],
+      avoid: 'Keeping eggs in the door — they need the steady cold',
+    },
+    {
+      zone: 'Fridge — crisper',
+      temp: '1–4°C · humid',
+      tone: 'crisper',
+      best: ['Leafy greens', 'Carrots', 'Broccoli', 'Berries'],
+      avoid: 'Apples beside greens — their ethylene wilts them fast',
+    },
+    {
+      zone: 'Fridge — door',
+      temp: '5–10°C',
+      tone: 'door',
+      best: ['Condiments', 'Jams', 'Juice', 'Butter'],
+      avoid: 'Milk — the warmest, most variable spot',
+    },
+    {
+      zone: 'Pantry — cool & dark',
+      temp: '10–21°C',
+      tone: 'pantry',
+      best: ['Potatoes', 'Onions', 'Oils', 'Unopened tins'],
+      avoid: 'Potatoes next to onions, and tomatoes in the fridge',
+    },
   ];
-
-  const CategoryTipItem = ({ frontLogo, backLogo, category }) => {
-    const [isFlipped, setIsFlipped] = useState(false);
-    return (
-      <div
-        className={`category-tip-item${isFlipped ? ' is-flipped' : ''}`}
-        onClick={() => setIsFlipped(f => !f)}
-      >
-        <div className="category-logo-tip">
-          <img src={frontLogo} alt={category} className="logo-front" />
-          <img src={backLogo} alt={`${category} storage tips`} className="logo-back" />
-        </div>
-      </div>
-    );
-  };
 
   return (
     <>
@@ -474,12 +475,12 @@ export const Tips = () => {
         whileInView="visible"
         viewport={{ once: true, margin: '-60px' }}
       >
-        <div className="tips-panel-header">
+        <div className="tips-panel-header tips-panel-header--stacked">
           <div>
             <span className="tips-eyebrow">From Your Pantry</span>
             <h2 className="tips-panel-title">Your Inventory</h2>
+            <p className="tips-panel-sub">Click any item to get personalised storage tips</p>
           </div>
-          <p className="tips-panel-sub">Click any item to get personalised storage tips</p>
         </div>
         <motion.div
           className="inventory-tips-container"
@@ -518,7 +519,7 @@ export const Tips = () => {
         )}
       </motion.section>
 
-      {/* ── Quick Category Cards ── */}
+      {/* ── Storage Zone Guide ── */}
       <motion.section
         className="tips-panel tips-category-panel"
         variants={fadeUp}
@@ -528,23 +529,31 @@ export const Tips = () => {
       >
         <div className="tips-category-header">
           <span className="tips-eyebrow">Quick Reference</span>
-          <h2 className="tips-panel-title">Storage Tips by Category</h2>
+          <h2 className="tips-panel-title">Where does it go?</h2>
+          <p className="zone-guide-sub">The five places food lives, coldest first — and the mistake to avoid in each.</p>
         </div>
         <motion.div
-          className="category-tips-container"
+          className="zone-grid"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {categoryTips.map((item, index) => (
-            <motion.div key={index} className="category-tip-wrap" variants={cardFadeUp}>
-              <CategoryTipItem
-                frontLogo={item.frontLogo}
-                backLogo={item.backLogo}
-                category={item.category}
-              />
-            </motion.div>
+          {STORAGE_ZONES.map(z => (
+            <motion.article key={z.zone} className={`zone-card zone-card--${z.tone}`} variants={cardFadeUp}>
+              <div className="zone-card-top">
+                <h3 className="zone-card-name">{z.zone}</h3>
+                <span className="zone-card-temp">{z.temp}</span>
+              </div>
+              <p className="zone-card-label">Best for</p>
+              <ul className="zone-card-chips">
+                {z.best.map(b => <li key={b}>{b}</li>)}
+              </ul>
+              <p className="zone-card-avoid">
+                <span className="zone-card-avoid-mark" aria-hidden="true">✕</span>
+                {z.avoid}
+              </p>
+            </motion.article>
           ))}
         </motion.div>
       </motion.section>
